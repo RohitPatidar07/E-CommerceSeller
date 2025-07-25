@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Dashboard from "./Component/Superadmin/Dashboard";
 import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
+import Home from "./Component/Website/Home";
 
 
 function App() {
@@ -37,6 +38,9 @@ function App() {
           {/* <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+
+          <Route path="/" element={<Home />} />
+
         </Routes>
       ) : (
         <>
