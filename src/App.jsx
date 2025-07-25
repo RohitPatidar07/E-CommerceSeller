@@ -9,6 +9,7 @@ import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
 import Settings from "./Component/Superadmin/Setting/Setting";
 import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
+import Home from "./Component/Website/Home";
 
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
           {/* <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+
+          <Route path="/" element={<Home />} />
+
         </Routes>
       ) : (
         <>
