@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +40,7 @@ const App = () => {
 
       {/* Desktop Login Button */}
       <div className="d-none d-md-block">
+       <Link to='/superadmin/dashboard'>
         <button
           className="btn text-white px-4 py-2 small fw-medium shadow"
           style={{
@@ -48,6 +50,7 @@ const App = () => {
         >
           <i className="fas fa-user-circle me-2"></i>Login
         </button>
+       </Link>
       </div>
 
       {/* Mobile Toggle Button */}

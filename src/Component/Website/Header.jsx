@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ const Header = () => {
 
           {/* Login Button */}
           <div className="d-none d-md-block">
+        <Link to="/superadmin/dashboard">
             <button 
               className="text-white px-4 py-2 small fw-medium rounded-button cursor-pointer transition-all shadow hover-shadow"
               style={{
@@ -57,6 +59,7 @@ const Header = () => {
               <i className="fas fa-user-circle me-2"></i>
               Login
             </button>
+        </Link>
           </div>
 
           {/* Mobile menu button */}
