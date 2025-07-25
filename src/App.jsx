@@ -62,7 +62,7 @@ function App() {
 
 
                  {/* profile */}
-                        <Route path="/profile" element={<Profile />} />
+                       
                       {/* profil end */}
 
 
