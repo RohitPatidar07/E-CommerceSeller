@@ -47,7 +47,7 @@ const Header = () => {
 
           {/* Login Button */}
           <div className="d-none d-md-block">
-        <Link to="/superadmin/dashboard">
+        <Link to="/dashboard">
             <button 
               className="text-white px-4 py-2 small fw-medium rounded-button cursor-pointer transition-all shadow hover-shadow"
               style={{
@@ -91,6 +91,7 @@ const Header = () => {
             <a href="#contact" className="text-white-90 hover-text-white hover-bg-white-10 px-4 py-3 text-decoration-none base fw-medium cursor-pointer rounded-button transition-all d-flex align-items-center">
               <i className="fas fa-envelope me-3"></i>Contact
             </a>
+           <Link to="/dashboard">
             <button 
               className="text-white px-4 py-3 fw-medium rounded-button cursor-pointer w-100 mt-2 transition-all d-flex align-items-center justify-content-center"
               style={{
@@ -101,6 +102,7 @@ const Header = () => {
               <i className="fas fa-user-circle me-2"></i>
               Login
             </button>
+           </Link>
           </div>
         </div>
       )}

@@ -10,6 +10,8 @@ import Sidebar from "./Layout/Sidebar";
 import Settings from "./Component/Superadmin/Setting/Setting";
 import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
 import Home from "./Component/Website/Home";
+import OrderManagement from "./Component/Superadmin/OrderManagement/OrderManagement";
+import UserManagement from "./Component/Superadmin/Usermanagement/UserManagement";
 
 
 function App() {
@@ -61,6 +63,8 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                  <Route path="/setting" element={<Settings />} />
                    <Route path="/planbilling" element={<PlanBilling />} />
+                    <Route path="/ordermanagement" element={<OrderManagement />} />
+                     <Route path="/usermanagement" element={<UserManagement />} />
               </Routes>
             </div>
           </div>

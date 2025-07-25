@@ -86,7 +86,7 @@ const Settings = () => {
 
                 {/* Header Section */}
                 <div className="mb-4">
-                    <h1 className="display-6 fw-bold text-dark mb-2">System Settings</h1>
+                    <h1 className="h2 mb-1 mb-md-2">System Settings</h1>
                     <p className="text-muted">Configure system-wide settings and preferences for your application.</p>
                 </div>
 

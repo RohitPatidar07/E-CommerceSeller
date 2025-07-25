@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaBell, FaSearch, FaUserCircle, FaBars } from "react-icons/fa";
 import "./Navbar.css"
+import { Link } from "react-router-dom";
 
 const Navbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -42,11 +43,11 @@ const Navbar = ({ toggleSidebar }) => {
       </div>
 
       {/* Notification and User */}
-      <div className="navbar-right">
-        <div className="notification">
+      <div className="navbar-right ">
+        {/* <div className="notification">
           <FaBell className="notification-icon" />
           <span className="notification-badge">3</span>
-        </div>
+        </div> */}
 
         <div className="user-dropdown" ref={dropdownRef}>
           <div
@@ -62,10 +63,10 @@ const Navbar = ({ toggleSidebar }) => {
 
           {dropdownOpen && (
             <ul className="dropdown-menu">
-              <li><a className="dropdown-item" href="#">Profile</a></li>
-              <li><a className="dropdown-item" href="#">Settings</a></li>
+              <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+              <li><Link className="dropdown-item" to="/setting">Settings</Link></li>
               <li><hr className="dropdown-divider" /></li>
-              <li><a className="dropdown-item" href="#">Logout</a></li>
+              <li><Link className="dropdown-item" to="/login">Logout</Link></li>
             </ul>
           )}
         </div>

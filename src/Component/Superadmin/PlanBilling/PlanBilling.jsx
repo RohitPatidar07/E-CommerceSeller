@@ -306,7 +306,7 @@ const PlanBilling = () => {
       <div className="">
         {/* Header Section */}
         <div className="mb-5">
-          <h1 className="display-6 fw-bold text-dark mb-2">Platform Billing</h1>
+          <h1 className="h2 mb-1 mb-md-2">Platform Billing</h1>
           <p className="text-muted">Monitor your platform's financial performance and billing metrics.</p>
           
           {/* Time Period Selector */}

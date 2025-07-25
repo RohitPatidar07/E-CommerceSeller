@@ -51,7 +51,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       name: "Users Management",
       icon: faUserCog,
       key: "users",
-      path: "/users"
+      path: "/usermanagement"
     },
     {
       name: "Plan Billing",
@@ -63,7 +63,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       name: "Order MAnagement",
       icon: faBox,
       key: "billing",
-      path: "/billing"
+      path: "/ordermanagement"
     },
     // {
     //   name: "Api Logs",
