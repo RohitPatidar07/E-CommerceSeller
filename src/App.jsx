@@ -17,6 +17,7 @@ import ActivityLogs from "./Component/Superadmin/ActivityLogs/ActivityLogs";
 import BrandingCMS from "./Component/Superadmin/BrandingCMS/BrandingCMS";
 import PlanManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
 import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
+import PlanRequest from "./Component/Superadmin/PlanRequest/PlanRequest";
 
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
                          <Route path="/brandingcms" element={<BrandingCMS />} />
                            <Route path="/planmanagement" element={<PlanManagement />} />
                             <Route path="/planpackages" element={<PlansPackages />} />
+                             <Route path="/planrequest" element={<PlanRequest />} />
 
               </Routes>
             </div>
