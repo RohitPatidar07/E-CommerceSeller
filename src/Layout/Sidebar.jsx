@@ -48,16 +48,28 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       path: "/dashboard"
     },
     {
-      name: "Users Management",
+      name: "Admin Management",
       icon: faUserCog,
       key: "users",
       path: "/usermanagement"
     },
-    {
-      name: "Plan Billing",
+    // {
+    //   name: "Plan Management",
+    //   icon: faBox,
+    //   key: "plan",
+    //   path: "/planmanagement"
+    // },
+      {
+      name: "Plan Packages",
       icon: faClipboardList,
       key: "plan",
-      path: "/planbilling"
+      path: "/planpackages"
+    },
+    {
+      name: "Plan Request",
+      icon: faServer,
+      key: "api",
+      path: "/planrequest"
     },
     // {
     //   name: "Order MAnagement",
@@ -71,18 +83,18 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     //   key: "api",
     //   path: "/api"
     // },
-    {
-      name: "Branding CMS",
-      icon: faBrush,
-      key: "branding",
-      path: "/brandingcms"
-    },
-    {
-      name: "Activity Logs",
-      icon: faHistory,
-      key: "activity",
-      path: "/activitylogs"
-    },
+    // {
+    //   name: "Branding CMS",
+    //   icon: faBrush,
+    //   key: "branding",
+    //   path: "/brandingcms"
+    // },
+    // {
+    //   name: "Activity Logs",
+    //   icon: faHistory,
+    //   key: "activity",
+    //   path: "/activitylogs"
+    // },
     {
       name: "Setting",
       icon: faCog,

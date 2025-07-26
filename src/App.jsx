@@ -11,10 +11,12 @@ import Settings from "./Component/Superadmin/Setting/Setting";
 import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
 import Home from "./Component/Website/Home";
 import OrderManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
-import UserManagement from "./Component/Superadmin/Usermanagement/UserManagement";
+import UserManagement from "./Component/Superadmin/AdminManagement/AdminManagement";
 import Login from "./Auth/Login";
 import ActivityLogs from "./Component/Superadmin/ActivityLogs/ActivityLogs";
 import BrandingCMS from "./Component/Superadmin/BrandingCMS/BrandingCMS";
+import PlanManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
+import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
 
 
 function App() {
@@ -71,6 +73,9 @@ function App() {
                      <Route path="/usermanagement" element={<UserManagement />} />
                        <Route path="/activitylogs" element={<ActivityLogs />} />
                          <Route path="/brandingcms" element={<BrandingCMS />} />
+                           <Route path="/planmanagement" element={<PlanManagement />} />
+                            <Route path="/planpackages" element={<PlansPackages />} />
+
               </Routes>
             </div>
           </div>
