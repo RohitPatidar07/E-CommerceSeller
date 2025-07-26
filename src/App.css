@@ -29,7 +29,7 @@ body, html {
 .right-side-content {
   margin-left: 250px;
   padding: 30px;
-  margin-top: 65px;
+  margin-top: 50px;
   transition: margin-left 0.3s ease;
 }
 

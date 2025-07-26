@@ -14,10 +14,10 @@ const Header = () => {
         <div className="d-flex justify-content-between align-items-center h-100">
           {/* Logo */}
           <div className="d-flex align-items-center">
-            <div 
-              className="bg-gradient rounded-button me-3 d-flex align-items-center justify-content-center" 
-              style={{ 
-                width: "40px", 
+            <div
+              className="bg-gradient rounded-button me-3 d-flex align-items-center justify-content-center"
+              style={{
+                width: "40px",
                 height: "40px",
                 background: "linear-gradient(to right, #2563eb, #1d4ed8)"
               }}
@@ -47,19 +47,19 @@ const Header = () => {
 
           {/* Login Button */}
           <div className="d-none d-md-block">
-        <Link to="/dashboard">
-            <button 
-              className="text-white px-4 py-2 small fw-medium rounded-button cursor-pointer transition-all shadow hover-shadow"
-              style={{
-                background: "linear-gradient(to right, #2563eb, #1d4ed8)",
-                border: "none",
-                minWidth: "100px"
-              }}
-            >
-              <i className="fas fa-user-circle me-2"></i>
-              Login
-            </button>
-        </Link>
+            <Link to="/dashboard">
+              <button
+                className="text-white px-4 py-2 small fw-medium rounded-button cursor-pointer transition-all shadow hover-shadow"
+                style={{
+                  background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+                  border: "none",
+                  minWidth: "100px"
+                }}
+              >
+                <i className="fas fa-user-circle me-2"></i>
+                Login
+              </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -91,18 +91,18 @@ const Header = () => {
             <a href="#contact" className="text-white-90 hover-text-white hover-bg-white-10 px-4 py-3 text-decoration-none base fw-medium cursor-pointer rounded-button transition-all d-flex align-items-center">
               <i className="fas fa-envelope me-3"></i>Contact
             </a>
-           <Link to="/dashboard">
-            <button 
-              className="text-white px-4 py-3 fw-medium rounded-button cursor-pointer w-100 mt-2 transition-all d-flex align-items-center justify-content-center"
-              style={{
-                background: "linear-gradient(to right, #2563eb, #1d4ed8)",
-                border: "none"
-              }}
-            >
-              <i className="fas fa-user-circle me-2"></i>
-              Login
-            </button>
-           </Link>
+            <Link to="/dashboard">
+              <button
+                className="text-white px-4 py-3 fw-medium rounded-button cursor-pointer w-100 mt-2 transition-all d-flex align-items-center justify-content-center"
+                style={{
+                  background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+                  border: "none"
+                }}
+              >
+                <i className="fas fa-user-circle me-2"></i>
+                Login
+              </button>
+            </Link>
           </div>
         </div>
       )}
