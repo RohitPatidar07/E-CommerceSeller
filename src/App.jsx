@@ -77,6 +77,7 @@ function App() {
                            <Route path="/planmanagement" element={<PlanManagement />} />
                             <Route path="/planpackages" element={<PlansPackages />} />
                              <Route path="/planrequest" element={<PlanRequest />} />
+                             <Route path="/payment" element={< />} />
 
               </Routes>
             </div>
