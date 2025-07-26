@@ -59,30 +59,30 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       key: "plan",
       path: "/planbilling"
     },
-    {
-      name: "Order MAnagement",
-      icon: faBox,
-      key: "billing",
-      path: "/ordermanagement"
-    },
+    // {
+    //   name: "Order MAnagement",
+    //   icon: faBox,
+    //   key: "billing",
+    //   path: "/ordermanagement"
+    // },
     // {
     //   name: "Api Logs",
     //   icon: faServer,
     //   key: "api",
     //   path: "/api"
     // },
-    // {
-    //   name: "Branding CMS",
-    //   icon: faBrush,
-    //   key: "branding",
-    //   path: "/branding"
-    // },
-    // {
-    //   name: "Activity Logs",
-    //   icon: faHistory,
-    //   key: "activity",
-    //   path: "/activity"
-    // },
+    {
+      name: "Branding CMS",
+      icon: faBrush,
+      key: "branding",
+      path: "/brandingcms"
+    },
+    {
+      name: "Activity Logs",
+      icon: faHistory,
+      key: "activity",
+      path: "/activitylogs"
+    },
     {
       name: "Setting",
       icon: faCog,
