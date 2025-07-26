@@ -11,23 +11,30 @@ const App = () => {
   return (
     <div className="min-vh-100 bg-white">
       {/* Navigation */}
-   <nav className="fixed-top bg-dark shadow-lg z-50" style={{ height: "60px" }}>
+  <nav
+  className="fixed-top shadow-sm"
+  style={{
+    height: "60px",
+    background: "linear-gradient(to right, #0f172a, #1e3a8a)",
+    zIndex: 1050,
+  }}
+>
   <div className="container h-100">
     <div className="d-flex justify-content-between align-items-center h-100">
 
-      {/* Logo Section */}
+      {/* Logo */}
       <div className="d-flex align-items-center">
         <div
           className="rounded-circle d-flex align-items-center justify-content-center me-3"
           style={{
             width: "40px",
             height: "40px",
-            background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+            background: "linear-gradient(to right, #3b82f6, #2563eb)",
           }}
         >
           <i className="fas fa-cube text-white fs-5"></i>
         </div>
-        <h1 className="text-white fs-4 fw-bold m-0">CentralLogix</h1>
+        <h1 className="text-white fs-5 fw-bold m-0">SELLER PRO</h1>
       </div>
 
       {/* Desktop Navigation */}
@@ -40,25 +47,26 @@ const App = () => {
 
       {/* Desktop Login Button */}
       <div className="d-none d-md-block">
-       <Link to='/superadmin/dashboard'>
-        <button
-          className="btn text-white px-4 py-2 small fw-medium shadow"
-          style={{
-            background: "linear-gradient(to right, #2563eb, #1d4ed8)",
-            minWidth: "100px",
-          }}
-        >
-          <i className="fas fa-user-circle me-2"></i>Login
-        </button>
-       </Link>
+        <Link to="/superadmin/dashboard">
+          <button
+            className="btn text-white px-4 py-2 small fw-medium shadow"
+            style={{
+              background: "linear-gradient(to right, #60a5fa, #3b82f6)",
+              minWidth: "100px",
+              border: "none",
+            }}
+          >
+            <i className="fas fa-user-circle me-2"></i>Login
+          </button>
+        </Link>
       </div>
 
       {/* Mobile Toggle Button */}
       <div className="d-md-none">
         <button
           onClick={toggleMenu}
-          className="btn p-2 text-white"
-          style={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+          className="btn text-white p-2"
+          style={{ backgroundColor: "transparent", border: "none" }}
         >
           <i className={`fas ${isMenuOpen ? "fa-times" : "fa-bars"} fs-5`}></i>
         </button>
@@ -68,265 +76,104 @@ const App = () => {
 
   {/* Mobile Menu */}
   {isMenuOpen && (
-    <div className="d-md-none bg-dark border-top border-secondary p-3 mt-1">
-      <div className="d-flex flex-column gap-2">
-        <a href="#home" className="text-white text-decoration-none px-4 py-2 rounded d-flex align-items-center">
-          <i className="fas fa-home me-3"></i>Home
+    <div
+      className="d-md-none bg-dark bg-opacity-95 border-top border-secondary py-3 px-4"
+      style={{ transition: "all 0.3s ease" }}
+    >
+      <div className="d-flex flex-column gap-3">
+        <a href="#home" className="text-white text-decoration-none d-flex align-items-center">
+          <i className="fas fa-home me-2"></i> Home
         </a>
-        <a href="#features" className="text-white text-decoration-none px-4 py-2 rounded d-flex align-items-center">
-          <i className="fas fa-star me-3"></i>Features
+        <a href="#features" className="text-white text-decoration-none d-flex align-items-center">
+          <i className="fas fa-star me-2"></i> Features
         </a>
-        <a href="#pricing" className="text-white text-decoration-none px-4 py-2 rounded d-flex align-items-center">
-          <i className="fas fa-tag me-3"></i>Pricing
+        <a href="#pricing" className="text-white text-decoration-none d-flex align-items-center">
+          <i className="fas fa-tag me-2"></i> Pricing
         </a>
-        <a href="#contact" className="text-white text-decoration-none px-4 py-2 rounded d-flex align-items-center">
-          <i className="fas fa-envelope me-3"></i>Contact
+        <a href="#contact" className="text-white text-decoration-none d-flex align-items-center">
+          <i className="fas fa-envelope me-2"></i> Contact
         </a>
-        <button
-          className="btn text-white fw-medium mt-3 d-flex align-items-center justify-content-center"
-          style={{
-            background: "linear-gradient(to right, #2563eb, #1d4ed8)",
-            border: "none",
-          }}
-        >
-          <i className="fas fa-user-circle me-2"></i>Login
-        </button>
+        <Link to="/superadmin/dashboard">
+          <button
+            className="btn text-white w-100 mt-3"
+            style={{
+              background: "linear-gradient(to right, #60a5fa, #3b82f6)",
+              border: "none",
+            }}
+          >
+            <i className="fas fa-user-circle me-2"></i>Login
+          </button>
+        </Link>
       </div>
     </div>
   )}
 </nav>
 
 
+
       {/* Hero Section */}
-      <section 
-        id="home" 
-        className="pt-5 min-vh-100 position-relative overflow-hidden"
-        style={{ paddingTop: "80px" }}
-      >
-        <div
-          className="position-absolute top-0 start-0 w-100 h-100 bg-cover bg-center bg-cover"
-          style={{
-            backgroundImage: `url('https://readdy.ai/api/search-image?query=modern%20abstract%203D%20geometric%20shapes%20and%20flowing%20lines%20creating%20a%20dynamic%20composition%2C%20deep%20blue%20and%20white%20gradient%20background%20with%20glowing%20elements%2C%20professional%20tech%20visualization%20with%20subtle%20depth%20and%20dimension&width=1440&height=800&seq=hero-bg-003&orientation=landscape')`,
-          }}
-        >
-          <div 
-            className="position-absolute top-0 start-0 w-100 h-100"
-            style={{ 
-              background: "linear-gradient(to right, rgba(30, 58, 138, 0.95), rgba(30, 64, 175, 0.8), transparent)"
-            }}
-          ></div>
+    <section 
+  className="position-relative d-flex align-items-center text-white min-vh-100" 
+  style={{
+    backgroundImage: "url('https://readdy.ai/api/search-image?query=modern%20abstract%203D%20geometric%20shapes%20and%20flowing%20lines%20creating%20a%20dynamic%20composition%2C%20deep%20blue%20and%20white%20gradient%20background%20with%20glowing%20elements%2C%20professional%20tech%20visualization%20with%20subtle%20depth%20and%20dimension&width=1440&height=800&seq=hero-bg-003&orientation=landscape')",
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    paddingTop: '80px'
+  }}
+>
+  {/* Gradient Overlay */}
+  <div 
+    className="position-absolute top-0 start-0 w-100 h-100" 
+    style={{ background: 'linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(30, 64, 175, 0.8))' }}
+  ></div>
+
+  {/* Content */}
+  <div className="container position-relative z-1">
+    <div className="row align-items-center">
+      <div className="col-lg-7">
+        <div className="mb-3">
+          <span className="badge bg-info bg-opacity-25 text-info fs-6 px-3 py-2 rounded-pill">
+            🚀 Welcome to CentralLogix
+          </span>
         </div>
-        
-        <div className="container position-relative py-5">
-          <div className="max-w-3xl">
-            <div 
-              className="d-inline-block mb-4 px-4 py-2 rounded-button border"
-              style={{
-                backgroundColor: "rgba(59, 130, 246, 0.1)",
-                backdropFilter: "blur(10px)",
-                borderColor: "rgba(191, 219, 254, 0.2)"
-              }}
-            >
-              <span 
-                className="fw-semibold"
-                style={{
-                  background: "linear-gradient(to right, #bfdbfe, #eff6ff, #bfdbfe)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}
-              >
-                Welcome to CentralLogix
-              </span>
-            </div>
-            
-            <h1 className="text-white fs-1 fw-bold mb-4 lh-base">
-              Transform Your{" "}
-              <span 
-                style={{
-                  background: "linear-gradient(to right, #bfdbfe, #eff6ff, #bfdbfe)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}
-              >
-                E-commerce
-              </span>{" "}
-              Operations
-            </h1>
-            
-            <p className="text-blue-100 fs-5 mb-4 lh-lg" style={{ maxWidth: "36rem" }}>
-              CentralLogix empowers businesses to streamline operations, boost
-              efficiency, and drive growth with our comprehensive management
-              platform.
-            </p>
-            
-            <div className="row g-3 mb-4">
-              <div className="col-6 col-md-3">
-                <div 
-                  className="p-3 rounded-button hover-bg-white-10 transition-all border"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    backdropFilter: "blur(10px)",
-                    borderColor: "rgba(191, 219, 254, 0.1)"
-                  }}
-                >
-                  <div className="d-flex align-items-center">
-                    <div 
-                      className="rounded-button me-3 d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)"
-                      }}
-                    >
-                      <i className="fas fa-chart-line text-blue-200"></i>
-                    </div>
-                    <span className="text-blue-100">85% More Efficient</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="col-6 col-md-3">
-                <div 
-                  className="p-3 rounded-button hover-bg-white-10 transition-all border"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    backdropFilter: "blur(10px)",
-                    borderColor: "rgba(191, 219, 254, 0.1)"
-                  }}
-                >
-                  <div className="d-flex align-items-center">
-                    <div 
-                      className="rounded-button me-3 d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)"
-                      }}
-                    >
-                      <i className="fas fa-clock text-blue-200"></i>
-                    </div>
-                    <span className="text-blue-100">24/7 Management</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="col-6 col-md-3">
-                <div 
-                  className="p-3 rounded-button hover-bg-white-10 transition-all border"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    backdropFilter: "blur(10px)",
-                    borderColor: "rgba(191, 219, 254, 0.1)"
-                  }}
-                >
-                  <div className="d-flex align-items-center">
-                    <div 
-                      className="rounded-button me-3 d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)"
-                      }}
-                    >
-                      <i className="fas fa-chart-bar text-blue-200"></i>
-                    </div>
-                    <span className="text-blue-100">Real-time Analytics</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="col-6 col-md-3">
-                <div 
-                  className="p-3 rounded-button hover-bg-white-10 transition-all border"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    backdropFilter: "blur(10px)",
-                    borderColor: "rgba(191, 219, 254, 0.1)"
-                  }}
-                >
-                  <div className="d-flex align-items-center">
-                    <div 
-                      className="rounded-button me-3 d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)"
-                      }}
-                    >
-                      <i className="fas fa-network-wired text-blue-200"></i>
-                    </div>
-                    <span className="text-blue-100">Multi-platform</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="d-flex flex-column flex-sm-row gap-3 mb-4">
-              <button 
-                className="text-white px-4 py-3 fw-semibold rounded-button cursor-pointer shadow hover-scale transition-all border"
-                style={{
-                  background: "linear-gradient(to right, #60a5fa, #3b82f6)",
-                  borderColor: "rgba(147, 197, 253, 0.2)"
-                }}
-              >
-                <i className="fas fa-rocket me-2"></i>
-                Get Started Free
-              </button>
-              
-              <button 
-                className="px-4 py-3 fw-semibold rounded-button cursor-pointer transition-all border"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  backdropFilter: "blur(10px)",
-                  borderColor: "rgba(191, 219, 254, 0.2)",
-                  color: "#bfdbfe"
-                }}
-              >
-                <i className="fas fa-play-circle me-2"></i>
-                Watch Demo
-              </button>
-            </div>
-            
-            <div className="d-flex flex-wrap align-items-center justify-content-start gap-3">
-              <div 
-                className="d-flex align-items-center px-3 py-2 rounded-button border"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  backdropFilter: "blur(10px)",
-                  borderColor: "rgba(191, 219, 254, 0.1)"
-                }}
-              >
-                <i className="fas fa-star text-warning"></i>
-                <span className="ms-2 text-blue-100">4.9/5 Rating</span>
-              </div>
-              
-              <div 
-                className="d-flex align-items-center px-3 py-2 rounded-button border"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  backdropFilter: "blur(10px)",
-                  borderColor: "rgba(191, 219, 254, 0.1)"
-                }}
-              >
-                <i className="fas fa-users text-blue-200"></i>
-                <span className="ms-2 text-blue-100">10,000+ Users</span>
-              </div>
-              
-              <div 
-                className="d-flex align-items-center px-3 py-2 rounded-button border"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  backdropFilter: "blur(10px)",
-                  borderColor: "rgba(191, 219, 254, 0.1)"
-                }}
-              >
-                <i className="fas fa-shield-alt text-blue-200"></i>
-                <span className="ms-2 text-blue-100">Enterprise Security</span>
-              </div>
-            </div>
+
+        <h1 className="display-4 fw-bold mb-3 lh-sm">
+          Power Your <span className="text-info">Business Growth</span> with Smart Automation
+        </h1>
+
+        <p className="lead text-light opacity-75 mb-4">
+          CentralLogix helps you manage operations, track analytics, and scale efficiently—all in one powerful platform.
+        </p>
+
+        <div className="d-flex flex-column flex-sm-row gap-3 mb-5">
+          <button className="btn btn-primary btn-lg px-4">
+            <i className="fas fa-play me-2"></i> Get Started
+          </button>
+          <button className="btn btn-outline-light btn-lg px-4">
+            <i className="fas fa-eye me-2"></i> Live Demo
+          </button>
+        </div>
+
+        {/* Feature Tags */}
+        <div className="d-flex flex-wrap gap-3">
+          <div className="d-flex align-items-center px-3 py-2 bg-white bg-opacity-10 rounded">
+            <i className="fas fa-chart-line text-warning me-2"></i>
+            <span>Efficiency Boost</span>
+          </div>
+          <div className="d-flex align-items-center px-3 py-2 bg-white bg-opacity-10 rounded">
+            <i className="fas fa-shield-alt text-info me-2"></i>
+            <span>Secure Platform</span>
+          </div>
+          <div className="d-flex align-items-center px-3 py-2 bg-white bg-opacity-10 rounded">
+            <i className="fas fa-users text-success me-2"></i>
+            <span>10K+ Users</span>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Features Section */}
       <section id="features" className="py-5 bg-light">
@@ -778,162 +625,89 @@ const App = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark text-white py-5">
-        <div className="container">
-          <div className="row g-4">
-            {/* Company Info */}
-            <div className="col-12 col-md-6">
-              <div className="d-flex align-items-center mb-3">
-                <div 
-                  className="rounded-button me-3"
-                  style={{ 
-                    width: "32px",
-                    height: "32px",
-                    background: "linear-gradient(to right, #2563eb, #1d4ed8)"
-                  }}
-                ></div>
-                <h3 className="text-white fs-3 fw-bold m-0">CentralLogix</h3>
-              </div>
-              <p className="text-gray-400 mb-4" style={{ maxWidth: "36rem" }}>
-                Empowering e-commerce businesses with advanced operations
-                management tools for sustainable growth and success.
-              </p>
-              <div className="d-flex gap-3">
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white transition-colors"
-                >
-                  <i className="fab fa-twitter fs-4"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white transition-colors"
-                >
-                  <i className="fab fa-facebook fs-4"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white transition-colors"
-                >
-                  <i className="fab fa-linkedin fs-4"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white transition-colors"
-                >
-                  <i className="fab fa-instagram fs-4"></i>
-                </a>
-              </div>
-            </div>
-            
-            {/* Quick Links */}
-            <div className="col-6 col-md-3">
-              <h4 className="fs-5 fw-semibold mb-3">Quick Links</h4>
-              <ul className="list-unstyled d-flex flex-column gap-2">
-                <li>
-                  <a
-                    href="#features"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#pricing"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    About Us
-                  </a>
-                </li>
-              </ul>
-            </div>
-            
-            {/* Support */}
-            <div className="col-6 col-md-3">
-              <h4 className="fs-5 fw-semibold mb-3">Support</h4>
-              <ul className="list-unstyled d-flex flex-column gap-2">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    API Reference
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                  >
-                    Status
-                  </a>
-                </li>
-              </ul>
-            </div>
+<footer
+  className="pt-5 pb-4 text-white"
+  style={{
+    background: "linear-gradient(to right, #0f172a, #1e3a8a)",
+  }}
+>
+  <div className="container">
+    <div className="row g-4">
+      {/* Company Info */}
+      <div className="col-12 col-md-6">
+        <div className="d-flex align-items-center mb-3">
+          <div
+            className="rounded-circle d-flex align-items-center justify-content-center me-3"
+            style={{
+              width: "36px",
+              height: "36px",
+              background: "linear-gradient(to right, #3b82f6, #2563eb)",
+            }}
+          >
+            <i className="fas fa-cube text-white"></i>
           </div>
-          
-          <div className="border-top border-gray-800 mt-4 pt-4">
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
-              <div className="text-gray-400 mb-3 mb-md-0">
-                © 2025 CentralLogix. All rights reserved.
-              </div>
-              <div className="d-flex gap-4">
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                >
-                  Privacy Policy
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                >
-                  Terms of Service
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover-text-white text-decoration-none transition-colors"
-                >
-                  Cookie Policy
-                </a>
-              </div>
-            </div>
-          </div>
+          <h3 className="fs-4 fw-bold m-0 text-white">SELLER PRO</h3>
         </div>
-      </footer>
+        <p className="text-white-50 mb-4" style={{ maxWidth: "30rem" }}>
+          Empowering e-commerce businesses with smart, scalable solutions to
+          streamline operations and drive growth.
+        </p>
+
+        <div className="d-flex gap-3">
+          <a href="#" className="text-white text-decoration-none">
+            <i className="fab fa-twitter fs-4"></i>
+          </a>
+          <a href="#" className="text-white text-decoration-none">
+            <i className="fab fa-facebook fs-4"></i>
+          </a>
+          <a href="#" className="text-white text-decoration-none">
+            <i className="fab fa-linkedin fs-4"></i>
+          </a>
+          <a href="#" className="text-white text-decoration-none">
+            <i className="fab fa-instagram fs-4"></i>
+          </a>
+        </div>
+      </div>
+
+      {/* Quick Links */}
+      <div className="col-6 col-md-3">
+        <h5 className="fw-semibold mb-3 text-info">Quick Links</h5>
+        <ul className="list-unstyled">
+          <li><a href="#features" className="text-white-50 text-decoration-none">Features</a></li>
+          <li><a href="#pricing" className="text-white-50 text-decoration-none">Pricing</a></li>
+          <li><a href="#contact" className="text-white-50 text-decoration-none">Contact</a></li>
+          <li><a href="#" className="text-white-50 text-decoration-none">About Us</a></li>
+        </ul>
+      </div>
+
+      {/* Support */}
+      <div className="col-6 col-md-3">
+        <h5 className="fw-semibold mb-3 text-info">Support</h5>
+        <ul className="list-unstyled">
+          <li><a href="#" className="text-white-50 text-decoration-none">Help Center</a></li>
+          <li><a href="#" className="text-white-50 text-decoration-none">Documentation</a></li>
+          <li><a href="#" className="text-white-50 text-decoration-none">API Reference</a></li>
+          <li><a href="#" className="text-white-50 text-decoration-none">System Status</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr className="border-light border-opacity-25 mt-5" />
+
+    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p className="text-white-50 mb-2 mb-md-0">
+        © 2025 CentralLogix. All rights reserved.
+      </p>
+      <div className="d-flex gap-4">
+        <a href="#" className="text-white-50 text-decoration-none">Privacy Policy</a>
+        <a href="#" className="text-white-50 text-decoration-none">Terms of Service</a>
+        <a href="#" className="text-white-50 text-decoration-none">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
 
       <style jsx>{`
         .rounded-button {

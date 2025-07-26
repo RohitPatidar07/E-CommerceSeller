@@ -12,6 +12,7 @@ import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
 import Home from "./Component/Website/Home";
 import OrderManagement from "./Component/Superadmin/OrderManagement/OrderManagement";
 import UserManagement from "./Component/Superadmin/Usermanagement/UserManagement";
+import Login from "./Auth/Login";
 
 
 function App() {
@@ -33,14 +34,15 @@ function App() {
   const hideLayout =
     location.pathname === "/" ||
     location.pathname === "/signup" ||
-    location.pathname === "/forgot-password";
+    location.pathname === "/forgot-password"||
+    location.pathname === "/login";
 
   return (
     <>
       {hideLayout ? (
         <Routes>
-          {/* <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+           <Route path="/login" element={<Login />} />
+          {/*<Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
           <Route path="/" element={<Home />} />
