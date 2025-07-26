@@ -10,7 +10,7 @@ import Sidebar from "./Layout/Sidebar";
 import Settings from "./Component/Superadmin/Setting/Setting";
 import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
 import Home from "./Component/Website/Home";
-import OrderManagement from "./Component/Superadmin/OrderManagement/OrderManagement";
+import OrderManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
 import UserManagement from "./Component/Superadmin/Usermanagement/UserManagement";
 import Login from "./Auth/Login";
 import ActivityLogs from "./Component/Superadmin/ActivityLogs/ActivityLogs";
