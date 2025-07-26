@@ -1,26 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
-  faGear,
-  faChartBar,
-  faUsers,
-  faFileAlt,
-  faUserGear,
-  faChartLine,
-  faCalculator,
-  faAddressBook,
-  faCircleDot,
   faTachometerAlt,
   faUserCog,
   faClipboardList,
-  faBox,
-  faCreditCard,
   faServer,
-  faBrush,
+  faCreditCard,
+  faCog,
+  faUser,
+  faBoxOpen,
   faHistory,
-  faCog
+  faUsers,
+  faChartBar,
+  faCogs,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
@@ -28,6 +22,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState(null);
+  const [role, setRole] = useState("user");
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem("userRole");
+    if (storedRole) setRole(storedRole);
+  }, []);
 
   const toggleMenu = (menuName) => {
     setActiveMenu(activeMenu === menuName ? null : menuName);
@@ -40,75 +40,46 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     if (window.innerWidth <= 768) setCollapsed(true);
   };
 
-  const menus = [
-    {
-      name: "Dashboard",
-      icon: faTachometerAlt,
-      key: "dashboard",
-      path: "/dashboard"
-    },
-    {
-      name: "Admin Management",
-      icon: faUserCog,
-      key: "users",
-      path: "/usermanagement"
-    },
-    // {
-    //   name: "Plan Management",
-    //   icon: faBox,
-    //   key: "plan",
-    //   path: "/planmanagement"
-    // },
-      {
-      name: "Plan Packages",
-      icon: faClipboardList,
-      key: "plan",
-      path: "/planpackages"
-    },
-    {
-      name: "Plan Request",
-      icon: faServer,
-      key: "api",
-      path: "/planrequest"
-    },
-     {
-      name: "Payment",
-      icon: faCreditCard,
-      key: "api",
-      path: "/payment"
-    },
-
-    // {
-    //   name: "Order MAnagement",
-    //   icon: faBox,
-    //   key: "billing",
-    //   path: "/ordermanagement"
-    // },
-    // {
-    //   name: "Api Logs",
-    //   icon: faServer,
-    //   key: "api",
-    //   path: "/api"
-    // },
-    // {
-    //   name: "Branding CMS",
-    //   icon: faBrush,
-    //   key: "branding",
-    //   path: "/brandingcms"
-    // },
-    // {
-    //   name: "Activity Logs",
-    //   icon: faHistory,
-    //   key: "activity",
-    //   path: "/activitylogs"
-    // },
-    {
-      name: "Setting",
-      icon: faCog,
-      key: "system",
-      path: "/setting"
-    },
+  // --- Admin Menus ---
+  const adminMenus = [
+    { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
+    { name: "User Management", icon: faUserCog, path: "/admin/usermanagement" },
+    { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
+    { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
+    { name: "Reports", icon: faServer, path: "/admin/reports" },
+    { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
+    { name: "Setting", icon: faCog, path: "/admin/setting" },
   ];
+
+  // --- Super Admin Menus ---
+  const superAdminMenus = [
+    { name: "Dashboard", icon: faTachometerAlt, path: "/superadmin/dashboard" },
+    { name: "Plan Packages", icon: faUsers, path: "/superadmin/planpackages" },
+    { name: "Plan Request", icon: faUserCog, path: "/superadmin/planrequest" },
+    { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
+    { name: "Payment", icon: faCogs, path: "/superadmin/payment" },
+    { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
+  ];
+
+  // --- User Menus ---
+  const userMenus = [
+    { name: "Dashboard", icon: faTachometerAlt, path: "/user/dashboard" },
+    { name: "Shipping Setting", icon: faBoxOpen, path: "/user/shippingsetting" },
+    { name: "Channel Integrations", icon: faHistory, path: "/user/channelintergration" },
+    { name: "Order Management", icon: faUser, path: "/user/ordermanagement" },
+    { name: "Inventory Management", icon: faCog, path: "/user/inventorymanagement" },
+    { name: "Report", icon: faCog, path: "/user/reports" },
+    { name: "Billing And Plans ", icon: faCog, path: "/user/setting" },
+    { name: "Srtting", icon: faCreditCard, path: "/user/setting" },
+  ];
+
+  // Choose menu list based on role
+  const menus =
+    role === "admin"
+      ? adminMenus
+      : role === "superadmin"
+        ? superAdminMenus
+        : userMenus;
 
   return (
     <div className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
@@ -116,46 +87,13 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <ul className="menu">
           {menus.map((menu, index) => (
             <li key={index} className="menu-item">
-              {menu.path ? (
-                // Single menu item (no submenu)
-                <div
-                  className={`menu-link ${isActive(menu.path) ? "active" : ""}`}
-                  onClick={() => handleNavigate(menu.path)}
-                >
-                  <FontAwesomeIcon icon={menu.icon} className="menu-icon" />
-                  {!collapsed && <span className="menu-text">{menu.name}</span>}
-                </div>
-              ) : (
-                // Menu with subitems
-                <>
-                  <div
-                    className="menu-link"
-                    onClick={() => toggleMenu(menu.key)}
-                  >
-                    <FontAwesomeIcon icon={menu.icon} className="menu-icon" />
-                    {!collapsed && <span className="menu-text">{menu.name}</span>}
-                    {!collapsed && (
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className={`arrow-icon ${activeMenu === menu.key ? "rotate" : ""}`}
-                      />
-                    )}
-                  </div>
-                  {!collapsed && activeMenu === menu.key && (
-                    <ul className="submenu">
-                      {menu.subItems.map((sub, subIndex) => (
-                        <ul
-                          key={subIndex}
-                          className={`submenu-item ${isActive(sub.path) ? "active-sub" : ""}`}
-                          onClick={() => handleNavigate(sub.path)}
-                        >
-                          {sub.label}
-                        </ul>
-                      ))}
-                    </ul>
-                  )}
-                </>
-              )}
+              <div
+                className={`menu-link ${isActive(menu.path) ? "active" : ""}`}
+                onClick={() => handleNavigate(menu.path)}
+              >
+                <FontAwesomeIcon icon={menu.icon} className="menu-icon" />
+                {!collapsed && <span className="menu-text">{menu.name}</span>}
+              </div>
             </li>
           ))}
         </ul>

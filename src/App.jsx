@@ -2,8 +2,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { useState, useEffect } from "react";
 
-
-
 import Dashboard from "./Component/Superadmin/Dashboard/Dashboard";
 import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
@@ -18,7 +16,14 @@ import BrandingCMS from "./Component/Superadmin/BrandingCMS/BrandingCMS";
 import PlanManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
 import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
 import PlanRequest from "./Component/Superadmin/PlanRequest/PlanRequest";
-
+import Payments from "./Component/Superadmin/Payment/Payments";
+import AdminDashboard from "./Component/Admin/Dashboard/AdminDashboard";
+import Reports from "./Component/Admin/Reports/Reports";
+import OrderDetails from "./Component/Admin/OrderDetails/OrderDetails";
+import InventoryManagement from "./Component/UserDashboard/InventoryManagement/InventoryManagement";
+import PlansBilling from "./Component/Admin/PlansBilling/PlansBilling";
+import Setting from "./Component/Admin/Setting/Setting";
+import OrderManagements from "./Component/Admin/OrderManagements/OrderManagements";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -51,7 +56,6 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
           <Route path="/" element={<Home />} />
-
         </Routes>
       ) : (
         <>
@@ -65,17 +69,34 @@ function App() {
               className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""
                 }`}
             >
+
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/setting" element={<Settings />} />
-                <Route path="/planbilling" element={<PlanBilling />} />
-                <Route path="/ordermanagement" element={<OrderManagement />} />
-                <Route path="/usermanagement" element={<UserManagement />} />
-                <Route path="/activitylogs" element={<ActivityLogs />} />
-                <Route path="/brandingcms" element={<BrandingCMS />} />
-                <Route path="/planmanagement" element={<PlanManagement />} />
-                <Route path="/planpackages" element={<PlansPackages />} />
-                <Route path="/planrequest" element={<PlanRequest />} />
+
+                {/* superadmin routes */}
+                <Route path="/superadmin/dashboard" element={<Dashboard />} />
+                <Route path="/superadmin/setting" element={<Settings />} />
+                <Route path="/superadmin/planbilling" element={<PlanBilling />} />
+                <Route path="/superadmin/ordermanagement" element={<OrderManagement />} />
+                <Route path="/superadmin/usermanagement" element={<UserManagement />} />
+                <Route path="/superadmin/activitylogs" element={<ActivityLogs />} />
+                <Route path="/superadmin/brandingcms" element={<BrandingCMS />} />
+                <Route path="/superadmin/planmanagement" element={<PlanManagement />} />
+                <Route path="/superadmin/planpackages" element={<PlansPackages />} />
+                <Route path="/superadmin/planrequest" element={<PlanRequest />} />
+                <Route path="/superadmin/payment" element={<Payments />} />
+
+                {/* Amindmin routes */}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/reports" element={<Reports />} />
+                <Route path="/admin/orderdetails" element={<OrderDetails />} />
+                <Route path="/admin/ordermanagements" element={<OrderManagements />} />
+                 <Route path="/admin/plansbilling" element={<PlansBilling />} />
+                  <Route path="/admin/setting" element={<Setting />} />
+
+
+                {/* User routes */}
+                <Route path="/admin/inventorymanagement" element={<InventoryManagement />} />
+
 
               </Routes>
             </div>

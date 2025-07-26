@@ -65,6 +65,15 @@ const PlansPackages = () => {
     return defaultPlans;
   };
 
+  const getSortIcon = (column, sortBy, sortOrder) => {
+    if (sortBy !== column) return <i className="bi bi-arrow-down-up"></i>;
+    return sortOrder === 'asc' ? (
+      <i className="bi bi-arrow-up"></i>
+    ) : (
+      <i className="bi bi-arrow-down"></i>
+    );
+  };
+
   // Save data to localStorage
   const savePlansToStorage = (plansData) => {
     try {
@@ -83,7 +92,7 @@ const PlansPackages = () => {
   const [filterStatus, setFilterStatus] = useState('All');
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -167,21 +176,21 @@ const PlansPackages = () => {
   // Validate form
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Plan name is required';
     } else if (plans.some(p => p.name.toLowerCase() === formData.name.toLowerCase() && p.id !== editingPlan?.id)) {
       newErrors.name = 'Plan name must be unique';
     }
-    
+
     if (!formData.price || parseFloat(formData.price) <= 0) {
       newErrors.price = 'Price must be greater than 0';
     }
-    
+
     if (formData.descriptions.filter(desc => desc.trim()).length === 0) {
       newErrors.descriptions = 'At least one description is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -190,7 +199,7 @@ const PlansPackages = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors({ ...errors, [name]: '' });
@@ -202,7 +211,7 @@ const PlansPackages = () => {
     const updatedDescriptions = [...formData.descriptions];
     updatedDescriptions[index] = value;
     setFormData({ ...formData, descriptions: updatedDescriptions });
-    
+
     if (errors.descriptions) {
       setErrors({ ...errors, descriptions: '' });
     }
@@ -210,9 +219,9 @@ const PlansPackages = () => {
 
   // Add description field
   const addDescriptionField = () => {
-    setFormData({ 
-      ...formData, 
-      descriptions: [...formData.descriptions, ''] 
+    setFormData({
+      ...formData,
+      descriptions: [...formData.descriptions, '']
     });
   };
 
@@ -228,14 +237,14 @@ const PlansPackages = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     const currentDate = new Date().toISOString().split('T')[0];
     const filteredDescriptions = formData.descriptions.filter(desc => desc.trim());
-    
+
     if (editingPlan) {
       // Update existing plan
       const updatedPlan = {
@@ -247,8 +256,8 @@ const PlansPackages = () => {
         descriptions: filteredDescriptions,
         lastModified: currentDate
       };
-      
-      setPlans(plans.map(plan => 
+
+      setPlans(plans.map(plan =>
         plan.id === editingPlan.id ? updatedPlan : plan
       ));
     } else {
@@ -264,10 +273,10 @@ const PlansPackages = () => {
         createdAt: currentDate,
         lastModified: currentDate
       };
-      
+
       setPlans([...plans, newPlan]);
     }
-    
+
     setShowModal(false);
     resetForm();
   };
@@ -300,13 +309,13 @@ const PlansPackages = () => {
 
   // Toggle plan status
   const toggleStatus = (planId) => {
-    setPlans(plans.map(plan => 
-      plan.id === planId 
-        ? { 
-            ...plan, 
-            status: plan.status === 'Active' ? 'Inactive' : 'Active',
-            lastModified: new Date().toISOString().split('T')[0]
-          }
+    setPlans(plans.map(plan =>
+      plan.id === planId
+        ? {
+          ...plan,
+          status: plan.status === 'Active' ? 'Inactive' : 'Active',
+          lastModified: new Date().toISOString().split('T')[0]
+        }
         : plan
     ));
   };
@@ -314,27 +323,27 @@ const PlansPackages = () => {
   // Filter and sort plans
   const getFilteredAndSortedPlans = () => {
     let filtered = plans;
-    
+
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(plan =>
         plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        plan.descriptions.some(desc => 
+        plan.descriptions.some(desc =>
           desc.toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
     }
-    
+
     // Apply status filter
     if (filterStatus !== 'All') {
       filtered = filtered.filter(plan => plan.status === filterStatus);
     }
-    
+
     // Apply sorting
     filtered.sort((a, b) => {
       let aValue = a[sortBy];
       let bValue = b[sortBy];
-      
+
       if (sortBy === 'price') {
         aValue = parseFloat(aValue);
         bValue = parseFloat(bValue);
@@ -342,14 +351,14 @@ const PlansPackages = () => {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
       }
     });
-    
+
     return filtered;
   };
 
@@ -364,15 +373,8 @@ const PlansPackages = () => {
       setSortOrder('asc');
     }
   };
-
-  // Get sort icon
-  const getSortIcon = (field) => {
-    if (sortBy !== field) return '↕';
-    return sortOrder === 'asc' ? '↑' : '↓';
-  };
-
   return (
-    <>  
+    <>
       <div className="">
         <div className="">
           {/* Header */}
@@ -402,7 +404,7 @@ const PlansPackages = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="col-md-3">
                 <select
                   className="form-select"
@@ -460,39 +462,39 @@ const PlansPackages = () => {
             <table className="table table-hover mb-0">
               <thead className="table-light">
                 <tr>
-                  <th 
+                  <th
                     className="user-select-none cursor-pointer"
                     onClick={() => handleSort('name')}
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                   >
                     Plan Name {getSortIcon('name')}
                   </th>
-                  <th 
+                  <th
                     className="user-select-none cursor-pointer"
                     onClick={() => handleSort('price')}
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                   >
                     Price {getSortIcon('price')}
                   </th>
-                  <th 
+                  <th
                     className="user-select-none cursor-pointer"
                     onClick={() => handleSort('billingCycle')}
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                   >
                     Billing Cycle {getSortIcon('billingCycle')}
                   </th>
-                  <th 
+                  <th
                     className="user-select-none cursor-pointer"
                     onClick={() => handleSort('status')}
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                   >
                     Status {getSortIcon('status')}
                   </th>
                   <th>Descriptions</th>
-                  <th 
+                  <th
                     className="user-select-none cursor-pointer"
                     onClick={() => handleSort('subscribers')}
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                   >
                     Subscribers {getSortIcon('subscribers')}
                   </th>
@@ -520,11 +522,10 @@ const PlansPackages = () => {
                     </td>
                     <td>
                       <button
-                        className={`btn btn-sm ${
-                          plan.status === 'Active' 
-                            ? 'btn-outline-success' 
-                            : 'btn-outline-danger'
-                        }`}
+                        className={`btn btn-sm ${plan.status === 'Active'
+                          ? 'btn-outline-success'
+                          : 'btn-outline-danger'
+                          }`}
                         onClick={() => toggleStatus(plan.id)}
                       >
                         {plan.status}
@@ -554,13 +555,13 @@ const PlansPackages = () => {
                           className="btn btn-sm btn-outline-primary"
                           onClick={() => handleEdit(plan)}
                         >
-                         <i className="bi bi-pencil-square me-2"></i>
+                          <i className="bi bi-pencil-square me-2"></i>
                         </button>
                         <button
                           className="btn btn-sm btn-outline-danger"
                           onClick={() => handleDelete(plan)}
                         >
-                         <i className="bi bi-trash me-2"></i>
+                          <i className="bi bi-trash me-2"></i>
                         </button>
                       </div>
                     </td>
@@ -590,15 +591,15 @@ const PlansPackages = () => {
 
       {/* Add/Edit Plan Modal */}
       {showModal && (
-        <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-lg modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
                   {editingPlan ? 'Edit Plan' : 'Add New Plan'}
                 </h5>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-close"
                   onClick={() => {
                     setShowModal(false);
@@ -606,7 +607,7 @@ const PlansPackages = () => {
                   }}
                 ></button>
               </div>
-              
+
               <div className="modal-body">
                 {/* Plan Name */}
                 <div className="mb-3">
@@ -747,7 +748,7 @@ const PlansPackages = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="modal d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -755,8 +756,8 @@ const PlansPackages = () => {
                   <span className="me-2">⚠️</span>
                   Delete Plan
                 </h5>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-close"
                   onClick={() => {
                     setShowDeleteConfirm(false);
@@ -764,7 +765,7 @@ const PlansPackages = () => {
                   }}
                 ></button>
               </div>
-              
+
               <div className="modal-body">
                 <p className="mb-3">
                   Are you sure you want to delete the <strong>"{planToDelete?.name}"</strong> plan?
@@ -776,7 +777,7 @@ const PlansPackages = () => {
                   </small>
                 </div>
               </div>
-              
+
               <div className="modal-footer">
                 <button
                   type="button"

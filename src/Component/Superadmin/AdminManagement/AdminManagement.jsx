@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AdminManagement = () => {
   const [selectedAdmin, setSelectedAdmin] = useState(null);
@@ -7,43 +7,48 @@ const AdminManagement = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [showSuspendModal, setShowSuspendModal] = useState(false);
-  const [admins, setAdmins] = useState([
-    {
-      id: 'ADM-2024-001',
-      name: 'John Smith',
-      email: 'john.smith@company.com',
-      region: 'North America',
-      status: 'Active'
-    },
-    {
-      id: 'ADM-2024-002',
-      name: 'Sarah Johnson',
-      email: 'sarah.johnson@company.com',
-      region: 'Europe',
-      status: 'Active'
-    },
-    {
-      id: 'ADM-2024-003',
-      name: 'Mike Chen',
-      email: 'mike.chen@company.com',
-      region: 'Asia Pacific',
-      status: 'Suspended'
-    },
-    {
-      id: 'ADM-2024-004',
-      name: 'Emily Davis',
-      email: 'emily.davis@company.com',
-      region: 'Latin America',
-      status: 'Active'
-    },
-    {
-      id: 'ADM-2024-005',
-      name: 'Robert Wilson',
-      email: 'robert.wilson@company.com',
-      region: 'Middle East',
-      status: 'Inactive'
-    }
-  ]);
+  
+  // Initialize admins from localStorage or with default data
+  const [admins, setAdmins] = useState(() => {
+    const savedAdmins = localStorage.getItem('adminUsers');
+    return savedAdmins ? JSON.parse(savedAdmins) : [
+      {
+        id: 'ADM-2024-001',
+        name: 'John Smith',
+        email: 'john.smith@company.com',
+        region: 'North America',
+        status: 'Active'
+      },
+      {
+        id: 'ADM-2024-002',
+        name: 'Sarah Johnson',
+        email: 'sarah.johnson@company.com',
+        region: 'Europe',
+        status: 'Active'
+      },
+      {
+        id: 'ADM-2024-003',
+        name: 'Mike Chen',
+        email: 'mike.chen@company.com',
+        region: 'Asia Pacific',
+        status: 'Suspended'
+      },
+      {
+        id: 'ADM-2024-004',
+        name: 'Emily Davis',
+        email: 'emily.davis@company.com',
+        region: 'Latin America',
+        status: 'Active'
+      },
+      {
+        id: 'ADM-2024-005',
+        name: 'Robert Wilson',
+        email: 'robert.wilson@company.com',
+        region: 'Middle East',
+        status: 'Inactive'
+      }
+    ];
+  });
 
   // Form states
   const [newAdmin, setNewAdmin] = useState({
@@ -61,6 +66,11 @@ const AdminManagement = () => {
     confirmPassword: ''
   });
   const [suspendReason, setSuspendReason] = useState('');
+
+  // Save to localStorage whenever admins change
+  useEffect(() => {
+    localStorage.setItem('adminUsers', JSON.stringify(admins));
+  }, [admins]);
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -230,6 +240,7 @@ const AdminManagement = () => {
                           }}
                           className="btn btn-sm btn-outline-warning"
                           title="Suspend"
+                          disabled={admin.status === 'Suspended'}
                         >
                           <i className="fas fa-pause"></i>
                           <span className="d-none d-md-inline ms-1">Suspend</span>
@@ -294,66 +305,75 @@ const AdminManagement = () => {
       </div>
 
       {/* Create Admin Modal */}
-      <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Create New Admin"
+   <Modal
+  isOpen={showCreateModal}
+  onClose={() => setShowCreateModal(false)}
+  title="Create New Admin"
+>
+  <form onSubmit={handleCreateAdmin}>
+    <div className="mb-3">
+      <label className="form-label">Full Name*</label>
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Enter full name"
+        value={newAdmin.name}
+        onChange={(e) =>
+          setNewAdmin((prev) => ({ ...prev, name: e.target.value }))
+        }
+        required
+        maxLength={15} // Optional: Restrict to 15 letters
+      />
+    </div>
+
+    <div className="mb-3">
+      <label className="form-label">Email Address*</label>
+      <input
+        type="email"
+        className="form-control"
+        placeholder="Enter email address"
+        value={newAdmin.email}
+        onChange={(e) =>
+          setNewAdmin((prev) => ({ ...prev, email: e.target.value }))
+        }
+        required
+      />
+    </div>
+
+    <div className="mb-3">
+      <label className="form-label">Region*</label>
+      <select
+        className="form-select"
+        value={newAdmin.region}
+        onChange={(e) =>
+          setNewAdmin((prev) => ({ ...prev, region: e.target.value }))
+        }
+        required
       >
-        <form onSubmit={handleCreateAdmin}>
-          <div className="mb-3">
-            <label className="form-label">Full Name*</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter full name"
-              value={newAdmin.name}
-              onChange={(e) => setNewAdmin({...newAdmin, name: e.target.value})}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Email Address*</label>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Enter email address"
-              value={newAdmin.email}
-              onChange={(e) => setNewAdmin({...newAdmin, email: e.target.value})}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Region*</label>
-            <select 
-              className="form-select"
-              value={newAdmin.region}
-              onChange={(e) => setNewAdmin({...newAdmin, region: e.target.value})}
-              required
-            >
-              <option value="North America">North America</option>
-              <option value="Europe">Europe</option>
-              <option value="Asia Pacific">Asia Pacific</option>
-              <option value="Latin America">Latin America</option>
-              <option value="Middle East">Middle East</option>
-            </select>
-          </div>
-          <div className="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(false)}
-              className="btn btn-outline-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-            >
-              Create Admin
-            </button>
-          </div>
-        </form>
-      </Modal>
+        <option value="">-- Select Region --</option>
+        <option value="North America">North America</option>
+        <option value="Europe">Europe</option>
+        <option value="Asia Pacific">Asia Pacific</option>
+        <option value="Latin America">Latin America</option>
+        <option value="Middle East">Middle East</option>
+      </select>
+    </div>
+
+    <div className="d-flex justify-content-end gap-2 pt-2">
+      <button
+        type="button"
+        onClick={() => setShowCreateModal(false)}
+        className="btn btn-outline-secondary"
+      >
+        Cancel
+      </button>
+      <button type="submit" className="btn btn-primary">
+        Create Admin
+      </button>
+    </div>
+  </form>
+</Modal>
+
 
       {/* Edit Admin Modal */}
       <Modal
@@ -368,7 +388,7 @@ const AdminManagement = () => {
               type="text"
               className="form-control"
               value={editAdmin.name}
-              onChange={(e) => setEditAdmin({...editAdmin, name: e.target.value})}
+              onChange={(e) => setEditAdmin(prev => ({...prev, name: e.target.value}))}
               required
             />
           </div>
@@ -378,7 +398,7 @@ const AdminManagement = () => {
               type="email"
               className="form-control"
               value={editAdmin.email}
-              onChange={(e) => setEditAdmin({...editAdmin, email: e.target.value})}
+              onChange={(e) => setEditAdmin(prev => ({...prev, email: e.target.value}))}
               required
             />
           </div>
@@ -387,7 +407,7 @@ const AdminManagement = () => {
             <select
               className="form-select"
               value={editAdmin.region}
-              onChange={(e) => setEditAdmin({...editAdmin, region: e.target.value})}
+              onChange={(e) => setEditAdmin(prev => ({...prev, region: e.target.value}))}
               required
             >
               <option value="North America">North America</option>
@@ -463,7 +483,7 @@ const AdminManagement = () => {
                 className="form-control"
                 placeholder="Enter new password"
                 value={resetPassword.newPassword}
-                onChange={(e) => setResetPassword({...resetPassword, newPassword: e.target.value})}
+                onChange={(e) => setResetPassword(prev => ({...prev, newPassword: e.target.value}))}
                 required
               />
             </div>
@@ -474,7 +494,7 @@ const AdminManagement = () => {
                 className="form-control"
                 placeholder="Confirm new password"
                 value={resetPassword.confirmPassword}
-                onChange={(e) => setResetPassword({...resetPassword, confirmPassword: e.target.value})}
+                onChange={(e) => setResetPassword(prev => ({...prev, confirmPassword: e.target.value}))}
                 required
               />
             </div>
