@@ -7,7 +7,7 @@ import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
 import Settings from "./Component/Superadmin/Setting/Setting";
 import PlanBilling from "./Component/Superadmin/PlanBilling/PlanBilling";
-import Home from "./Component/Website/Home";
+
 import OrderManagement from "./Component/Superadmin/Planmanagement/PlanManagement";
 import UserManagement from "./Component/Superadmin/AdminManagement/AdminManagement";
 import Login from "./Auth/Login";
@@ -17,6 +17,12 @@ import PlanManagement from "./Component/Superadmin/Planmanagement/PlanManagement
 import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
 import PlanRequest from "./Component/Superadmin/PlanRequest/PlanRequest";
 import Payments from "./Component/Superadmin/Payment/Payments";
+import Features from "./Component/Website/Features";
+import Pricing from "./Component/Website/Pricing";
+import About from "./Component/Website/About";
+import Contact from "./Component/Website/Contact";
+import Blog from "./Component/Website/Blog";
+import Home from "./Component/Website/Home";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -38,17 +44,29 @@ function App() {
     location.pathname === "/" ||
     location.pathname === "/signup" ||
     location.pathname === "/forgot-password" ||
-    location.pathname === "/login";
-
+    location.pathname === "/login"||
+    location.pathname === "/features"||
+    location.pathname === "/pricing"||
+    location.pathname === "/about"||
+    location.pathname === "/blog"||
+    location.pathname === "/contact";
   return (
     <>
       {hideLayout ? (
+  
         <Routes>
           <Route path="/login" element={<Login />} />
           {/*<Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home/>} />
+          
+          <Route path="/features" element={<Features/>} />
+                  
+          <Route path="/pricing" element={<Pricing/>} />    
+          <Route path="/about" element={<About/>} />    
+          <Route path="/contact" element={<Contact/>} />
+          <Route path="/blog" element={<Blog/>} />
         </Routes>
       ) : (
         <>
