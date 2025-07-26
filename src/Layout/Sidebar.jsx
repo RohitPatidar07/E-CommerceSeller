@@ -54,7 +54,13 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       path: "/usermanagement"
     },
     {
-      name: "Plan Billing",
+      name: "Plan Management",
+      icon: faBox,
+      key: "plan",
+      path: "/planmanagement"
+    },
+      {
+      name: "Plan Packages",
       icon: faClipboardList,
       key: "plan",
       path: "/planbilling"
@@ -71,18 +77,18 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     //   key: "api",
     //   path: "/api"
     // },
-    {
-      name: "Branding CMS",
-      icon: faBrush,
-      key: "branding",
-      path: "/brandingcms"
-    },
-    {
-      name: "Activity Logs",
-      icon: faHistory,
-      key: "activity",
-      path: "/activitylogs"
-    },
+    // {
+    //   name: "Branding CMS",
+    //   icon: faBrush,
+    //   key: "branding",
+    //   path: "/brandingcms"
+    // },
+    // {
+    //   name: "Activity Logs",
+    //   icon: faHistory,
+    //   key: "activity",
+    //   path: "/activitylogs"
+    // },
     {
       name: "Setting",
       icon: faCog,
