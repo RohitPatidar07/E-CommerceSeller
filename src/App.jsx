@@ -30,6 +30,7 @@ import SystemAlerts from "./Component/Admin/SystemAlerts/SystemAlerts";
 import InventoryManagements from "./Component/Admin/InventoryManagements/InventoryManagements";
 import ReportsDashboard from "./Component/Admin/ReportsDashboard/ReportsDashboard";
 import ShippingSetting from "./Component/Admin/ShippingSetting/ShippingSetting";
+import DeliveryPartner from "./Component/Admin/DeliveryPartner/DeliveryPartner";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -102,7 +103,8 @@ function App() {
                 <Route path="/admin/channelintegration" element={<ChannelIntegration />} />
                 <Route path="/admin/systemalerts" element={<SystemAlerts />} />
                 <Route path="/admin/inventorymanagements" element={<InventoryManagements />} />
-                 <Route path="/admin/shippingsetting" element={<ShippingSetting />} />
+                <Route path="/admin/shippingsetting" element={<ShippingSetting />} />
+                 <Route path="/admin/deliverypartner" element={<DeliveryPartner />} />
 
 
                 {/* User routes */}

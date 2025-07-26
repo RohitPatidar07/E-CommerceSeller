@@ -43,15 +43,17 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Admin Menus ---
   const adminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
-    { name: "User Management", icon: faUserCog, path: "/admin/usermanagements" },
     { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
     { name: "Channel Integration", icon: faServer, path: "/admin/channelintegration" },
-    { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
-    { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
-    { name: "Shipping Setting", icon: faCog, path: "/admin/shippingsetting" },
     { name: "Reports", icon: faServer, path: "/admin/reportdashboard" },
-    { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
+    { name: "Delivery Partner", icon: faCog, path: "/admin/deliverypartner" },
     { name: "Setting", icon: faCog, path: "/admin/setting" },
+    
+    // { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
+    // { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
+    // { name: "Shipping Setting", icon: faCog, path: "/admin/shippingsetting" },
+    // { name: "User Management", icon: faUserCog, path: "/admin/usermanagements" },
+    // { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
   ];
 
   // --- Super Admin Menus ---
