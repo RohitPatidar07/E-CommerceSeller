@@ -18,12 +18,18 @@ import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
 import PlanRequest from "./Component/Superadmin/PlanRequest/PlanRequest";
 import Payments from "./Component/Superadmin/Payment/Payments";
 import AdminDashboard from "./Component/Admin/Dashboard/AdminDashboard";
-import Reports from "./Component/Admin/Reports/Reports";
+import Reports from "./Component/Superadmin/Setting/Reports/Reports";
 import OrderDetails from "./Component/Admin/OrderDetails/OrderDetails";
 import InventoryManagement from "./Component/UserDashboard/InventoryManagement/InventoryManagement";
 import PlansBilling from "./Component/Admin/PlansBilling/PlansBilling";
 import Setting from "./Component/Admin/Setting/Setting";
 import OrderManagements from "./Component/Admin/OrderManagements/OrderManagements";
+import UserManagements from "./Component/Admin/UserManagements/UserManagements";
+import ChannelIntegration from "./Component/Admin/ChannelIntegration/ChannelIntegration";
+import SystemAlerts from "./Component/Admin/SystemAlerts/SystemAlerts";
+import InventoryManagements from "./Component/Admin/InventoryManagements/InventoryManagements";
+import ReportsDashboard from "./Component/Admin/ReportsDashboard/ReportsDashboard";
+import ShippingSetting from "./Component/Admin/ShippingSetting/ShippingSetting";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -87,16 +93,21 @@ function App() {
 
                 {/* Amindmin routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/reports" element={<Reports />} />
+                <Route path="/admin/reportdashboard" element={<ReportsDashboard />} />
                 <Route path="/admin/orderdetails" element={<OrderDetails />} />
                 <Route path="/admin/ordermanagements" element={<OrderManagements />} />
-                 <Route path="/admin/plansbilling" element={<PlansBilling />} />
-                  <Route path="/admin/setting" element={<Setting />} />
+                <Route path="/admin/usermanagements" element={<UserManagements />} />
+                <Route path="/admin/plansbilling" element={<PlansBilling />} />
+                <Route path="/admin/setting" element={<Setting />} />
+                <Route path="/admin/channelintegration" element={<ChannelIntegration />} />
+                <Route path="/admin/systemalerts" element={<SystemAlerts />} />
+                <Route path="/admin/inventorymanagements" element={<InventoryManagements />} />
+                 <Route path="/admin/shippingsetting" element={<ShippingSetting />} />
 
 
                 {/* User routes */}
-                <Route path="/admin/inventorymanagement" element={<InventoryManagement />} />
-
+                <Route path="/user/inventorymanagement" element={<InventoryManagement />} />
+                <Route path="/user/reports" element={<Reports />} />
 
               </Routes>
             </div>

@@ -1,3 +1,6 @@
+// Converted React code using Bootstrap instead of Tailwind
+// Includes React Icons and uses Bootstrap components and utility classes
+
 import React, { useState } from 'react';
 import { FaEdit, FaTrash, FaSync, FaPlus, FaUpload, FaTimes, FaSearch, FaFilter, FaSort, FaExclamationTriangle, FaAmazon, FaStore } from 'react-icons/fa';
 import { SiEbay, SiShopify, SiEtsy, SiWalmart } from 'react-icons/si';
@@ -22,7 +25,7 @@ const getStatusClass = (status) => {
   }
 };
 
-const InventoryManagement = () => {
+const InventoryManagements = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -57,10 +60,10 @@ const InventoryManagement = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div className="">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2>Inventory Management</h2>
+          <h2 className='h3 fw-bold text-dark mb-2'>Inventory Management</h2>
           <p className="text-muted">Manage your products and sync across all channels</p>
         </div>
         <div className="d-flex gap-2">
@@ -156,4 +159,4 @@ const InventoryManagement = () => {
   );
 };
 
-export default InventoryManagement;
+export default InventoryManagements;
