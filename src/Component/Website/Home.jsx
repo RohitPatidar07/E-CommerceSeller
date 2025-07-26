@@ -47,7 +47,7 @@ const App = () => {
 
       {/* Desktop Login Button */}
       <div className="d-none d-md-block">
-        <Link to="/superadmin/dashboard">
+        <Link to="/login">
           <button
             className="btn text-white px-4 py-2 small fw-medium shadow"
             style={{
@@ -59,17 +59,6 @@ const App = () => {
             <i className="fas fa-user-circle me-2"></i>Login
           </button>
         </Link>
-       <Link to="/dashboard">
-        <button
-          className="btn text-white px-4 py-2 small fw-medium shadow"
-          style={{
-            background: "linear-gradient(to right, #2563eb, #1d4ed8)",
-            minWidth: "100px",
-          }}
-        >
-          <i className="fas fa-user-circle me-2"></i>Login
-        </button>
-       </Link>
       </div>
 
       {/* Mobile Toggle Button */}
@@ -104,7 +93,7 @@ const App = () => {
         <a href="#contact" className="text-white text-decoration-none d-flex align-items-center">
           <i className="fas fa-envelope me-2"></i> Contact
         </a>
-        <Link to="/superadmin/dashboard">
+        <Link to="dashboard">
           <button
             className="btn text-white w-100 mt-3"
             style={{
