@@ -1,7 +1,9 @@
+// Converted version of the Tailwind-based code using React + Bootstrap + React Icons + Recharts-compatible layout
+
 import React, { useState } from 'react';
 import { FaDownload, FaCheck, FaTimes, FaPrint } from 'react-icons/fa';
 
-const BillingandPlans = () => {
+const UserPlanBilling = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -239,4 +241,4 @@ const BillingandPlans = () => {
   );
 };
 
-export default BillingandPlans;
+export default UserPlanBilling;
