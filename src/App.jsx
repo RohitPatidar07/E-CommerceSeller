@@ -39,14 +39,14 @@ function App() {
   const hideLayout =
     location.pathname === "/" ||
     location.pathname === "/signup" ||
-    location.pathname === "/forgot-password"||
+    location.pathname === "/forgot-password" ||
     location.pathname === "/login";
 
   return (
     <>
       {hideLayout ? (
         <Routes>
-           <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           {/*<Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
@@ -62,21 +62,20 @@ function App() {
               setCollapsed={setIsSidebarCollapsed}
             />
             <div
-              className={`right-side-content ${
-                isSidebarCollapsed ? "collapsed" : ""
-              }`}
+              className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""
+                }`}
             >
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
-                 <Route path="/setting" element={<Settings />} />
-                   <Route path="/planbilling" element={<PlanBilling />} />
-                    <Route path="/ordermanagement" element={<OrderManagement />} />
-                     <Route path="/usermanagement" element={<UserManagement />} />
-                       <Route path="/activitylogs" element={<ActivityLogs />} />
-                         <Route path="/brandingcms" element={<BrandingCMS />} />
-                           <Route path="/planmanagement" element={<PlanManagement />} />
-                            <Route path="/planpackages" element={<PlansPackages />} />
-                             <Route path="/planrequest" element={<PlanRequest />} />
+                <Route path="/setting" element={<Settings />} />
+                <Route path="/planbilling" element={<PlanBilling />} />
+                <Route path="/ordermanagement" element={<OrderManagement />} />
+                <Route path="/usermanagement" element={<UserManagement />} />
+                <Route path="/activitylogs" element={<ActivityLogs />} />
+                <Route path="/brandingcms" element={<BrandingCMS />} />
+                <Route path="/planmanagement" element={<PlanManagement />} />
+                <Route path="/planpackages" element={<PlansPackages />} />
+                <Route path="/planrequest" element={<PlanRequest />} />
 
               </Routes>
             </div>
