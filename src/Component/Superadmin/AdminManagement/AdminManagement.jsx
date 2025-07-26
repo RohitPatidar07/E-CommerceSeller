@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UserManagement = () => {
+const AdminManagement = () => {
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -165,7 +165,7 @@ const UserManagement = () => {
         <div className="mb-3 mb-md-4">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
             <div className="mb-3 mb-md-0">
-              <h1 className="h2 mb-1 mb-md-2">Users Management</h1>
+              <h1 className="h2 mb-1 mb-md-2">Admin Management</h1>
               <p className="text-muted mb-0">Manage admin users, their permissions, and account status across different regions.</p>
             </div>
             <button
@@ -541,4 +541,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default AdminManagement;

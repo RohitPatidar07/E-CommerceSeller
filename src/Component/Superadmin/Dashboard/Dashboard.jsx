@@ -3,16 +3,19 @@ import * as echarts from 'echarts';
 
 const Dashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('7 Days');
-  const [chartInstance, setChartInstance] = useState(null);
+  const [mainChartInstance, setMainChartInstance] = useState(null);
+  const [growthChartInstance, setGrowthChartInstance] = useState(null);
+  const [companyChartInstance, setCompanyChartInstance] = useState(null);
+  const [revenueChartInstance, setRevenueChartInstance] = useState(null);
 
-  // Initialize chart
+  // Initialize main chart
   useEffect(() => {
     const chartDom = document.getElementById('main-chart');
     if (chartDom) {
       const myChart = echarts.init(chartDom);
-      setChartInstance(myChart);
+      setMainChartInstance(myChart);
 
-      const option = getChartOption(selectedPeriod);
+      const option = getMainChartOption(selectedPeriod);
       myChart.setOption(option);
 
       const handleResize = () => {
@@ -28,15 +31,57 @@ const Dashboard = () => {
     }
   }, [selectedPeriod]);
 
-  // Update chart when period changes
+  // Initialize additional charts
   useEffect(() => {
-    if (chartInstance) {
-      const option = getChartOption(selectedPeriod);
-      chartInstance.setOption(option);
+    // Total Growth Chart
+    const growthChartDom = document.getElementById('growth-chart');
+    if (growthChartDom) {
+      const chart = echarts.init(growthChartDom);
+      setGrowthChartInstance(chart);
+      chart.setOption(getGrowthChartOption());
     }
-  }, [selectedPeriod, chartInstance]);
 
-  const getChartOption = (period) => {
+    // Company Signup Chart
+    const companyChartDom = document.getElementById('company-chart');
+    if (companyChartDom) {
+      const chart = echarts.init(companyChartDom);
+      setCompanyChartInstance(chart);
+      chart.setOption(getCompanyChartOption());
+    }
+
+    // Revenue Trends Chart
+    const revenueChartDom = document.getElementById('revenue-chart');
+    if (revenueChartDom) {
+      const chart = echarts.init(revenueChartDom);
+      setRevenueChartInstance(chart);
+      chart.setOption(getRevenueChartOption());
+    }
+
+    const handleResize = () => {
+      if (growthChartInstance) growthChartInstance.resize();
+      if (companyChartInstance) companyChartInstance.resize();
+      if (revenueChartInstance) revenueChartInstance.resize();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (growthChartInstance) growthChartInstance.dispose();
+      if (companyChartInstance) companyChartInstance.dispose();
+      if (revenueChartInstance) revenueChartInstance.dispose();
+    };
+  }, []);
+
+  // Update main chart when period changes
+  useEffect(() => {
+    if (mainChartInstance) {
+      const option = getMainChartOption(selectedPeriod);
+      mainChartInstance.setOption(option);
+    }
+  }, [selectedPeriod, mainChartInstance]);
+
+  const getMainChartOption = (period) => {
     // This is a simplified version - you would adjust data based on selected period
     let xAxisData, userData, revenueData;
     
@@ -107,6 +152,238 @@ const Dashboard = () => {
           data: revenueData,
           lineStyle: { color: '#3b82f6', width: 3 },
           itemStyle: { color: '#3b82f6' }
+        }
+      ]
+    };
+  };
+
+  const getGrowthChartOption = () => {
+    return {
+      title: {
+        text: 'Total Growth',
+        left: 'center',
+        textStyle: {
+          fontSize: 14,
+          fontWeight: 'bold'
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        axisLabel: {
+          rotate: 45
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Growth (%)'
+      },
+      series: [{
+        name: 'Growth',
+        type: 'line',
+        smooth: true,
+        data: [5.2, 8.1, 12.4, 15.3, 18.7, 22.5, 25.8, 28.3, 32.1, 35.6, 38.9, 42.5],
+        itemStyle: {
+          color: '#8b5cf6'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(139, 92, 246, 0.5)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(139, 92, 246, 0.1)'
+            }
+          ])
+        }
+      }]
+    };
+  };
+
+  const getCompanyChartOption = () => {
+    return {
+      title: {
+        text: 'Company Signups',
+        left: 'center',
+        textStyle: {
+          fontSize: 14,
+          fontWeight: 'bold'
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: ['Q1', 'Q2', 'Q3', 'Q4'],
+        axisLabel: {
+          rotate: 45
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Companies'
+      },
+      series: [{
+        name: 'New Companies',
+        type: 'bar',
+        data: [45, 78, 92, 120],
+        itemStyle: {
+          color: function(params) {
+            const colorList = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+            return colorList[params.dataIndex];
+          }
+        }
+      }]
+    };
+  };
+
+  const getRevenueChartOption = () => {
+    return {
+      title: {
+        text: 'Revenue Trends',
+        left: 'center',
+        textStyle: {
+          fontSize: 14,
+          fontWeight: 'bold'
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      legend: {
+        data: ['Recurring', 'One-time', 'Services'],
+        bottom: 0
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '15%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: 'Revenue ($)'
+        }
+      ],
+      series: [
+        {
+          name: 'Recurring',
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          lineStyle: {
+            width: 0
+          },
+          showSymbol: false,
+          areaStyle: {
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(16, 185, 129, 0.8)'
+              },
+              {
+                offset: 1,
+                color: 'rgba(16, 185, 129, 0.1)'
+              }
+            ])
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [14000, 18200, 19100, 23400, 29000, 33000, 41000]
+        },
+        {
+          name: 'One-time',
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          lineStyle: {
+            width: 0
+          },
+          showSymbol: false,
+          areaStyle: {
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(59, 130, 246, 0.8)'
+              },
+              {
+                offset: 1,
+                color: 'rgba(59, 130, 246, 0.1)'
+              }
+            ])
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [3000, 5200, 11000, 13000, 14000, 18000, 21000]
+        },
+        {
+          name: 'Services',
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          lineStyle: {
+            width: 0
+          },
+          showSymbol: false,
+          areaStyle: {
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(245, 158, 11, 0.8)'
+              },
+              {
+                offset: 1,
+                color: 'rgba(245, 158, 11, 0.1)'
+              }
+            ])
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [5000, 8000, 9000, 10000, 12500, 15000, 18000]
         }
       ]
     };
@@ -247,6 +524,36 @@ const Dashboard = () => {
             </div>
             <div className="chart-container" style={{ height: '400px' }}>
               <div id="main-chart" className="w-100 h-100"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Charts Row */}
+        <div className="row mb-4">
+          {/* Total Growth Chart */}
+          <div className="col-md-4 mb-4 mb-md-0">
+            <div className="card shadow-sm h-100">
+              <div className="card-body">
+                <div id="growth-chart" style={{ height: '300px' }}></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Company Signup Chart */}
+          <div className="col-md-4 mb-4 mb-md-0">
+            <div className="card shadow-sm h-100">
+              <div className="card-body">
+                <div id="company-chart" style={{ height: '300px' }}></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Revenue Trends Chart */}
+          <div className="col-md-4">
+            <div className="card shadow-sm h-100">
+              <div className="card-body">
+                <div id="revenue-chart" style={{ height: '300px' }}></div>
+              </div>
             </div>
           </div>
         </div>

@@ -33,12 +33,12 @@ const plansData = [
 
 const PlanManagement = () => {
   return (
-    <div className="container mt-5">
+    <div className="">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Plans Management</h2>
-        <button className="btn btn-primary">
+        {/* <button className="btn btn-primary">
           + Create New Plan
-        </button>
+        </button> */}
       </div>
       <p className="text-muted">
         Manage user plans, track subscriptions, and update plan details.
@@ -48,8 +48,8 @@ const PlanManagement = () => {
         <thead className="table-light">
           <tr>
             <th>Plan ID</th>
-            <th>User</th>
-            <th>Email</th>
+            {/* <th>User</th>
+            <th>Email</th> */}
             <th>Plan Name</th>
             <th>Plan Type</th>
             <th>Start Date</th>
@@ -61,8 +61,8 @@ const PlanManagement = () => {
           {plansData.map((plan, index) => (
             <tr key={index}>
               <td><strong>{plan.planId}</strong></td>
-              <td>{plan.user}</td>
-              <td>{plan.email}</td>
+              {/* <td>{plan.user}</td>
+              <td>{plan.email}</td> */}
               <td>{plan.planName}</td>
               <td>{plan.planType}</td>
               <td>{plan.startDate}</td>
@@ -75,10 +75,12 @@ const PlanManagement = () => {
               </td>
               <td>
                 <button className="btn btn-outline-primary btn-sm me-2">
-                  ✏️ Edit
+                   <i className="fas fa-edit me-1"></i>
+                  Edit
                 </button>
                 <button className="btn btn-outline-danger btn-sm">
-                  🗑 Delete
+                   <i className="fas fa-trash me-1"></i>
+                  Delete
                 </button>
               </td>
             </tr>
