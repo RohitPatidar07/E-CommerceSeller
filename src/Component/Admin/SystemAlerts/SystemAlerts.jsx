@@ -50,8 +50,8 @@ const SystemAlerts = () => {
   const currentAlerts = alertsData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <Container className="py-4">
-      <h2 className="mb-3">System Alerts</h2>
+    <div className="">
+      <h1 className="h3 fw-bold text-dark mb-2">System Alerts</h1>
       <p className="text-muted">Monitor and manage system alerts and error notifications</p>
 
       <Row className="my-4">
@@ -143,7 +143,7 @@ const SystemAlerts = () => {
           <Button variant="primary" onClick={() => setIsModalOpen(false)}>Create Alert</Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </div>
   );
 };
 

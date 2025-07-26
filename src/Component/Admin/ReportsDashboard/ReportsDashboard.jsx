@@ -51,53 +51,53 @@ const ReportsDashboard = () => {
   ];
 
   return (
-    <Container fluid className="py-4 px-5 bg-light">
+    <Container fluid className="">
       <header className="mb-4 border-bottom pb-3">
-        <h1 className="h3">Reports</h1>
+        <h1 className="h3 fw-bold text-dark mb-2">Reports</h1>
         <p className="text-muted">Here's what's happening with your business today.</p>
       </header>
 
       <Row className="mb-3">
-     
-<Col className="d-flex flex-wrap gap-2">
-  <DropdownButton
-    variant="outline-secondary"
-    title={<><FaCalendarAlt className="me-2" />{selectedDateRange}</>}
-    className="me-2"
-  >
-    {['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'Custom Range'].map(option => (
-      <Dropdown.Item key={option} onClick={() => setSelectedDateRange(option)}>
-        {option}
-      </Dropdown.Item>
-    ))}
-  </DropdownButton>
 
-  <DropdownButton
-    variant="outline-secondary"
-    title={<><FaLayerGroup className="me-2" />{selectedPlanType}</>}
-    className="me-2"
-  >
-    {['All Plans', 'Basic Plan', 'Premium Plan', 'Enterprise'].map(option => (
-      <Dropdown.Item key={option} onClick={() => setSelectedPlanType(option)}>
-        {option}
-      </Dropdown.Item>
-    ))}
-  </DropdownButton>
+        <Col className="d-flex flex-wrap gap-2">
+          <DropdownButton
+            variant="outline-secondary"
+            title={<><FaCalendarAlt className="me-2" />{selectedDateRange}</>}
+            className="me-2"
+          >
+            {['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'Custom Range'].map(option => (
+              <Dropdown.Item key={option} onClick={() => setSelectedDateRange(option)}>
+                {option}
+              </Dropdown.Item>
+            ))}
+          </DropdownButton>
 
-  <DropdownButton
-    variant="outline-secondary"
-    title={<><FaUserCircle className="me-2" />{userStatus}</>}
-    className="me-2"
-  >
-    {['All Users', 'Active', 'Inactive', 'Pending'].map(option => (
-      <Dropdown.Item key={option} onClick={() => setUserStatus(option)}>
-        {option}
-      </Dropdown.Item>
-    ))}
-  </DropdownButton>
+          <DropdownButton
+            variant="outline-secondary"
+            title={<><FaLayerGroup className="me-2" />{selectedPlanType}</>}
+            className="me-2"
+          >
+            {['All Plans', 'Basic Plan', 'Premium Plan', 'Enterprise'].map(option => (
+              <Dropdown.Item key={option} onClick={() => setSelectedPlanType(option)}>
+                {option}
+              </Dropdown.Item>
+            ))}
+          </DropdownButton>
 
-  <Button variant="primary">Apply Filters</Button>
-</Col>
+          <DropdownButton
+            variant="outline-secondary"
+            title={<><FaUserCircle className="me-2" />{userStatus}</>}
+            className="me-2"
+          >
+            {['All Users', 'Active', 'Inactive', 'Pending'].map(option => (
+              <Dropdown.Item key={option} onClick={() => setUserStatus(option)}>
+                {option}
+              </Dropdown.Item>
+            ))}
+          </DropdownButton>
+
+          <Button variant="primary">Apply Filters</Button>
+        </Col>
       </Row>
 
       <Row className="g-3 mb-4">

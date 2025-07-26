@@ -60,10 +60,10 @@ const InventoryManagements = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div className="">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2>Inventory Management</h2>
+          <h2 className='h3 fw-bold text-dark mb-2'>Inventory Management</h2>
           <p className="text-muted">Manage your products and sync across all channels</p>
         </div>
         <div className="d-flex gap-2">

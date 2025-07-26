@@ -238,12 +238,12 @@ const OrderManagements = () => {
     const { kpiData, recentOrders, selectedPeriod, showModal, editingOrder } = dashboardData;
 
     return (
-        <div className="min-vh-100 bg-light p-4">
-            <div className="container-fluid">
+        <div className="">
+            <div className="">
                 {/* Welcome Section */}
-                <div className="card mb-4 shadow-sm">
-                    <div className="card-body">
-                        <h1 className="card-title display-6 mb-2">Welcome back, Sarah!</h1>
+                <div className="mb-4">
+                    <div className="">
+                        <h1 className="h3 fw-bold text-dark mb-2">Welcome back, Sarah!</h1>
                         <p className="card-text text-muted mb-0">Here's what's happening with your business today.</p>
                     </div>
                 </div>

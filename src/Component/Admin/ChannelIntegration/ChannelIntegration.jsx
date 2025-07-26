@@ -41,10 +41,10 @@ const ChannelIntegration = () => {
   };
 
   return (
-    <div className="container-fluid bg-light py-4">
-      <div className="container">
+    <div className="">
+      <div className="">
         <div className="mb-4">
-          <h2 className="fw-bold mb-2">Channel Integrations</h2>
+          <h2 className="h3 fw-bold text-dark mb-2">Channel Integrations</h2>
           <p className="text-muted">Connect your sales channels to sync orders and inventory automatically.</p>
         </div>
 

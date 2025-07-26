@@ -90,10 +90,10 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="bg-light min-vh-100 py-4 px-3">
-      <div className="container-fluid">
+    <div className="">
+      <div className="">
         <div className="mb-4">
-          <h1 className="h3 fw-bold">Welcome back, Admin!</h1>
+          <h1 className="h3 fw-bold text-dark mb-2">Welcome back, Admin!</h1>
           <p className="text-muted">Here's what's happening with your platform today.</p>
         </div>
 

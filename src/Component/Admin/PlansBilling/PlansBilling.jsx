@@ -80,9 +80,9 @@ const BillingandPlans = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div className="">
       <div className="mb-4">
-        <h1 className="h3 fw-bold">Billing & Plans</h1>
+        <h1 className="h3 fw-bold text-dark mb-2">Billing & Plans</h1>
         <p className="text-muted">Manage your subscription and billing information</p>
       </div>
 

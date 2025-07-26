@@ -90,9 +90,9 @@ const OrderDetails = () => {
   };
 
   return (
-    <div className="container-fluid py-4 bg-light min-vh-100">
+    <div className="">
       <div className="mb-4">
-        <h2 className="fw-bold mb-1">Orders Management</h2>
+        <h2 className="h3 fw-bold text-dark mb-2">Orders Management</h2>
         <p className="text-muted">Manage and track all your orders in one place.</p>
       </div>
 

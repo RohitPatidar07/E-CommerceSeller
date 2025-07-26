@@ -31,7 +31,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div className="">
       <div className="mb-4">
         <h1 className="h3 fw-bold text-dark mb-2">Settings</h1>
         <p className="text-muted">Manage your business profile and account settings</p>

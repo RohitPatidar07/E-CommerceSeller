@@ -94,8 +94,8 @@ const UserManagements = () => {
   };
 
   return (
-    <Container fluid className="py-4 user-mgmt-container">
-      <h2>User Management</h2>
+    <div className="">
+      <h1 className="h3 fw-bold text-dark mb-2">User Management</h1>
       <p>Manage user accounts, plans, and permissions across your platform.</p>
 
       <Row className="bg-white shadow p-3 my-3 rounded">
@@ -232,7 +232,7 @@ const UserManagements = () => {
           <Button variant="primary" onClick={closeModals}>Send Reset Email</Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </div>
   );
 };
 
