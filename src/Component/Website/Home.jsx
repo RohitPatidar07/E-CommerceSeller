@@ -47,7 +47,6 @@ const App = () => {
 
       {/* Desktop Login Button */}
       <div className="d-none d-md-block">
-<<<<<<< HEAD
         <Link to="/superadmin/dashboard">
           <button
             className="btn text-white px-4 py-2 small fw-medium shadow"
@@ -60,7 +59,6 @@ const App = () => {
             <i className="fas fa-user-circle me-2"></i>Login
           </button>
         </Link>
-=======
        <Link to="/dashboard">
         <button
           className="btn text-white px-4 py-2 small fw-medium shadow"
@@ -72,7 +70,6 @@ const App = () => {
           <i className="fas fa-user-circle me-2"></i>Login
         </button>
        </Link>
->>>>>>> 717d1ffef64bf431b925d6c25b0742381f60c8d0
       </div>
 
       {/* Mobile Toggle Button */}
