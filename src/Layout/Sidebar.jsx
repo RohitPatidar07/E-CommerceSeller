@@ -43,30 +43,34 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Admin Menus ---
   const adminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
-    { name: "Admin Management", icon: faUserCog, path: "/admin/usermanagement" },
-    { name: "Plan Packages", icon: faClipboardList, path: "/admin/planpackages" },
-    { name: "Plan Request", icon: faServer, path: "/admin/planrequest" },
-    { name: "Payment", icon: faCreditCard, path: "/admin/payment" },
+    { name: "User Management", icon: faUserCog, path: "/admin/usermanagement" },
+    { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
+    { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
+    { name: "Reports", icon: faServer, path: "/admin/reports" },
+    { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
     { name: "Setting", icon: faCog, path: "/admin/setting" },
   ];
 
   // --- Super Admin Menus ---
   const superAdminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/superadmin/dashboard" },
-    { name: "All Users", icon: faUsers, path: "/superadmin/users" },
-    { name: "All Admins", icon: faUserCog, path: "/superadmin/admins" },
-    { name: "Reports", icon: faChartBar, path: "/superadmin/reports" },
-    { name: "System Settings", icon: faCogs, path: "/superadmin/system-settings" },
-    { name: "Transactions", icon: faCreditCard, path: "/superadmin/transactions" },
+    { name: "Plan Packages", icon: faUsers, path: "/superadmin/planpackages" },
+    { name: "Plan Request", icon: faUserCog, path: "/superadmin/planrequest" },
+    { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
+    { name: "Payment", icon: faCogs, path: "/superadmin/payment" },
+    { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
   ];
 
   // --- User Menus ---
   const userMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/user/dashboard" },
-    { name: "My Orders", icon: faBoxOpen, path: "/user/orders" },
-    { name: "Payment History", icon: faHistory, path: "/user/payment-history" },
-    { name: "Profile", icon: faUser, path: "/user/profile" },
-    { name: "Setting", icon: faCog, path: "/user/setting" },
+    { name: "Shipping Setting", icon: faBoxOpen, path: "/user/shippingsetting" },
+    { name: "Channel Integrations", icon: faHistory, path: "/user/channelintergration" },
+    { name: "Order Management", icon: faUser, path: "/user/ordermanagement" },
+    { name: "Inventory Management", icon: faCog, path: "/user/inventorymanagement" },
+    { name: "Report", icon: faCog, path: "/user/reports" },
+    { name: "Billing And Plans ", icon: faCog, path: "/user/setting" },
+    { name: "Srtting", icon: faCreditCard, path: "/user/setting" },
   ];
 
   // Choose menu list based on role
@@ -74,8 +78,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     role === "admin"
       ? adminMenus
       : role === "superadmin"
-      ? superAdminMenus
-      : userMenus;
+        ? superAdminMenus
+        : userMenus;
 
   return (
     <div className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
