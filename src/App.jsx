@@ -23,6 +23,19 @@ import About from "./Component/Website/About";
 import Contact from "./Component/Website/Contact";
 import Blog from "./Component/Website/Blog";
 import Home from "./Component/Website/Home";
+import AdminDashboard from "./Component/Admin/Dashboard/AdminDashboard";
+import Reports from "./Component/Superadmin/Setting/Reports/Reports";
+import OrderDetails from "./Component/Admin/OrderDetails/OrderDetails";
+import InventoryManagement from "./Component/UserDashboard/InventoryManagement/InventoryManagement";
+import PlansBilling from "./Component/Admin/PlansBilling/PlansBilling";
+import Setting from "./Component/Admin/Setting/Setting";
+import OrderManagements from "./Component/Admin/OrderManagements/OrderManagements";
+import UserManagements from "./Component/Admin/UserManagements/UserManagements";
+import ChannelIntegration from "./Component/Admin/ChannelIntegration/ChannelIntegration";
+import SystemAlerts from "./Component/Admin/SystemAlerts/SystemAlerts";
+import InventoryManagements from "./Component/Admin/InventoryManagements/InventoryManagements";
+import ReportsDashboard from "./Component/Admin/ReportsDashboard/ReportsDashboard";
+import ShippingSetting from "./Component/Admin/ShippingSetting/ShippingSetting";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -77,24 +90,43 @@ function App() {
               setCollapsed={setIsSidebarCollapsed}
             />
             <div
-              className={`right-side-content ${
-                isSidebarCollapsed ? "collapsed" : ""
-              }`}
+              className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""
+                }`}
             >
 
-              {/* superadmin routes */}
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/setting" element={<Settings />} />
-                <Route path="/planbilling" element={<PlanBilling />} />
-                <Route path="/ordermanagement" element={<OrderManagement />} />
-                <Route path="/usermanagement" element={<UserManagement />} />
-                <Route path="/activitylogs" element={<ActivityLogs />} />
-                <Route path="/brandingcms" element={<BrandingCMS />} />
-                <Route path="/planmanagement" element={<PlanManagement />} />
-                <Route path="/planpackages" element={<PlansPackages />} />
-                <Route path="/planrequest" element={<PlanRequest />} />
-                <Route path="/payment" element={<Payments />} />
+
+                {/* superadmin routes */}
+                <Route path="/superadmin/dashboard" element={<Dashboard />} />
+                <Route path="/superadmin/setting" element={<Settings />} />
+                <Route path="/superadmin/planbilling" element={<PlanBilling />} />
+                <Route path="/superadmin/ordermanagement" element={<OrderManagement />} />
+                <Route path="/superadmin/usermanagement" element={<UserManagement />} />
+                <Route path="/superadmin/activitylogs" element={<ActivityLogs />} />
+                <Route path="/superadmin/brandingcms" element={<BrandingCMS />} />
+                <Route path="/superadmin/planmanagement" element={<PlanManagement />} />
+                <Route path="/superadmin/planpackages" element={<PlansPackages />} />
+                <Route path="/superadmin/planrequest" element={<PlanRequest />} />
+                <Route path="/superadmin/payment" element={<Payments />} />
+
+                {/* Amindmin routes */}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/reportdashboard" element={<ReportsDashboard />} />
+                <Route path="/admin/orderdetails" element={<OrderDetails />} />
+                <Route path="/admin/ordermanagements" element={<OrderManagements />} />
+                <Route path="/admin/usermanagements" element={<UserManagements />} />
+                <Route path="/admin/plansbilling" element={<PlansBilling />} />
+                <Route path="/admin/setting" element={<Setting />} />
+                <Route path="/admin/channelintegration" element={<ChannelIntegration />} />
+                <Route path="/admin/systemalerts" element={<SystemAlerts />} />
+                <Route path="/admin/inventorymanagements" element={<InventoryManagements />} />
+                 <Route path="/admin/shippingsetting" element={<ShippingSetting />} />
+
+
+                {/* User routes */}
+                <Route path="/user/inventorymanagement" element={<InventoryManagement />} />
+                <Route path="/user/reports" element={<Reports />} />
+
               </Routes>
             </div>
           </div>

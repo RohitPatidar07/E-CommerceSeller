@@ -1,0 +1,1 @@
+const  BASE_URL = "https://aiskiilsbackend-production.up.railway.app/api";
