@@ -257,7 +257,7 @@ const OrderManagement = () => {
                 <div className="col-12 mb-4">
                     <div className="d-flex justify-content-between align-items-center">
                         <h1 className="h3 fw-bold text-dark mb-0">Order Management</h1>
-                    
+
                     </div>
                     <p className="text-muted mb-0">All orders (from all platforms) appear in one table</p>
                 </div>
@@ -290,38 +290,102 @@ const OrderManagement = () => {
 
                 {/* Orders Table */}
                 <div className="col-12">
-                        <div className="d-flex">
-                            <div className="me-3">
-                                <label className="form-label">Platform</label>
-                                <select
-                                    className="form-select form-select-sm"
-                                    value={filters.platform}
-                                    onChange={(e) => handleFilterChange('platform', e.target.value)}
-                                >
-                                    <option value="all">All Platforms</option>
-                                    <option value="Amazon">Amazon</option>
-                                    <option value="Meesho">Meesho</option>
-                                </select>
+                    {/* Enhanced Filters Section */}
+                    <div className="card shadow-sm mb-4">
+                        <div className="card-body">
+                            <div className="row g-3">
+                                <div className="col-md-4">
+                                    <label className="form-label fw-medium">Platform</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light">
+                                            <i className="fas fa-store text-muted"></i>
+                                        </span>
+                                        <select
+                                            className="form-select"
+                                            value={filters.platform}
+                                            onChange={(e) => handleFilterChange('platform', e.target.value)}
+                                        >
+                                            <option value="all">All Platforms</option>
+                                            <option value="Amazon">Amazon</option>
+                                            <option value="Meesho">Meesho</option>
+                                            <option value="Flipkart">Flipkart</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-4">
+                                    <label className="form-label fw-medium">Status</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light">
+                                            <i className="fas fa-tag text-muted"></i>
+                                        </span>
+                                        <select
+                                            className="form-select"
+                                            value={filters.status}
+                                            onChange={(e) => handleFilterChange('status', e.target.value)}
+                                        >
+                                            <option value="all">All Statuses</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Shipped">Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-4">
+                                    <label className="form-label fw-medium">Date Range</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light">
+                                            <i className="fas fa-calendar text-muted"></i>
+                                        </span>
+                                        <select
+                                            className="form-select"
+                                            value={selectedPeriod}
+                                            onChange={(e) => handlePeriodChange(e.target.value)}
+                                        >
+                                            <option value="7days">Last 7 Days</option>
+                                            <option value="30days">Last 30 Days</option>
+                                            <option value="90days">Last 90 Days</option>
+                                            <option value="custom">Custom Range</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label className="form-label">Status</label>
-                                <select
-                                    className="form-select form-select-sm"
-                                    value={filters.status}
-                                    onChange={(e) => handleFilterChange('status', e.target.value)}
-                                >
-                                    <option value="all">All Statuses</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                </select>
-                            </div>
+
+                            {/* Additional filter options (can be toggled) */}
+                            {/* <div className="mt-3 d-flex justify-content-between align-items-center">
+                                <button className="btn btn-sm btn-outline-secondary">
+                                    <i className="fas fa-filter me-1"></i> More Filters
+                                </button>
+                                <div>
+                                    <span className="text-muted me-2">
+                                        {filteredOrders.length} orders found
+                                    </span>
+                                    <button
+                                        className="btn btn-sm btn-outline-danger"
+                                        onClick={() => handleFilterChange('platform', 'all') & handleFilterChange('status', 'all')}
+                                    >
+                                        <i className="fas fa-times me-1"></i> Clear Filters
+                                    </button>
+                                </div>
+                            </div> */}
                         </div>
+                    </div>
+
+                    {/* Orders Table */}
                     <div className="card shadow-sm">
-                        <div className="card-header bg-white border-0">
-                            <h5 className="mb-0">Recent Orders</h5>
+                        <div className="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                            {/* <h5 className="mb-0">Recent Orders</h5> */}
+                            {/* <div>
+                                <button className="btn btn-sm btn-outline-success me-2">
+                                    <i className="fas fa-file-export me-1"></i> Export
+                                </button>
+                                <button className="btn btn-sm btn-primary">
+                                    <i className="fas fa-plus me-1"></i> Add Order
+                                </button>
+                            </div> */}
                         </div>
                         <div className="card-body p-0">
                             <div className="table-responsive">
@@ -338,53 +402,157 @@ const OrderManagement = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredOrders.map((order) => (
-                                            <tr key={order.orderId}>
-                                                <td className="fw-medium text-primary">{order.orderId}</td>
-                                                <td>
-                                                    <div className="d-flex flex-column">
-                                                        <span className="fw-medium">{order.customer}</span>
-                                                        <small className="text-muted">{order.customerEmail}</small>
+                                        {filteredOrders.length > 0 ? (
+                                            filteredOrders.map((order) => (
+                                                <tr key={order.orderId}>
+                                                    <td className="fw-medium text-primary">{order.orderId}</td>
+                                                    <td>
+                                                        <div className="d-flex flex-column">
+                                                            <span className="fw-medium">{order.customer}</span>
+                                                            <small className="text-muted">{order.customerEmail}</small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge ${order.platform === 'Amazon' ? 'bg-warning text-dark' : 'bg-info text-dark'} px-3 py-1 rounded-pill`}>
+                                                            {order.platform}
+                                                        </span>
+                                                    </td>
+                                                    <td className="fw-bold">{order.amount}</td>
+                                                    <td>
+                                                        <span className={`badge ${getStatusBadgeClass(order.status)} px-3 py-1 rounded-pill fw-medium`}>
+                                                            {order.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="text-muted">{order.date}</td>
+                                                    <td className="text-end">
+                                                        <div className="d-flex justify-content-end">
+                                                            <button
+                                                                className="btn btn-sm btn-outline-primary me-2"
+                                                                onClick={() => openViewModal(order)}
+                                                                title="View Details"
+                                                            >
+                                                                <i className="fas fa-eye"></i>
+                                                            </button>
+                                                            <button
+                                                                className="btn btn-sm btn-primary me-2"
+                                                                onClick={() => openEditModal(order)}
+                                                                title="Edit Order"
+                                                            >
+                                                                <i className="fas fa-edit"></i>
+                                                            </button>
+
+                                                            {/* Assign to Partner Dropdown */}
+                                                            <div className="me-2">
+                                                                <button
+                                                                    className="btn btn-sm btn-outline-secondary"
+                                                                    type="button"
+                                                                    id={`assignDropdown-${order.orderId}`}
+                                                                    data-bs-toggle="dropdown"
+                                                                    aria-expanded="false"
+                                                                    title="Assign to Partner"
+                                                                >
+                                                                    <i className="fas fa-user-tag"></i>
+                                                                </button>
+                                                                <ul className="dropdown-menu" aria-labelledby={`assignDropdown-${order.orderId}`}>
+                                                                    <li><h6 className="dropdown-header">Assign to Partner</h6></li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="dropdown-item"
+                                                                            onClick={() => assignToPartner(order.orderId, 'deliveryPartner1')}
+                                                                        >
+                                                                            <i className="fas fa-motorcycle me-2"></i> Delivery Partner 1
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="dropdown-item"
+                                                                            onClick={() => assignToPartner(order.orderId, 'deliveryPartner2')}
+                                                                        >
+                                                                            <i className="fas fa-truck me-2"></i> Delivery Partner 2
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="dropdown-item"
+                                                                            onClick={() => assignToPartner(order.orderId, 'deliveryPartner3')}
+                                                                        >
+                                                                            <i className="fas fa-shipping-fast me-2"></i> Delivery Partner 3
+                                                                        </button>
+                                                                    </li>
+                                                                    <li><hr className="dropdown-divider" /></li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="dropdown-item text-danger"
+                                                                            onClick={() => unassignPartner(order.orderId)}
+                                                                        >
+                                                                            <i className="fas fa-times-circle me-2"></i> Unassign Partner
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <button
+                                                                className="btn btn-sm btn-outline-danger"
+                                                                onClick={() => deleteOrder(order.orderId)}
+                                                                title="Delete Order"
+                                                            >
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="7" className="text-center py-4">
+                                                    <div className="d-flex flex-column align-items-center">
+                                                        <i className="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                                        <h5 className="text-muted">No orders found</h5>
+                                                        <p className="text-muted">Try adjusting your filters</p>
+                                                        <button
+                                                            className="btn btn-sm btn-outline-primary"
+                                                            onClick={() => handleFilterChange('platform', 'all') & handleFilterChange('status', 'all')}
+                                                        >
+                                                            Reset Filters
+                                                        </button>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <span className={`badge ${order.platform === 'Amazon' ? 'bg-warning text-dark' : 'bg-info text-dark'} px-3 py-1 rounded-pill`}>
-                                                        {order.platform}
-                                                    </span>
-                                                </td>
-                                                <td className="fw-bold">{order.amount}</td>
-                                                <td>
-                                                    <span className={`badge ${getStatusBadgeClass(order.status)} px-3 py-1 rounded-pill fw-medium`}>
-                                                        {order.status}
-                                                    </span>
-                                                </td>
-                                                <td className="text-muted">{order.date}</td>
-                                                <td className="text-end">
-                                                    <button
-                                                        className="btn btn-sm btn-outline-primary me-2"
-                                                        onClick={() => openViewModal(order)}
-                                                    >
-                                                        <i className="fas fa-eye me-1"></i> View
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm btn-primary me-2"
-                                                        onClick={() => openEditModal(order)}
-                                                    >
-                                                        <i className="fas fa-edit me-1"></i> Edit
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm btn-outline-danger"
-                                                        onClick={() => deleteOrder(order.orderId)}
-                                                    >
-                                                        <i className="fas fa-trash me-1"></i>
-                                                    </button>
-                                                </td>
                                             </tr>
-                                        ))}
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        {filteredOrders.length > 0 && (
+                            <div className="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                                <div className="text-muted">
+                                    Showing <span className="fw-medium">1-{filteredOrders.length}</span> of <span className="fw-medium">{filteredOrders.length}</span> orders
+                                </div>
+                                <nav>
+                                    <ul className="pagination pagination-sm mb-0">
+                                        <li className="page-item disabled">
+                                            <button className="page-link" disabled>
+                                                <i className="fas fa-chevron-left"></i>
+                                            </button>
+                                        </li>
+                                        <li className="page-item active">
+                                            <button className="page-link">1</button>
+                                        </li>
+                                        <li className="page-item">
+                                            <button className="page-link">2</button>
+                                        </li>
+                                        <li className="page-item">
+                                            <button className="page-link">3</button>
+                                        </li>
+                                        <li className="page-item">
+                                            <button className="page-link">
+                                                <i className="fas fa-chevron-right"></i>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

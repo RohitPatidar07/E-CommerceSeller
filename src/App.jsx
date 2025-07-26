@@ -76,7 +76,6 @@ function App() {
               className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""
                 }`}
             >
-
               <Routes>
 
                 {/* superadmin routes */}
