@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,30 +10,45 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Hardcoded credentials
     const credentials = {
-      admin: { email: "admin@example.com", password: "123" },
-      superadmin: { email: "superadmin@example.com", password: "123" },
-      user: { email: "user@example.com", password: "123" },
+      admin: { email: "admin@example.com", password: "admin123" },
+      user: { email: "user@example.com", password: "user123" },
     };
 
-    const validUser = credentials[role];
+    if (role === "superadmin") {
+      try {
+        const response = await axios.post("https://cj2ww6qd-5000.inc1.devtunnels.ms/login", {
+          email,
+          password,
+        });
 
-    if (email === validUser.email && password === validUser.password) {
-      localStorage.setItem("userRole", role);
-
-      if (role === "admin") {
-        navigate("/admin/dashboard");
-      } else if (role === "superadmin") {
-        navigate("/superadmin/dashboard");
-      } else {
-        navigate("/user/dashboard");
+        if (response.data && response.data.token) {
+          localStorage.setItem("authToken", response.data.token);
+          localStorage.setItem("userRole", "superadmin");
+          navigate("/superadmin/dashboard");
+        } else {
+          setError("Invalid response from server.");
+        }
+      } catch (err) {
+        setError("Invalid email or password for Super Admin.");
       }
     } else {
-      setError("Invalid email or password for selected role.");
+      const validUser = credentials[role];
+
+      if (email === validUser.email && password === validUser.password) {
+        localStorage.setItem("userRole", role);
+
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/user/dashboard");
+        }
+      } else {
+        setError("Invalid email or password for selected role.");
+      }
     }
   };
 
@@ -124,8 +140,8 @@ const Login = () => {
                     onChange={(e) => setRole(e.target.value)}
                     required
                   >
-                    <option value="superadmin">Super Admin</option>
                     <option value="admin">Admin</option>
+                    <option value="superadmin">Super Admin</option>
                     <option value="user">User</option>
                   </select>
                 </div>
