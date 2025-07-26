@@ -75,7 +75,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       name: "Payment",
       icon: faCreditCard,
       key: "api",
-      path: "/planrequest"
+      path: "/payment"
     },
 
     // {
