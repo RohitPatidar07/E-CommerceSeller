@@ -4,10 +4,36 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("admin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/admin/staffmanagement");
+
+    // Hardcoded credentials
+    const credentials = {
+      admin: { email: "admin@example.com", password: "admin123" },
+      superadmin: { email: "superadmin@example.com", password: "super123" },
+      user: { email: "user@example.com", password: "user123" },
+    };
+
+    const validUser = credentials[role];
+
+    if (email === validUser.email && password === validUser.password) {
+      localStorage.setItem("userRole", role);
+
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "superadmin") {
+        navigate("/superadmin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    } else {
+      setError("Invalid email or password for selected role.");
+    }
   };
 
   return (
@@ -22,7 +48,6 @@ const Login = () => {
         }}
       >
         <div className="row g-0">
-          {/* Image Column */}
           <div className="col-md-6 d-none d-md-block">
             <img
               src="https://img.freepik.com/free-vector/login-concept-illustration_114360-739.jpg"
@@ -32,10 +57,8 @@ const Login = () => {
             />
           </div>
 
-          {/* Form Column */}
           <div className="col-md-6 d-flex align-items-center p-5 text-white">
             <div className="w-100">
-              {/* Logo + Title */}
               <div className="d-flex align-items-center justify-content-center mb-4">
                 <div
                   className="rounded-circle d-flex align-items-center justify-content-center me-2"
@@ -55,10 +78,20 @@ const Login = () => {
                 Login to manage your dashboard
               </p>
 
+              {error && (
+                <div className="alert alert-danger py-2 px-3 small">{error}</div>
+              )}
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label text-white">Email address</label>
-                  <input type="email" className="form-control" required />
+                  <input
+                    type="email"
+                    className="form-control"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
 
                 <div className="mb-3 position-relative">
@@ -67,6 +100,8 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     className="form-control"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <span
                     className="position-absolute top-50 end-0 translate-middle-y me-3"
@@ -79,6 +114,20 @@ const Login = () => {
                       <i className="bi bi-eye-fill text-white-50"></i>
                     )}
                   </span>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label text-white">Select Role</label>
+                  <select
+                    className="form-select"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    required
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="superadmin">Super Admin</option>
+                    <option value="user">User</option>
+                  </select>
                 </div>
 
                 <div className="mb-3 d-flex justify-content-between align-items-center">

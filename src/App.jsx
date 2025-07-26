@@ -2,8 +2,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { useState, useEffect } from "react";
 
-
-
 import Dashboard from "./Component/Superadmin/Dashboard/Dashboard";
 import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
@@ -19,8 +17,6 @@ import PlanManagement from "./Component/Superadmin/Planmanagement/PlanManagement
 import PlansPackages from "./Component/Superadmin/PlanPackages/PlanPackages";
 import PlanRequest from "./Component/Superadmin/PlanRequest/PlanRequest";
 import Payments from "./Component/Superadmin/Payment/Payments";
-
-
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -41,19 +37,18 @@ function App() {
   const hideLayout =
     location.pathname === "/" ||
     location.pathname === "/signup" ||
-    location.pathname === "/forgot-password"||
+    location.pathname === "/forgot-password" ||
     location.pathname === "/login";
 
   return (
     <>
       {hideLayout ? (
         <Routes>
-           <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           {/*<Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
           <Route path="/" element={<Home />} />
-
         </Routes>
       ) : (
         <>
@@ -68,20 +63,20 @@ function App() {
                 isSidebarCollapsed ? "collapsed" : ""
               }`}
             >
+
+              {/* superadmin routes */}
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
-                 <Route path="/setting" element={<Settings />} />
-                   <Route path="/planbilling" element={<PlanBilling />} />
-                    <Route path="/ordermanagement" element={<OrderManagement />} />
-                     <Route path="/usermanagement" element={<UserManagement />} />
-                       <Route path="/activitylogs" element={<ActivityLogs />} />
-                         <Route path="/brandingcms" element={<BrandingCMS />} />
-                           <Route path="/planmanagement" element={<PlanManagement />} />
-                            <Route path="/planpackages" element={<PlansPackages />} />
-                             <Route path="/planrequest" element={<PlanRequest />} />
-                              <Route path="/payment" element={<Payments />} />
-                             
-
+                <Route path="/setting" element={<Settings />} />
+                <Route path="/planbilling" element={<PlanBilling />} />
+                <Route path="/ordermanagement" element={<OrderManagement />} />
+                <Route path="/usermanagement" element={<UserManagement />} />
+                <Route path="/activitylogs" element={<ActivityLogs />} />
+                <Route path="/brandingcms" element={<BrandingCMS />} />
+                <Route path="/planmanagement" element={<PlanManagement />} />
+                <Route path="/planpackages" element={<PlansPackages />} />
+                <Route path="/planrequest" element={<PlanRequest />} />
+                <Route path="/payment" element={<Payments />} />
               </Routes>
             </div>
           </div>
