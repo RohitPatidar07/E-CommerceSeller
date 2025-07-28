@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
-  faTachometerAlt,
-  faUserCog,
   faClipboardList,
   faServer,
   faCreditCard,
@@ -14,7 +12,14 @@ import {
   faHistory,
   faUsers,
   faChartBar,
-  faCogs,
+  faHandshake, 
+  faBoxes, 
+  faTachometerAlt,
+  faUsersCog,
+  faSatelliteDish, 
+  faChartLine, 
+  faTruckFast,  
+  faSlidersH,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
@@ -43,11 +48,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Admin Menus ---
   const adminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
-    { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
-    { name: "Channel Integration", icon: faServer, path: "/admin/channelintegration" },
-    { name: "Reports", icon: faServer, path: "/admin/reportdashboard" },
-    { name: "Delivery Partner", icon: faCog, path: "/admin/deliverypartner" },
-    { name: "Setting", icon: faCog, path: "/admin/setting" },
+  { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
+  { name: "Channel Integration", icon: faSatelliteDish, path: "/admin/channelintegration" },
+  { name: "Reports", icon: faChartLine, path: "/admin/reportdashboard" },
+  { name: "Delivery Partner", icon: faTruckFast, path: "/admin/deliverypartner" },
+  { name: "Setting", icon: faSlidersH, path: "/admin/setting" }
     
     // { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
     // { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
@@ -59,11 +64,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Super Admin Menus ---
   const superAdminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/superadmin/dashboard" },
-    { name: "Plan Packages", icon: faUsers, path: "/superadmin/planpackages" },
-    { name: "Plan Request", icon: faUserCog, path: "/superadmin/planrequest" },
-    { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
-    { name: "Payment", icon: faCogs, path: "/superadmin/payment" },
-    { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
+  { name: "Plan Packages", icon: faBoxes, path: "/superadmin/planpackages" },
+  { name: "Plan Request", icon: faHandshake, path: "/superadmin/planrequest" },
+  { name: "User Management", icon: faUsersCog, path: "/superadmin/usermanagement" },
+  { name: "Payment", icon: faCreditCard, path: "/superadmin/payment" }
+    // { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
 
   ];
 

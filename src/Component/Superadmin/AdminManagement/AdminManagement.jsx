@@ -6,7 +6,6 @@ const AdminManagement = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [showSuspendModal, setShowSuspendModal] = useState(false);
   
   // Initialize admins from localStorage or with default data
   const [admins, setAdmins] = useState(() => {
@@ -26,13 +25,7 @@ const AdminManagement = () => {
         region: 'Europe',
         status: 'Active'
       },
-      {
-        id: 'ADM-2024-003',
-        name: 'Mike Chen',
-        email: 'mike.chen@company.com',
-        region: 'Asia Pacific',
-        status: 'Suspended'
-      },
+     
       {
         id: 'ADM-2024-004',
         name: 'Emily Davis',
@@ -65,7 +58,6 @@ const AdminManagement = () => {
     newPassword: '',
     confirmPassword: ''
   });
-  const [suspendReason, setSuspendReason] = useState('');
 
   // Save to localStorage whenever admins change
   useEffect(() => {
@@ -76,8 +68,6 @@ const AdminManagement = () => {
     switch (status) {
       case 'Active':
         return 'bg-success text-white';
-      case 'Suspended':
-        return 'bg-warning text-dark';
       case 'Deleted':
         return 'bg-danger text-white';
       default:
@@ -129,17 +119,6 @@ const AdminManagement = () => {
     } else {
       alert("Passwords don't match!");
     }
-  };
-
-  // Handle suspend admin
-  const handleSuspendAdmin = (e) => {
-    e.preventDefault();
-    const updatedAdmins = admins.map(admin => 
-      admin.id === selectedAdmin.id ? { ...admin, status: 'Suspended' } : admin
-    );
-    setAdmins(updatedAdmins);
-    setShowSuspendModal(false);
-    setSuspendReason('');
   };
 
   // Modal component
@@ -233,18 +212,7 @@ const AdminManagement = () => {
                           <i className="fas fa-edit"></i>
                           <span className="d-none d-md-inline ms-1">Edit</span>
                         </button>
-                        <button
-                          onClick={() => {
-                            setSelectedAdmin(admin);
-                            setShowSuspendModal(true);
-                          }}
-                          className="btn btn-sm btn-outline-warning"
-                          title="Suspend"
-                          disabled={admin.status === 'Suspended'}
-                        >
-                          <i className="fas fa-pause"></i>
-                          <span className="d-none d-md-inline ms-1">Suspend</span>
-                        </button>
+                       
                         <button
                           onClick={() => {
                             setSelectedAdmin(admin);
@@ -305,75 +273,74 @@ const AdminManagement = () => {
       </div>
 
       {/* Create Admin Modal */}
-   <Modal
-  isOpen={showCreateModal}
-  onClose={() => setShowCreateModal(false)}
-  title="Create New Admin"
->
-  <form onSubmit={handleCreateAdmin}>
-    <div className="mb-3">
-      <label className="form-label">Full Name*</label>
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Enter full name"
-        value={newAdmin.name}
-        onChange={(e) =>
-          setNewAdmin((prev) => ({ ...prev, name: e.target.value }))
-        }
-        required
-        maxLength={15} // Optional: Restrict to 15 letters
-      />
-    </div>
-
-    <div className="mb-3">
-      <label className="form-label">Email Address*</label>
-      <input
-        type="email"
-        className="form-control"
-        placeholder="Enter email address"
-        value={newAdmin.email}
-        onChange={(e) =>
-          setNewAdmin((prev) => ({ ...prev, email: e.target.value }))
-        }
-        required
-      />
-    </div>
-
-    <div className="mb-3">
-      <label className="form-label">Region*</label>
-      <select
-        className="form-select"
-        value={newAdmin.region}
-        onChange={(e) =>
-          setNewAdmin((prev) => ({ ...prev, region: e.target.value }))
-        }
-        required
+      <Modal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Create New Admin"
       >
-        <option value="">-- Select Region --</option>
-        <option value="North America">North America</option>
-        <option value="Europe">Europe</option>
-        <option value="Asia Pacific">Asia Pacific</option>
-        <option value="Latin America">Latin America</option>
-        <option value="Middle East">Middle East</option>
-      </select>
-    </div>
+        <form onSubmit={handleCreateAdmin}>
+          <div className="mb-3">
+            <label className="form-label">Full Name*</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter full name"
+              value={newAdmin.name}
+              onChange={(e) =>
+                setNewAdmin((prev) => ({ ...prev, name: e.target.value }))
+              }
+              required
+              maxLength={15} // Optional: Restrict to 15 letters
+            />
+          </div>
 
-    <div className="d-flex justify-content-end gap-2 pt-2">
-      <button
-        type="button"
-        onClick={() => setShowCreateModal(false)}
-        className="btn btn-outline-secondary"
-      >
-        Cancel
-      </button>
-      <button type="submit" className="btn btn-primary">
-        Create Admin
-      </button>
-    </div>
-  </form>
-</Modal>
+          <div className="mb-3">
+            <label className="form-label">Email Address*</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email address"
+              value={newAdmin.email}
+              onChange={(e) =>
+                setNewAdmin((prev) => ({ ...prev, email: e.target.value }))
+              }
+              required
+            />
+          </div>
 
+          <div className="mb-3">
+            <label className="form-label">Region*</label>
+            <select
+              className="form-select"
+              value={newAdmin.region}
+              onChange={(e) =>
+                setNewAdmin((prev) => ({ ...prev, region: e.target.value }))
+              }
+              required
+            >
+              <option value="">-- Select Region --</option>
+              <option value="North America">North America</option>
+              <option value="Europe">Europe</option>
+              <option value="Asia Pacific">Asia Pacific</option>
+              <option value="Latin America">Latin America</option>
+              <option value="Middle East">Middle East</option>
+            </select>
+          </div>
+
+          <div className="d-flex justify-content-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(false)}
+              className="btn btn-outline-secondary"
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Create Admin
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       {/* Edit Admin Modal */}
       <Modal
@@ -511,47 +478,6 @@ const AdminManagement = () => {
                 className="btn btn-success"
               >
                 Reset Password
-              </button>
-            </div>
-          </form>
-        </div>
-      </Modal>
-
-      {/* Suspend Account Modal */}
-      <Modal
-        isOpen={showSuspendModal}
-        onClose={() => setShowSuspendModal(false)}
-        title="Suspend Account"
-      >
-        <div>
-          <p className="mb-3">
-            Suspend account for <strong>{selectedAdmin?.name}</strong>
-          </p>
-          <form onSubmit={handleSuspendAdmin}>
-            <div className="mb-3">
-              <label className="form-label">Reason for Suspension*</label>
-              <textarea
-                className="form-control"
-                rows={3}
-                placeholder="Enter reason for suspension"
-                value={suspendReason}
-                onChange={(e) => setSuspendReason(e.target.value)}
-                required
-              ></textarea>
-            </div>
-            <div className="d-flex justify-content-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowSuspendModal(false)}
-                className="btn btn-outline-secondary"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-warning"
-              >
-                Suspend Account
               </button>
             </div>
           </form>
