@@ -1,176 +1,117 @@
-import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import  { BASE_URL } from "../../../config"; // Adjust the import path as necessary
 
 const PlansPackages = () => {
-  // localStorage key
-  const STORAGE_KEY = 'plansPackagesData';
+  // State for plans data and UI
+  const [plans, setPlans] = useState([]);
+  const [filteredPlans, setFilteredPlans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [id, setId] = useState("");
 
-  // Default plans data
-  const defaultPlans = [
-    {
-      id: 1,
-      name: 'Bronze',
-      price: 9.99,
-      billingCycle: 'Monthly',
-      status: 'Active',
-      descriptions: ['Basic access', 'Community support', 'Limited features'],
-      subscribers: 1243,
-      createdAt: '2024-01-15',
-      lastModified: '2024-01-15'
-    },
-    {
-      id: 2,
-      name: 'Silver',
-      price: 14.99,
-      billingCycle: 'Monthly',
-      status: 'Active',
-      descriptions: ['Priority email support', 'Extended features', 'Access to updates'],
-      subscribers: 857,
-      createdAt: '2024-01-20',
-      lastModified: '2024-01-20'
-    },
-    {
-      id: 3,
-      name: 'Gold',
-      price: 24.99,
-      billingCycle: 'Monthly',
-      status: 'Active',
-      descriptions: ['All Silver features', 'Advanced analytics', 'Custom branding'],
-      subscribers: 512,
-      createdAt: '2024-02-01',
-      lastModified: '2024-02-01'
-    },
-    {
-      id: 4,
-      name: 'Platinum',
-      price: 48.99,
-      billingCycle: 'Monthly',
-      status: 'Active',
-      descriptions: ['All Gold features', 'Dedicated account manager', '24/7 support'],
-      subscribers: 326,
-      createdAt: '2024-02-10',
-      lastModified: '2024-02-10'
-    }
-  ];
+  // State for sorting and filtering
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [sortBy, setSortBy] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc");
 
-  // Load data from localStorage or use defaults
-  const loadPlansFromStorage = () => {
-    try {
-      const storedData = localStorage.getItem(STORAGE_KEY);
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-    } catch (error) {
-      console.error('Error loading data from localStorage:', error);
-    }
-    return defaultPlans;
-  };
-
-  const getSortIcon = (column, sortBy, sortOrder) => {
-    if (sortBy !== column) return <i className="bi bi-arrow-down-up"></i>;
-    return sortOrder === 'asc' ? (
-      <i className="bi bi-arrow-up"></i>
-    ) : (
-      <i className="bi bi-arrow-down"></i>
-    );
-  };
-
-  // Save data to localStorage
-  const savePlansToStorage = (plansData) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(plansData));
-    } catch (error) {
-      console.error('Error saving data to localStorage:', error);
-    }
-  };
-
-  const [plans, setPlans] = useState(loadPlansFromStorage);
+  // State for modals and forms
   const [showModal, setShowModal] = useState(false);
-  const [editingPlan, setEditingPlan] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(null);
   const [planToDelete, setPlanToDelete] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('All');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [isEditing, setIsEditing] = useState(false);
 
+  // Form state
   const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    billingCycle: 'Monthly',
-    status: 'Active',
-    descriptions: ['']
+    name: "",
+    priceMonthly: "",
+    priceYearly: "",
+    description: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  // Save to localStorage whenever plans change
+  // Fetch plans from API
+  const fetchPlans = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.get(`${BASE_URL}plan`);
+      
+      const transformedData = res.data.data.map((item) => ({
+        id: item._id,
+        name: item.name,
+        priceMonthly: item.priceMonthly,
+        priceYearly: item.priceYearly,
+        description: item.description,
+        status: "Active", // Adding status as it's used in your UI
+        subscribers: Math.floor(Math.random() * 10000), // Random subscribers for demo
+      }));
+      
+      setPlans(transformedData);
+      setFilteredPlans(transformedData);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching plan data", err);
+      setError("Failed to load plans. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    savePlansToStorage(plans);
-  }, [plans]);
+    fetchPlans();
+  }, []);
 
-  // Generate next ID based on existing plans
-  const getNextId = () => {
-    return plans.length > 0 ? Math.max(...plans.map(p => p.id)) + 1 : 1;
-  };
+  // Filter and sort plans whenever dependencies change
+  useEffect(() => {
+    if (isLoading) return;
 
-  // Reset form data
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      price: '',
-      billingCycle: 'Monthly',
-      status: 'Active',
-      descriptions: ['']
+    const filtered = plans.filter((plan) => {
+      // Apply search filter
+      const matchesSearch =
+        !searchTerm ||
+        plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (plan.description && plan.description.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      // Apply status filter
+      const matchesStatus =
+        filterStatus === "All" || plan.status === filterStatus;
+      
+      return matchesSearch && matchesStatus;
     });
-    setErrors({});
-    setEditingPlan(null);
-  };
 
-  // Clear localStorage and reset to defaults
-  const resetToDefaults = () => {
-    if (window.confirm('Are you sure you want to reset all data to defaults? This will delete all your custom plans.')) {
-      localStorage.removeItem(STORAGE_KEY);
-      setPlans(defaultPlans);
-    }
-  };
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      let aValue = a[sortBy];
+      let bValue = b[sortBy];
 
-  // Export data
-  const exportData = () => {
-    const dataStr = JSON.stringify(plans, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'plans-packages-data.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
+      // Convert to number if sorting by price
+      if (sortBy === "priceMonthly" || sortBy === "priceYearly") {
+        aValue = parseFloat(aValue);
+        bValue = parseFloat(bValue);
+      } 
+      // Convert to lowercase if string comparison
+      else if (typeof aValue === "string") {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
 
-  // Import data
-  const importData = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const importedData = JSON.parse(e.target.result);
-          if (Array.isArray(importedData) && importedData.length > 0) {
-            setPlans(importedData);
-            alert('Data imported successfully!');
-          } else {
-            alert('Invalid data format. Please select a valid JSON file.');
-          }
-        } catch (error) {
-          alert('Error importing data. Please check the file format.');
-          console.error('Import error:', error);
-        }
-      };
-      reader.readAsText(file);
-    }
-    // Reset the input
-    event.target.value = '';
+      // Determine sort order
+      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+      return 0;
+    });
+
+    setFilteredPlans(sorted);
+  }, [plans, searchTerm, filterStatus, sortBy, sortOrder, isLoading]);
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) setErrors({ ...errors, [name]: "" });
   };
 
   // Validate form
@@ -178,412 +119,308 @@ const PlansPackages = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Plan name is required';
-    } else if (plans.some(p => p.name.toLowerCase() === formData.name.toLowerCase() && p.id !== editingPlan?.id)) {
-      newErrors.name = 'Plan name must be unique';
+      newErrors.name = "Plan name is required";
     }
 
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      newErrors.price = 'Price must be greater than 0';
+    if (!formData.priceMonthly || parseFloat(formData.priceMonthly) <= 0) {
+      newErrors.priceMonthly = "Monthly price must be greater than 0";
     }
 
-    if (formData.descriptions.filter(desc => desc.trim()).length === 0) {
-      newErrors.descriptions = 'At least one description is required';
+    if (!formData.priceYearly || parseFloat(formData.priceYearly) <= 0) {
+      newErrors.priceYearly = "Yearly price must be greater than 0";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: '' });
-    }
-  };
-
-  // Handle description changes
-  const handleDescriptionChange = (index, value) => {
-    const updatedDescriptions = [...formData.descriptions];
-    updatedDescriptions[index] = value;
-    setFormData({ ...formData, descriptions: updatedDescriptions });
-
-    if (errors.descriptions) {
-      setErrors({ ...errors, descriptions: '' });
-    }
-  };
-
-  // Add description field
-  const addDescriptionField = () => {
-    setFormData({
-      ...formData,
-      descriptions: [...formData.descriptions, '']
-    });
-  };
-
-  // Remove description field
-  const removeDescriptionField = (index) => {
-    if (formData.descriptions.length > 1) {
-      const updatedDescriptions = [...formData.descriptions];
-      updatedDescriptions.splice(index, 1);
-      setFormData({ ...formData, descriptions: updatedDescriptions });
-    }
-  };
-
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+    if (!validateForm()) return;
+
+    try {
+      setIsLoading(true);
+      
+      if (editingPlan) {
+        // Update existing plan
+        const updatedPlanData = {
+          name: formData.name.trim(),
+          priceMonthly: parseFloat(formData.priceMonthly),
+          priceYearly: parseFloat(formData.priceYearly),
+          description: formData.description.trim(),
+        };
+
+        await axios.put(
+          `${BASE_URL}plan/${id}`,
+          updatedPlanData
+        );
+        
+        // Refetch plans after update
+        await fetchPlans();
+      } else {
+        // Add new plan
+        const newPlanData = {
+          name: formData.name.trim(),
+          priceMonthly: parseFloat(formData.priceMonthly),
+          priceYearly: parseFloat(formData.priceYearly),
+          description: formData.description.trim(),
+        };
+
+        await axios.post(
+          `${BASE_URL}plan`,
+          newPlanData
+        );
+        
+        // Refetch plans after create
+        await fetchPlans();
+      }
+
+      setShowModal(false);
+      resetForm();
+    } catch (err) {
+      console.error("Error saving plan", err);
+      setError("Failed to save plan. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-    const currentDate = new Date().toISOString().split('T')[0];
-    const filteredDescriptions = formData.descriptions.filter(desc => desc.trim());
-
-    if (editingPlan) {
-      // Update existing plan
-      const updatedPlan = {
-        ...editingPlan,
-        name: formData.name.trim(),
-        price: parseFloat(formData.price),
-        billingCycle: formData.billingCycle,
-        status: formData.status,
-        descriptions: filteredDescriptions,
-        lastModified: currentDate
-      };
-
-      setPlans(plans.map(plan =>
-        plan.id === editingPlan.id ? updatedPlan : plan
-      ));
-    } else {
-      // Add new plan
-      const newPlan = {
-        id: getNextId(),
-        name: formData.name.trim(),
-        price: parseFloat(formData.price),
-        billingCycle: formData.billingCycle,
-        status: formData.status,
-        descriptions: filteredDescriptions,
-        subscribers: 0,
-        createdAt: currentDate,
-        lastModified: currentDate
-      };
-
-      setPlans([...plans, newPlan]);
-    }
-
-    setShowModal(false);
-    resetForm();
   };
 
-  // Handle edit plan
+  // Reset form to initial state
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      priceMonthly: "",
+      priceYearly: "",
+      description: "",
+    });
+    setErrors({});
+    setEditingPlan(null);
+    setIsEditing(false);
+  };
+
+  // Prepare form for editing
   const handleEdit = (plan) => {
     setEditingPlan(plan);
+    setIsEditing(true);
+    setId(plan.id);
     setFormData({
       name: plan.name,
-      price: plan.price.toString(),
-      billingCycle: plan.billingCycle,
-      status: plan.status,
-      descriptions: [...plan.descriptions]
+      priceMonthly: plan.priceMonthly.toString(),
+      priceYearly: plan.priceYearly.toString(),
+      description: plan.description,
     });
     setShowModal(true);
   };
 
-  // Handle delete plan
+  // Prepare for deletion
   const handleDelete = (plan) => {
     setPlanToDelete(plan);
+    setId(plan.id);
     setShowDeleteConfirm(true);
   };
 
-  // Confirm delete
-  const confirmDelete = () => {
-    setPlans(plans.filter(plan => plan.id !== planToDelete.id));
-    setShowDeleteConfirm(false);
-    setPlanToDelete(null);
+  // Confirm deletion
+  const confirmDelete = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(
+        `${BASE_URL}plan/${id}` // Use the correct endpoint for deletion,
+      );
+      
+      // Refetch plans after delete
+      await fetchPlans();
+      
+      setShowDeleteConfirm(false);
+      setPlanToDelete(null);
+      setId("");
+    } catch (err) {
+      console.error("Error deleting plan", err);
+      setError("Failed to delete plan. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Toggle plan status
   const toggleStatus = (planId) => {
-    setPlans(plans.map(plan =>
-      plan.id === planId
-        ? {
-          ...plan,
-          status: plan.status === 'Active' ? 'Inactive' : 'Active',
-          lastModified: new Date().toISOString().split('T')[0]
-        }
-        : plan
-    ));
+    setPlans(
+      plans.map((plan) =>
+        plan.id === planId
+          ? {
+              ...plan,
+              status: plan.status === "Active" ? "Inactive" : "Active",
+            }
+          : plan
+      )
+    );
   };
 
-  // Filter and sort plans
-  const getFilteredAndSortedPlans = () => {
-    let filtered = plans;
-
-    // Apply search filter
-    if (searchTerm) {
-      filtered = filtered.filter(plan =>
-        plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        plan.descriptions.some(desc =>
-          desc.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }
-
-    // Apply status filter
-    if (filterStatus !== 'All') {
-      filtered = filtered.filter(plan => plan.status === filterStatus);
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let aValue = a[sortBy];
-      let bValue = b[sortBy];
-
-      if (sortBy === 'price') {
-        aValue = parseFloat(aValue);
-        bValue = parseFloat(bValue);
-      } else if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-    return filtered;
-  };
-
-  const filteredPlans = getFilteredAndSortedPlans();
-
-  // Handle sort
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-  };
   return (
-    <>
-      <div className="">
-        <div className="">
-          {/* Header */}
-          <div className="card-header bg-white mb-4">
-            <div className="row align-items-center">
-              <div className="col">
-                <h1 className="h2 mb-1 text-dark fw-bold">Plans & Packages</h1>
-                <p className="text-muted mb-0">Manage your subscription plans and pricing options</p>
-              </div>
+    <div className="container-fluid">
+      <div className="card">
+        {/* Header */}
+        <div className="card-header bg-white mb-4">
+          <div className="row align-items-center">
+            <div className="col">
+              <h1 className="h2 mb-1 text-dark fw-bold">Plans & Packages</h1>
+              <p className="text-muted mb-0">
+                Manage your subscription plans and pricing options
+              </p>
             </div>
           </div>
+        </div>
 
-          {/* Controls */}
-          <div className="card-body">
-            <div className="row g-3 align-items-center mb-4">
-              <div className="col-md-4">
-                <div className="input-group">
-                  <span className="input-group-text">
-                    🔍
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search plans..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-3">
-                <select
-                  className="form-select"
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                >
-                  <option value="All">All Status</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-
-              <div className="col-md-5 text-end">
-                {/* <div className="btn-group me-2">
-                  <button
-                    className="btn btn-outline-secondary btn-sm"
-                    onClick={exportData}
-                    title="Export data to JSON file"
-                  >
-                    📤 Export
-                  </button>
-                  <label className="btn btn-outline-secondary btn-sm">
-                    📥 Import
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={importData}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                  <button
-                    className="btn btn-outline-warning btn-sm"
-                    onClick={resetToDefaults}
-                    title="Reset to default data"
-                  >
-                    🔄 Reset
-                  </button>
-                </div> */}
-                <button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    resetForm();
-                    setShowModal(true);
-                  }}
-                >
-                  <i className="bi bi-plus-circle me-2"></i>
-                  Add New Plan
-                </button>
+        {/* Controls */}
+        <div className="card-body">
+          <div className="row g-3 align-items-center mb-4">
+            <div className="col-md-4">
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search plans..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
             </div>
-          </div>
 
-          {/* Table */}
-          <div className="table-responsive">
-            <table className="table table-hover mb-0">
-              <thead className="table-light">
-                <tr>
-                  <th
-                    className="user-select-none cursor-pointer"
-                    onClick={() => handleSort('name')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Plan Name {getSortIcon('name')}
-                  </th>
-                  <th
-                    className="user-select-none cursor-pointer"
-                    onClick={() => handleSort('price')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Price {getSortIcon('price')}
-                  </th>
-                  <th
-                    className="user-select-none cursor-pointer"
-                    onClick={() => handleSort('billingCycle')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Billing Cycle {getSortIcon('billingCycle')}
-                  </th>
-                  <th
-                    className="user-select-none cursor-pointer"
-                    onClick={() => handleSort('status')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Status {getSortIcon('status')}
-                  </th>
-                  <th>Descriptions</th>
-                  <th
-                    className="user-select-none cursor-pointer"
-                    onClick={() => handleSort('subscribers')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Subscribers {getSortIcon('subscribers')}
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPlans.map((plan) => (
-                  <tr key={plan.id}>
-                    <td>
-                      <div>
-                        <div className="fw-semibold text-dark">{plan.name}</div>
+            <div className="col-md-3">
+              <select
+                className="form-select"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="All">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div className="col-md-5 text-end">
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  resetForm();
+                  setShowModal(true);
+                }}
+              >
+                <i className="bi bi-plus-circle me-2"></i>
+                Add New Plan
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Plans Cards */}
+        <div className="card-body">
+          {isLoading ? (
+            <div className="text-center py-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-4 text-danger">
+              {error}
+            </div>
+          ) : filteredPlans.length === 0 ? (
+            <div className="text-center py-4">
+              No plans found matching your criteria
+            </div>
+          ) : (
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              {filteredPlans.map((plan) => (
+                <div className="col" key={plan.id}>
+                  <div className="card h-100 border-0 shadow-sm">
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <h3 className="h5 mb-0 text-dark fw-bold">{plan.name}</h3>
+                        <button
+                          className={`btn btn-sm ${
+                            plan.status === "Active"
+                              ? "btn-outline-success"
+                              : "btn-outline-danger"
+                          }`}
+                          onClick={() => toggleStatus(plan.id)}
+                        >
+                          {plan.status}
+                        </button>
+                      </div>
+                      
+                      <div className="mb-3">
                         <small className="text-muted">ID: {plan.id}</small>
                       </div>
-                    </td>
-                    <td>
-                      <div className="h5 mb-0 text-dark fw-bold">
-                        ${plan.price.toFixed(2)}
-                      </div>
-                    </td>
-                    <td>
-                      <span className="badge bg-secondary">
-                        {plan.billingCycle}
-                      </span>
-                    </td>
-                    <td>
-                      <button
-                        className={`btn btn-sm ${plan.status === 'Active'
-                          ? 'btn-outline-success'
-                          : 'btn-outline-danger'
-                          }`}
-                        onClick={() => toggleStatus(plan.id)}
-                      >
-                        {plan.status}
-                      </button>
-                    </td>
-                    <td>
-                      <ul className="list-unstyled mb-0">
-                        {plan.descriptions.map((desc, idx) => (
-                          <li key={idx} className="small text-muted">
-                            <span className="text-primary me-1">•</span>
-                            {desc}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <div>
-                        <div className="h5 mb-0 text-dark fw-bold">
-                          {plan.subscribers.toLocaleString()}
+                      
+                      <div className="d-flex justify-content-between mb-3">
+                        <div>
+                          <div className="text-muted small">Monthly</div>
+                          <div className="h4 text-dark fw-bold">
+                            ${plan.priceMonthly.toFixed(2)}
+                          </div>
                         </div>
-                        <small className="text-muted">subscribers</small>
+                        <div className="text-end">
+                          <div className="text-muted small">Yearly</div>
+                          <div className="h4 text-dark fw-bold">
+                            ${plan.priceYearly.toFixed(2)}
+                          </div>
+                        </div>
                       </div>
-                    </td>
-                    <td>
-                      <div className="btn-group d-flex gap-2" role="group">
-                        <button
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={() => handleEdit(plan)}
-                        >
-                          <i className="bi bi-pencil-square me-2"></i>
-                        </button>
-                        <button
-                          className="btn btn-sm btn-outline-danger"
-                          onClick={() => handleDelete(plan)}
-                        >
-                          <i className="bi bi-trash me-2"></i>
-                        </button>
+                      
+                      <p className="text-muted small mb-4">
+                        {plan.description}
+                      </p>
+                      
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div className="btn-group">
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => handleEdit(plan)}
+                            title="Edit"
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleDelete(plan)}
+                            title="Delete"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </div>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-          {/* Results Footer */}
-          <div className="card-footer bg-light">
-            <div className="row align-items-center">
-              <div className="col">
-                <small className="text-muted">
-                  Showing {filteredPlans.length} of {plans.length} plans
-                </small>
-              </div>
-              <div className="col-auto">
-                <small className="text-muted">
-                  Total subscribers: {plans.reduce((sum, plan) => sum + plan.subscribers, 0).toLocaleString()}
-                </small>
-              </div>
+        {/* Results Footer */}
+        <div className="card-footer bg-light">
+          <div className="row align-items-center">
+            <div className="col">
+              <small className="text-muted">
+                Showing {filteredPlans.length} of {plans.length} plans
+              </small>
+            </div>
+            <div className="col-auto">
+              <small className="text-muted">
+                Total subscribers:{" "}
+                {plans
+                  .reduce((sum, plan) => sum + plan.subscribers, 0)
+                  .toLocaleString()}
+              </small>
             </div>
           </div>
         </div>
@@ -591,12 +428,16 @@ const PlansPackages = () => {
 
       {/* Add/Edit Plan Modal */}
       {showModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg modal-dialog-scrollable">
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          tabIndex="-1"
+        >
+          <div className="modal-dialog modal-lg modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  {editingPlan ? 'Edit Plan' : 'Add New Plan'}
+                  {isEditing ? "Edit Plan" : "Add New Plan"}
                 </h5>
                 <button
                   type="button"
@@ -605,142 +446,130 @@ const PlansPackages = () => {
                     setShowModal(false);
                     resetForm();
                   }}
+                  aria-label="Close"
                 ></button>
               </div>
 
-              <div className="modal-body">
-                {/* Plan Name */}
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">
-                    Plan Name <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                    placeholder="Enter plan name"
-                  />
-                  {errors.name && (
-                    <div className="invalid-feedback">{errors.name}</div>
-                  )}
-                </div>
+              <form onSubmit={handleSubmit}>
+                <div className="modal-body">
+                  {/* Plan Name */}
+                  <div className="mb-3">
+                    <label htmlFor="planName" className="form-label fw-semibold">
+                      Plan Name <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="planName"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className={`form-control ${
+                        errors.name ? "is-invalid" : ""
+                      }`}
+                      placeholder="Enter plan name"
+                    />
+                    {errors.name && (
+                      <div className="invalid-feedback">{errors.name}</div>
+                    )}
+                  </div>
 
-                {/* Price and Billing Cycle */}
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">
-                        Price ($) <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        min="0"
-                        step="0.01"
-                        className={`form-control ${errors.price ? 'is-invalid' : ''}`}
-                        placeholder="0.00"
-                      />
-                      {errors.price && (
-                        <div className="invalid-feedback">{errors.price}</div>
-                      )}
+                  {/* Price Monthly */}
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="priceMonthly" className="form-label fw-semibold">
+                          Monthly Price ($) <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          id="priceMonthly"
+                          name="priceMonthly"
+                          value={formData.priceMonthly}
+                          onChange={handleInputChange}
+                          min="0"
+                          step="0.01"
+                          className={`form-control ${
+                            errors.priceMonthly ? "is-invalid" : ""
+                          }`}
+                          placeholder="0.00"
+                        />
+                        {errors.priceMonthly && (
+                          <div className="invalid-feedback">{errors.priceMonthly}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Price Yearly */}
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="priceYearly" className="form-label fw-semibold">
+                          Yearly Price ($) <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          id="priceYearly"
+                          name="priceYearly"
+                          value={formData.priceYearly}
+                          onChange={handleInputChange}
+                          min="0"
+                          step="0.01"
+                          className={`form-control ${
+                            errors.priceYearly ? "is-invalid" : ""
+                          }`}
+                          placeholder="0.00"
+                        />
+                        {errors.priceYearly && (
+                          <div className="invalid-feedback">{errors.priceYearly}</div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label fw-semibold">
-                        Billing Cycle
-                      </label>
-                      <select
-                        name="billingCycle"
-                        value={formData.billingCycle}
-                        onChange={handleInputChange}
-                        className="form-select"
-                      >
-                        <option value="Monthly">Monthly</option>
-                        <option value="Yearly">Yearly</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="One-time">One-time</option>
-                      </select>
-                    </div>
+                  {/* Description */}
+                  <div className="mb-3">
+                    <label htmlFor="description" className="form-label fw-semibold">
+                      Description <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className={`form-control ${
+                        errors.description ? "is-invalid" : ""
+                      }`}
+                      placeholder="Enter plan description"
+                      rows="3"
+                    />
+                    {errors.description && (
+                      <div className="invalid-feedback">{errors.description}</div>
+                    )}
                   </div>
                 </div>
 
-                {/* Status */}
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">Status</label>
-                  <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    className="form-select"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
-                </div>
-
-                {/* Descriptions */}
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">
-                    Plan Features <span className="text-danger">*</span>
-                  </label>
-                  {formData.descriptions.map((desc, index) => (
-                    <div key={index} className="input-group mb-2">
-                      <input
-                        type="text"
-                        value={desc}
-                        onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                        className="form-control"
-                        placeholder={`Feature ${index + 1}`}
-                      />
-                      {formData.descriptions.length > 1 && (
-                        <button
-                          type="button"
-                          className="btn btn-outline-danger"
-                          onClick={() => removeDescriptionField(index)}
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-secondary"
-                    onClick={addDescriptionField}
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowModal(false);
+                      resetForm();
+                    }}
                   >
-                    + Add Another Feature
+                    Cancel
                   </button>
-                  {errors.descriptions && (
-                    <div className="text-danger small mt-1">{errors.descriptions}</div>
-                  )}
+                  <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        {isEditing ? "Updating..." : "Creating..."}
+                      </>
+                    ) : (
+                      isEditing ? "Update Plan" : "Create Plan"
+                    )}
+                  </button>
                 </div>
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    setShowModal(false);
-                    resetForm();
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSubmit}
-                >
-                  {editingPlan ? 'Update Plan' : 'Create Plan'}
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -748,12 +577,16 @@ const PlansPackages = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          tabIndex="-1"
+        >
+          <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  <span className="me-2">⚠️</span>
+                  <i className="bi bi-exclamation-triangle-fill text-warning me-2"></i>
                   Delete Plan
                 </h5>
                 <button
@@ -763,17 +596,23 @@ const PlansPackages = () => {
                     setShowDeleteConfirm(false);
                     setPlanToDelete(null);
                   }}
+                  aria-label="Close"
                 ></button>
               </div>
 
               <div className="modal-body">
                 <p className="mb-3">
-                  Are you sure you want to delete the <strong>"{planToDelete?.name}"</strong> plan?
+                  Are you sure you want to delete the{" "}
+                  <strong>"{planToDelete?.name}"</strong> plan?
                 </p>
                 <div className="alert alert-warning">
                   <small>
-                    <strong>Warning:</strong> This action cannot be undone and will affect{' '}
-                    <strong>{planToDelete?.subscribers.toLocaleString()}</strong> subscribers.
+                    <strong>Warning:</strong> This action cannot be undone and
+                    will affect{" "}
+                    <strong>
+                      {planToDelete?.subscribers.toLocaleString()}
+                    </strong>{" "}
+                    subscribers.
                   </small>
                 </div>
               </div>
@@ -793,15 +632,23 @@ const PlansPackages = () => {
                   type="button"
                   className="btn btn-danger"
                   onClick={confirmDelete}
+                  disabled={isLoading}
                 >
-                  Delete Plan
+                  {isLoading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete Plan"
+                  )}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

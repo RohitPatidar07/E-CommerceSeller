@@ -1,53 +1,52 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../config";
 
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("admin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@example.com");
+  const [password, setPassword] = useState("user123");
   const [error, setError] = useState("");
+
+  const credentials = {
+    superadmin: { email: "superadmin@gmail.com", password: "super123" },
+    admin: { email: "user@example.com", password: "user123" },
+  };
+
+  const handleRoleChange = (selectedRole) => {
+    setRole(selectedRole);
+    setEmail(credentials[selectedRole].email);
+    setPassword(credentials[selectedRole].password);
+    setError(""); // Clear error on role switch
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const credentials = {
-      admin: { email: "admin@example.com", password: "admin123" },
-      user: { email: "user@example.com", password: "user123" },
-    };
+    setError("");
 
     if (role === "superadmin") {
       try {
-        const response = await axios.post("https://cj2ww6qd-5000.inc1.devtunnels.ms/login", {
+        const response = await axios.post(`${BASE_URL}login`, {
           email,
           password,
         });
 
-        if (response.data && response.data.token) {
-          localStorage.setItem("authToken", response.data.token);
-          localStorage.setItem("userRole", "superadmin");
-          navigate("/superadmin/dashboard");
-        } else {
-          setError("Invalid response from server.");
-        }
+        // Optionally store user data or token
+        localStorage.setItem("userRole", "superadmin");
+        navigate("/superadmin/dashboard");
       } catch (err) {
-        setError("Invalid email or password for Super Admin.");
+        setError("Super Admin login failed. Please check credentials.");
       }
     } else {
       const validUser = credentials[role];
-
       if (email === validUser.email && password === validUser.password) {
         localStorage.setItem("userRole", role);
-
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
+        navigate("/admin/dashboard");
       } else {
-        setError("Invalid email or password for selected role.");
+        setError("Invalid email or password for Admin.");
       }
     }
   };
@@ -137,12 +136,11 @@ const Login = () => {
                   <select
                     className="form-select"
                     value={role}
-                    onChange={(e) => setRole(e.target.value)}
+                    onChange={(e) => handleRoleChange(e.target.value)}
                     required
                   >
                     <option value="admin">Admin</option>
                     <option value="superadmin">Super Admin</option>
-                    <option value="user">User</option>
                   </select>
                 </div>
 

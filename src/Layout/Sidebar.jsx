@@ -62,6 +62,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
     { name: "Payment", icon: faCogs, path: "/superadmin/payment" },
     { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
+     { name: "Logout", icon: faCreditCard , path: "/" },
 
   ];
 
