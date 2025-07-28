@@ -427,14 +427,14 @@ const OrderManagement = () => {
                                                     <td className="text-end">
                                                         <div className="d-flex justify-content-end">
                                                             <button
-                                                                className="btn btn-sm btn-outline-primary me-2"
+                                                                className="btn btn-sm btn-outline-success me-2"
                                                                 onClick={() => openViewModal(order)}
                                                                 title="View Details"
                                                             >
                                                                 <i className="fas fa-eye"></i>
                                                             </button>
                                                             <button
-                                                                className="btn btn-sm btn-primary me-2"
+                                                                className="btn btn-sm btn-outline-primary me-2"
                                                                 onClick={() => openEditModal(order)}
                                                                 title="Edit Order"
                                                             >

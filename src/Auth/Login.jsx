@@ -15,7 +15,7 @@ const Login = () => {
 
     const credentials = {
       admin: { email: "admin@example.com", password: "admin123" },
-      user: { email: "user@example.com", password: "user123" },
+      // Removed user credentials
     };
 
     if (role === "superadmin") {
@@ -40,12 +40,7 @@ const Login = () => {
 
       if (email === validUser.email && password === validUser.password) {
         localStorage.setItem("userRole", role);
-
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
+        navigate("/admin/dashboard");
       } else {
         setError("Invalid email or password for selected role.");
       }
@@ -91,7 +86,7 @@ const Login = () => {
 
               <h2 className="fw-bold text-center mb-3">Welcome Back!</h2>
               <p className="text-white-50 text-center mb-4">
-                Login to manage your dashboard
+                Admin Portal Login
               </p>
 
               {error && (
@@ -142,7 +137,7 @@ const Login = () => {
                   >
                     <option value="admin">Admin</option>
                     <option value="superadmin">Super Admin</option>
-                    <option value="user">User</option>
+                    {/* Removed user option */}
                   </select>
                 </div>
 

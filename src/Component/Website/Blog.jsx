@@ -13,11 +13,11 @@ import analyticsImg from "../../assets/Image9.jpeg";
 import "./Blog.css";
 const Blog = () => {
   return (
-    <div className="min-vh-100 bg-white pt-5">
+    <div className="">
     <Navbar/>
-    <div className="container-fluid ecommerce-blog-container">
+    <div className="p-5 mt-5">
       {/* Hero Section */}
-      <section className="row ecommerce-hero bg-light py-5 mb-4">
+      <section className="">
         <div className="col-12 text-center">
           <h1 className="ecommerce-hero-title display-4 fw-bold mb-3">
             E-Commerce Growth Starts With Smart Tools

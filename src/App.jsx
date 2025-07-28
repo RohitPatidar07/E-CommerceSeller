@@ -37,6 +37,7 @@ import InventoryManagements from "./Component/Admin/InventoryManagements/Invento
 import ReportsDashboard from "./Component/Admin/ReportsDashboard/ReportsDashboard";
 import ShippingSetting from "./Component/Admin/ShippingSetting/ShippingSetting";
 import DeliveryPartner from "./Component/Admin/DeliveryPartner/DeliveryPartner";
+import Profile from "./Profile/Profile";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -122,6 +123,9 @@ function App() {
                 <Route path="/admin/inventorymanagements" element={<InventoryManagements />} />
                 <Route path="/admin/shippingsetting" element={<ShippingSetting />} />
                  <Route path="/admin/deliverypartner" element={<DeliveryPartner />} />
+
+                 {/* Profile */}
+                  <Route path="/profile" element={<Profile />} />
 
 
                 {/* User routes */}

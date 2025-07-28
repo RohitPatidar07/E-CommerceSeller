@@ -102,7 +102,7 @@ const DeliveryPartner = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="">
       <h2 className="mb-4">Assign Delivery Partner</h2>
 
       {/* Step 1: Select Orders */}
