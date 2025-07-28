@@ -1,0 +1,129 @@
+/* Custom styles for the Ecommerce Blog component */
+.ecommerce-blog-container {
+    max-width: 1200px;
+    padding: 0 15px;
+  }
+  
+  .ecommerce-hero {
+    border-radius: 0.5rem;
+    padding: 3rem 1rem;
+  }
+  
+  .ecommerce-hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .ecommerce-breadcrumb {
+    font-size: 0.9rem;
+  }
+  
+  .ecommerce-blog-card .card {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .ecommerce-blog-card .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .ecommerce-blog-title {
+    min-height: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .ecommerce-blog-text {
+    min-height: 4.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .ecommerce-blog-category {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+  }
+  
+  .ecommerce-blog-image {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+  }
+  
+  .ecommerce-cta {
+    background-color: #0d6efd !important;
+  }
+  
+  /* Sidebar styles */
+  .ecommerce-sidebar {
+    position: sticky;
+    top: 20px;
+  }
+  
+  .ecommerce-sidebar-title {
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .ecommerce-sidebar-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #0d6efd;
+  }
+  /* Previous styles remain the same */
+  
+  /* Search Bar Styles */
+  .ecommerce-search-bar .form-control {
+    border-right: 0;
+    padding: 0.75rem 1rem;
+  }
+  
+  .ecommerce-search-bar .btn {
+    border-left: 0;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Popular Article Images */
+  .ecommerce-popular-image {
+    height: 70px;
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .ecommerce-popular-image {
+      height: 60px;
+    }
+    
+    .ecommerce-search-bar .form-control,
+    .ecommerce-search-bar .btn {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .ecommerce-blog-image {
+      height: 180px;
+    }
+    
+    .ecommerce-sidebar {
+      margin-top: 3rem;
+      padding-left: 0 !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .ecommerce-hero-title {
+      font-size: 2rem;
+    }
+    
+    .ecommerce-hero-subtitle {
+      font-size: 1rem !important;
+    }
+  }
+  
+  

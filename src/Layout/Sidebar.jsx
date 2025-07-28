@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
-  faTachometerAlt,
-  faUserCog,
   faClipboardList,
   faServer,
   faCreditCard,
@@ -14,7 +12,14 @@ import {
   faHistory,
   faUsers,
   faChartBar,
-  faCogs,
+  faHandshake, 
+  faBoxes, 
+  faTachometerAlt,
+  faUsersCog,
+  faSatelliteDish, 
+  faChartLine, 
+  faTruckFast,  
+  faSlidersH,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
@@ -43,24 +48,26 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Admin Menus ---
   const adminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
-    { name: "User Management", icon: faUserCog, path: "/admin/usermanagements" },
-    { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
-    { name: "Channel Integration", icon: faServer, path: "/admin/channelintegration" },
-    { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
-    { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
-    { name: "Shipping Setting", icon: faCog, path: "/admin/shippingsetting" },
-    { name: "Reports", icon: faServer, path: "/admin/reportdashboard" },
-    { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
-    { name: "Setting", icon: faCog, path: "/admin/setting" },
+  { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
+  { name: "Channel Integration", icon: faSatelliteDish, path: "/admin/channelintegration" },
+  { name: "Reports", icon: faChartLine, path: "/admin/reportdashboard" },
+  { name: "Delivery Partner", icon: faTruckFast, path: "/admin/deliverypartner" },
+  { name: "Setting", icon: faSlidersH, path: "/admin/setting" }
+    
+    // { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
+    // { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
+    // { name: "Shipping Setting", icon: faCog, path: "/admin/shippingsetting" },
+    // { name: "User Management", icon: faUserCog, path: "/admin/usermanagements" },
+    // { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
   ];
 
   // --- Super Admin Menus ---
   const superAdminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/superadmin/dashboard" },
     { name: "Plan Packages", icon: faUsers, path: "/superadmin/planpackages" },
-    { name: "Plan Request", icon: faUserCog, path: "/superadmin/planrequest" },
+    { name: "Plan Request", icon: faUser, path: "/superadmin/planrequest" },
     { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
-    { name: "Payment", icon: faCogs, path: "/superadmin/payment" },
+    { name: "Payment", icon: faCog, path: "/superadmin/payment" },
     { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
      { name: "Logout", icon: faCreditCard , path: "/" },
 

@@ -5,12 +5,11 @@ const ChannelIntegration = () => {
   const [modalType, setModalType] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState('');
   const [platforms, setPlatforms] = useState([
-    { name: 'Shopify', icon: 'fab fa-shopify', iconColor: 'text-success', connected: true },
     { name: 'Amazon', icon: 'fab fa-amazon', iconColor: 'text-warning', connected: false },
-    { name: 'eBay', icon: 'fab fa-ebay', iconColor: 'text-primary', connected: false },
-    { name: 'Etsy', icon: 'fab fa-etsy', iconColor: 'text-danger', connected: false },
-    { name: 'WooCommerce', icon: 'fab fa-wordpress', iconColor: 'text-info', connected: true },
-    { name: 'Magento', icon: 'fas fa-shopping-bag', iconColor: 'text-danger', connected: false }
+    { name: 'Meesho', icon: 'fas fa-store', iconColor: 'text-info', connected: false },
+    { name: 'Flipkart', icon: 'fas fa-shopping-cart', iconColor: 'text-primary', connected: false },
+    { name: 'Myntra', icon: 'fas fa-tshirt', iconColor: 'text-danger', connected: false },
+    { name: 'WooCommerce', icon: 'fab fa-wordpress', iconColor: 'text-info', connected: true }
   ]);
 
   const handleConnect = (platform) => {
