@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { BASE_URL } from "../../../config";
 
 const PlanRequest = () => {
   const [plans, setPlans] = useState([]);
@@ -11,9 +12,9 @@ const PlanRequest = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get("https://2lkmvcf8-5000.inc1.devtunnels.ms/plan-booking");
+      const response = await axios.get(`${BASE_URL}plan-booking`);
 
-      console.logq  ("Fetched plans:", response.data);
+      console.log("Fetched plans:", response.data);
       setPlans(response.data);
     } catch (error) {
       console.error("Error fetching plans:", error);
@@ -26,18 +27,42 @@ const PlanRequest = () => {
     fetchPlans();
   }, []);
 
-  const handleApprove = (id) => {
-    const updatedPlans = plans.map((plan) =>
-      plan._id === id ? { ...plan, status: "Approved" } : plan
-    );
-    setPlans(updatedPlans);
+  const handleApprove = async (id) => {
+    try {
+      await axios.put(
+        `https://2lkmvcf8-5000.inc1.devtunnels.ms/update-status/${id}`,
+        {
+          status: "Approved",
+        }
+      );
+
+      // Update local UI state
+      const updatedPlans = plans.map((plan) =>
+        plan._id === id ? { ...plan, status: "Approved" } : plan
+      );
+      setPlans(updatedPlans);
+    } catch (error) {
+      console.error("Error approving plan:", error);
+    }
   };
 
-  const handleReject = (id) => {
-    const updatedPlans = plans.map((plan) =>
-      plan._id === id ? { ...plan, status: "Rejected" } : plan
-    );
-    setPlans(updatedPlans);
+  const handleReject = async (id) => {
+    try {
+      await axios.put(
+        `https://2lkmvcf8-5000.inc1.devtunnels.ms/update-status/${id}`,
+        {
+          status: "Rejected",
+        }
+      );
+
+      // Update local UI state
+      const updatedPlans = plans.map((plan) =>
+        plan._id === id ? { ...plan, status: "Rejected" } : plan
+      );
+      setPlans(updatedPlans);
+    } catch (error) {
+      console.error("Error rejecting plan:", error);
+    }
   };
 
   const filteredPlans = plans.filter((plan) => {
@@ -46,7 +71,8 @@ const PlanRequest = () => {
       plan.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plan.plan?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "All" || plan.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || plan.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -160,14 +186,22 @@ const PlanRequest = () => {
                         <td className="px-4 py-3">{plan.email}</td>
                         <td className="px-4 py-3">{plan.phone}</td>
                         <td className="px-4 py-3">
-                          <span className={`badge ${getPlanBadge(plan.plan)} px-3 py-2 rounded-pill`}>
+                          <span
+                            className={`badge ${getPlanBadge(
+                              plan.plan
+                            )} px-3 py-2 rounded-pill`}
+                          >
                             {plan.plan}
                           </span>
                         </td>
                         <td className="px-4 py-3">{plan.billing}</td>
                         <td className="px-4 py-3">{plan.date}</td>
                         <td className="px-4 py-3">
-                          <span className={`badge ${getStatusBadge(plan.status)} px-3 py-2 rounded-pill`}>
+                          <span
+                            className={`badge ${getStatusBadge(
+                              plan.status
+                            )} px-3 py-2 rounded-pill`}
+                          >
                             {plan.status || "Pending"}
                           </span>
                         </td>
@@ -208,25 +242,48 @@ const PlanRequest = () => {
           {filteredPlans.length > 0 && (
             <div className="d-flex justify-content-between align-items-center px-4 py-3 border-top bg-light bg-opacity-50">
               <div className="text-muted small">
-                Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredPlans.length)} of{" "}
+                Showing {indexOfFirstItem + 1} to{" "}
+                {Math.min(indexOfLastItem, filteredPlans.length)} of{" "}
                 {filteredPlans.length} results
               </div>
               <nav>
                 <ul className="pagination pagination-sm mb-0">
-                  <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                    <button className="page-link" onClick={() => paginate(currentPage - 1)}>
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage - 1)}
+                    >
                       &laquo;
                     </button>
                   </li>
                   {[...Array(totalPages)].map((_, i) => (
-                    <li key={i} className={`page-item ${currentPage === i + 1 ? "active" : ""}`}>
-                      <button className="page-link" onClick={() => paginate(i + 1)}>
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === i + 1 ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => paginate(i + 1)}
+                      >
                         {i + 1}
                       </button>
                     </li>
                   ))}
-                  <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                    <button className="page-link" onClick={() => paginate(currentPage + 1)}>
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage + 1)}
+                    >
                       &raquo;
                     </button>
                   </li>

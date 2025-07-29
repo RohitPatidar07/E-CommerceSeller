@@ -353,130 +353,163 @@ const AdminManagement = () => {
       </div>
 
       {/* Create Admin Modal */}
-      <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Create New Admin"
-      >
-        <form onSubmit={handleCreateAdmin}>
-          {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
-          <div className="mb-3">
-            <label className="form-label">Full Name*</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              className="form-control"
-              placeholder="Enter full name"
-              onChange={handleChange}
-              required
-            />
-          </div>
+      {showCreateModal && (
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Create New Admin</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowCreateModal(false)}
+                ></button>
+              </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email Address*</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              className="form-control"
-              placeholder="Enter email address"
-              onChange={handleChange}
-              required
-            />
-          </div>
+              <div className="modal-body">
+                <form onSubmit={handleCreateAdmin}>
+                  {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
 
-          <div className="mb-3">
-            <label className="form-label">Password*</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              className="form-control"
-              placeholder="Enter password"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  <div className="mb-3">
+                    <label className="form-label">Full Name*</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      className="form-control"
+                      placeholder="Enter full name"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-          <div className="mb-3">
-            <label className="form-label">Confirm Password*</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              className="form-control"
-              placeholder="Enter confirm password"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  <div className="mb-3">
+                    <label className="form-label">Email Address*</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      className="form-control"
+                      placeholder="Enter email address"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-          <div className="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(false)}
-              className="btn btn-outline-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading}
-            >
-              {loading ? "Creating..." : "Create Admin"}
-            </button>
+                  <div className="mb-3">
+                    <label className="form-label">Password*</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      className="form-control"
+                      placeholder="Enter password"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Confirm Password*</label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      className="form-control"
+                      placeholder="Confirm password"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="d-flex justify-content-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateModal(false)}
+                      className="btn btn-outline-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={loading}
+                    >
+                      {loading ? "Creating..." : "Create Admin"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-        </form>
-      </Modal>
+        </div>
+      )}
+
+
 
       {/* Edit Admin Modal */}
-      <Modal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        title="Edit Admin"
-      >
-        <form onSubmit={handleEditAdmin}>
-          {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
-          <div className="mb-3">
-            <label className="form-label">Full Name*</label>
-            <input
-              type="text"
-              className="form-control"
-              value={editAdmin.name}
-              onChange={(e) =>
-                setEditAdmin((prev) => ({ ...prev, name: e.target.value }))
-              }
-              required
-            />
+      {showEditModal && (
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit Admin</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowEditModal(false)}
+                ></button>
+              </div>
+
+              <div className="modal-body">
+                <form onSubmit={handleEditAdmin}>
+                  {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
+
+                  <div className="mb-3">
+                    <label className="form-label">Full Name*</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={editAdmin.name}
+                      onChange={(e) =>
+                        setEditAdmin((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Email Address*</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      value={editAdmin.email}
+                      onChange={(e) =>
+                        setEditAdmin((prev) => ({ ...prev, email: e.target.value }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="d-flex justify-content-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowEditModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                      {loading ? "Saving..." : "Save Changes"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Email Address*</label>
-            <input
-              type="email"
-              className="form-control"
-              value={editAdmin.email}
-              onChange={(e) =>
-                setEditAdmin((prev) => ({ ...prev, email: e.target.value }))
-              }
-              required
-            />
-          </div>
-          <div className="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowEditModal(false)}
-              className="btn btn-outline-secondary"
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        </form>
-      </Modal>
+        </div>
+      )}
+
 
       {/* Delete Confirmation Modal */}
       <Modal
@@ -503,8 +536,8 @@ const AdminManagement = () => {
             >
               Cancel
             </button>
-            <button 
-              onClick={handleDeleteAdmin} 
+            <button
+              onClick={handleDeleteAdmin}
               className="btn btn-danger"
               disabled={loading}
             >
@@ -515,70 +548,85 @@ const AdminManagement = () => {
       </Modal>
 
       {/* Reset Password Modal */}
-      <Modal
-        isOpen={showResetPasswordModal}
-        onClose={() => setShowResetPasswordModal(false)}
-        title="Reset Password"
-      >
-        <div>
-          <p className="mb-3">
-            Reset password for <strong>{selectedAdmin?.name}</strong>
-          </p>
-          <form onSubmit={handleResetPasswordSubmit}>
-            {error && (
-              <div className="alert alert-danger py-2 px-3">{error}</div>
-            )}
-            <div className="mb-3">
-              <label className="form-label">New Password*</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter new password"
-                value={resetPassword.newPassword}
-                onChange={(e) =>
-                  setResetPassword((prev) => ({
-                    ...prev,
-                    newPassword: e.target.value,
-                  }))
-                }
-                required
-              />
+      {showResetPasswordModal && (
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Reset Password</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowResetPasswordModal(false)}
+                ></button>
+              </div>
+
+              <div className="modal-body">
+                <p className="mb-3">
+                  Reset password for <strong>{selectedAdmin?.name}</strong>
+                </p>
+                <form onSubmit={handleResetPasswordSubmit}>
+                  {error && (
+                    <div className="alert alert-danger py-2 px-3">{error}</div>
+                  )}
+
+                  <div className="mb-3">
+                    <label className="form-label">New Password*</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Enter new password"
+                      value={resetPassword.newPassword}
+                      onChange={(e) =>
+                        setResetPassword((prev) => ({
+                          ...prev,
+                          newPassword: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Confirm Password*</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Confirm new password"
+                      value={resetPassword.confirmPassword}
+                      onChange={(e) =>
+                        setResetPassword((prev) => ({
+                          ...prev,
+                          confirmPassword: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="d-flex justify-content-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowResetPasswordModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-success"
+                      disabled={loading}
+                    >
+                      {loading ? "Resetting..." : "Reset Password"}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div className="mb-3">
-              <label className="form-label">Confirm Password*</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Confirm new password"
-                value={resetPassword.confirmPassword}
-                onChange={(e) =>
-                  setResetPassword((prev) => ({
-                    ...prev,
-                    confirmPassword: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="d-flex justify-content-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowResetPasswordModal(false)}
-                className="btn btn-outline-secondary"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-success"
-                disabled={loading}
-              >
-                {loading ? "Resetting..." : "Reset Password"}
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
-      </Modal>
+      )}
+
     </div>
   );
 };
