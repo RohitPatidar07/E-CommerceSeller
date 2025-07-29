@@ -3,53 +3,58 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config";
 
+// Dummy valid admin user for demo purposes (ideally fetched from DB)
+
+
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("admin");
-  const [email, setEmail] = useState("user@example.com");
-  const [password, setPassword] = useState("user123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const credentials = {
-    superadmin: { email: "superadmin@gmail.com", password: "super123" },
-    admin: { email: "user@example.com", password: "user123" },
-  };
 
   const handleRoleChange = (selectedRole) => {
     setRole(selectedRole);
-    setEmail(credentials[selectedRole].email);
-    setPassword(credentials[selectedRole].password);
-    setError(""); // Clear error on role switch
+    setError(""); // Clear error on role change
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (role === "superadmin") {
-      try {
-        const response = await axios.post(`${BASE_URL}login`, {
-          email,
-          password,
-        });
+  try {
+    const response = await axios.post(`${BASE_URL}login`, {
+      email,
+      password,
+      role,
+    });
 
-        // Optionally store user data or token
-        localStorage.setItem("userRole", "superadmin");
+    const data = response.data;
+
+    if (data && data.success && data.user) {
+      const { role: userRole } = data.user;
+
+      // Save token and role
+      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("authToken", data.user.token); // if provided
+
+      if (userRole === "superadmin") {
         navigate("/superadmin/dashboard");
-      } catch (err) {
-        setError("Super Admin login failed. Please check credentials.");
-      }
-    } else {
-      const validUser = credentials[role];
-      if (email === validUser.email && password === validUser.password) {
-        localStorage.setItem("userRole", role);
+      } else if (userRole === "admin") {
         navigate("/admin/dashboard");
       } else {
-        setError("Invalid email or password for Admin.");
+        setError("Unknown role assigned.");
       }
+    } else {
+      setError("Invalid credentials.");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError("Login failed. Please check your credentials and try again.");
+  }
+};
+
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-white px-3">
@@ -131,7 +136,7 @@ const Login = () => {
                   </span>
                 </div>
 
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <label className="form-label text-white">Select Role</label>
                   <select
                     className="form-select"
@@ -142,16 +147,26 @@ const Login = () => {
                     <option value="admin">Admin</option>
                     <option value="superadmin">Super Admin</option>
                   </select>
-                </div>
+                </div> */}
 
                 <div className="mb-3 d-flex justify-content-between align-items-center">
                   <div className="form-check">
-                    <input className="form-check-input" type="checkbox" id="remember" />
-                    <label className="form-check-label text-white-50" htmlFor="remember">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="remember"
+                    />
+                    <label
+                      className="form-check-label text-white-50"
+                      htmlFor="remember"
+                    >
                       Remember me
                     </label>
                   </div>
-                  <a href="#" className="text-white-50 text-decoration-none small">
+                  <a
+                    href="#"
+                    className="text-white-50 text-decoration-none small"
+                  >
                     Forgot Password?
                   </a>
                 </div>

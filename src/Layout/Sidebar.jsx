@@ -52,7 +52,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   { name: "Channel Integration", icon: faSatelliteDish, path: "/admin/channelintegration" },
   { name: "Reports", icon: faChartLine, path: "/admin/reportdashboard" },
   { name: "Delivery Partner", icon: faTruckFast, path: "/admin/deliverypartner" },
-  { name: "Setting", icon: faSlidersH, path: "/admin/setting" }
+  { name: "Setting", icon: faSlidersH, path: "/admin/setting" },
     
     // { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
     // { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
@@ -68,8 +68,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     { name: "Plan Request", icon: faUser, path: "/superadmin/planrequest" },
     { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
     { name: "Payment", icon: faCog, path: "/superadmin/payment" },
-    { name: "Srtting", icon: faCreditCard, path: "/superadmin/setting" },
-     { name: "Logout", icon: faCreditCard , path: "/" },
+    { name: "Setting", icon: faCreditCard, path: "/superadmin/setting" },
 
   ];
 

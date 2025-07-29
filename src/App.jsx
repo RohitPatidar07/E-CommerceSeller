@@ -65,6 +65,7 @@ function App() {
     location.pathname === "/about"||
     location.pathname === "/blog"||
     location.pathname === "/contact";
+   
   return (
     <>
       {hideLayout ? (
@@ -82,6 +83,7 @@ function App() {
           <Route path="/about" element={<About/>} />    
           <Route path="/contact" element={<Contact/>} />
           <Route path="/blog" element={<Blog/>} />
+         
         </Routes>
       ) : (
         <>
@@ -131,6 +133,7 @@ function App() {
                 {/* User routes */}
                 <Route path="/user/inventorymanagement" element={<InventoryManagement />} />
                 <Route path="/user/reports" element={<Reports />} />
+                
 
               </Routes>
             </div>

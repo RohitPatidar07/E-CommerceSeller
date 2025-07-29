@@ -469,7 +469,7 @@ const Dashboard = () => {
       <div className="">
         {/* Header Section */}
         <div className="mb-5">
-          <h1 className="h2 mb-1 mb-md-2">Welcome back, Admin!</h1>
+          <h1 className="h2 mb-1 mb-md-2">Welcome back, Super Admin!</h1>
           <p className="text-muted">Here's what's happening with your platform today.</p>
         </div>
 
