@@ -9,14 +9,48 @@ const Pricing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const selectedPlan = new URLSearchParams(window.location.search).get("plan");
   const [formData, setFormData] = useState({
     company: "",
     email: "",
-    plan: "",
+    plan: selectedPlan || "",
     billing: "",
     date: "",
     phone: "",
   });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post(
+        "https://2lkmvcf8-5000.inc1.devtunnels.ms/plan-booking",
+        formData
+      );
+      alert("Plan booking submitted successfully!");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Failed to submit plan booking:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  // const [formData, setFormData] = useState({
+  //   company: "",
+  //   email: "",
+  //   plan: "",
+  //   billing: "",
+  //   date: "",
+  //   phone: "",
+  // });
 
   const fetchPlans = async () => {
     try {
@@ -28,8 +62,6 @@ const Pricing = () => {
         priceMonthly: item.priceMonthly,
         priceYearly: item.priceYearly,
         description: item.description,
-        status: "Active",
-        subscribers: Math.floor(Math.random() * 10000),
       }));
       setPlans(transformedData);
     } catch (err) {
@@ -43,12 +75,12 @@ const Pricing = () => {
     fetchPlans();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  // const handleChange = (e) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: e.target.value,
+  //   }));
+  // };
 
   const openModal = (planName) => {
     setFormData((prev) => ({
@@ -58,13 +90,13 @@ const Pricing = () => {
     setShowModal(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted Data:", formData);
-    // axios.post(`${BASE_URL}pricing/book`, formData)...
-    setShowModal(false);
-    alert("Booking Submitted!");
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Submitted Data:", formData);
+  //   // axios.post(`${BASE_URL}pricing/book`, formData)
+  //   setShowModal(false);
+  //   alert("Booking Submitted!");
+  // };
 
   return (
     <div className="min-vh-100">
@@ -100,8 +132,12 @@ const Pricing = () => {
               >
                 Simple, Transparent Pricing
               </h2>
-              <p className="text-muted fs-5 mx-auto" style={{ maxWidth: "36rem" }}>
-                Start your 14-day free trial. No credit card required. Upgrade anytime.
+              <p
+                className="text-muted fs-5 mx-auto"
+                style={{ maxWidth: "36rem" }}
+              >
+                Start your 14-day free trial. No credit card required. Upgrade
+                anytime.
               </p>
             </div>
 
@@ -113,21 +149,24 @@ const Pricing = () => {
                 {plans.map((plan, index) => (
                   <div key={plan.id} className="col-12 col-md-4">
                     <div
-                      className="p-4 rounded-button shadow hover-shadow-lg transition-all cursor-pointer border h-100 hover-translate-up"
+                      className="p-4 rounded-button shadow hover-shadow-lg transition-all cursor-pointer border h-100 hover-translate-up position-relative"
                       style={{
                         background:
                           index === 1
                             ? "linear-gradient(to bottom right, #2563eb, #3b82f6)"
                             : "linear-gradient(to bottom right, white, rgba(239, 246, 255, 0.3))",
                         borderColor: "rgba(191, 219, 254, 0.3)",
-                        color: index === 1 ? "white" : "inherit",
+                        color: index === 2 ? "white" : "inherit",
                       }}
                     >
                       {index === 1 && (
                         <div className="position-absolute top-0 start-50 translate-middle">
                           <span
                             className="text-primary px-4 py-1 rounded-button small fw-semibold shadow"
-                            style={{ background: "#bfdbfe", marginTop: "-1rem" }}
+                            style={{
+                              background: "#bfdbfe",
+                              marginTop: "-1rem",
+                            }}
                           >
                             Most Popular
                           </span>
@@ -135,37 +174,145 @@ const Pricing = () => {
                       )}
 
                       <div className="text-center position-relative">
-                        <h3 className={`fs-3 fw-bold mb-3 ${index === 1 ? "text-white" : "text-dark"}`}>
-                          {plan.name}
+                        <h3
+                          className={`fs-3 fw-bold mb-3 ${
+                            index === 1 ? "text-white" : "text-dark"
+                          }`}
+                        >
+                          {index === 0
+                            ? "Basic Plan"
+                            : index === 1
+                            ? "Gold Plan"
+                            : "Silver Plan "}
                         </h3>
+
                         <div className="mb-4">
                           <div className="d-flex align-items-center justify-content-center">
-                            <span className={`small me-2 ${index === 1 ? "text-white-50" : "text-muted"}`}>
+                            <span
+                              className={`small me-2 ${
+                                index === 1 ? "text-white-50" : "text-muted"
+                              }`}
+                            >
                               INR
                             </span>
-                            <span className={`fs-1 fw-bold ${index === 1 ? "text-white" : "text-primary"}`}>
+                            <span
+                              className={`fs-1 fw-bold ${
+                                index === 1 ? "text-white" : "text-primary"
+                              }`}
+                            >
                               {plan.priceMonthly}
                             </span>
                           </div>
-                          <span className={`small ${index === 1 ? "text-white-50" : "text-muted"}`}>month</span>
+                          <span
+                            className={`small ${
+                              index === 1 ? "text-white-50" : "text-muted"
+                            }`}
+                          >
+                            per month
+                          </span>
                         </div>
-                        <p className="text-black small mb-4">{plan.description}</p>
+
+                        <ul
+                          className={`text-start list-unstyled px-4 mb-4 small ${
+                            index === 1 ? "text-white" : "text-muted"
+                          }`}
+                        >
+                          {index === 0 && (
+                            <>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                1 User
+                              </li>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                5 GB Storage
+                              </li>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                Email Support
+                              </li>
+                            </>
+                          )}
+                          {index === 2 && (
+                            <>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                5 Users
+                              </li>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                50 GB Storage
+                              </li>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                Priority Email Support
+                              </li>
+                              <li>
+                                <i className="fas fa-check text-success me-2"></i>
+                                Basic Analytics
+                              </li>
+                            </>
+                          )}
+                          {index === 1 && (
+                            <>
+                              <li>
+                                <i className="fas fa-check me-2"></i>
+                                Unlimited Users
+                              </li>
+                              <li>
+                                <i className="fas fa-check  me-2"></i>
+                                1 TB Storage
+                              </li>
+                              <li>
+                                <i className="fas fa-check  me-2"></i>
+                                24/7 Phone & Email Support
+                              </li>
+                              <li>
+                                <i className="fas fa-check  me-2"></i>
+                                Advanced Analytics
+                              </li>
+                              <li>
+                                <i className="fas fa-check  me-2"></i>
+                                Custom Reports
+                              </li>
+                            </>
+                          )}
+                        </ul>
+
                         <div className="mb-4">
                           <div className="d-flex align-items-center justify-content-center">
-                            <span className={`fs-1 fw-bold ${index === 1 ? "text-white" : "text-primary"}`}>
+                            <span
+                              className={`fs-1 fw-bold ${
+                                index === 1 ? "text-white" : "text-primary"
+                              }`}
+                            >
                               {plan.priceYearly}
                             </span>
                           </div>
-                          <span className={`small ${index === 1 ? "text-white-50" : "text-muted"}`}>Yearly</span>
+                          <span
+                            className={`small ${
+                              index === 1 ? "text-white-50" : "text-muted"
+                            }`}
+                          >
+                            per year
+                          </span>
                         </div>
 
                         <button
                           className={`btn w-100 d-flex justify-content-center align-items-center gap-2 ${
-                            index === 1 ? "btn-light text-primary" : "btn-primary"
+                            index === 1
+                              ? "btn-light text-primary"
+                              : "btn-primary"
                           }`}
                           onClick={() => openModal(plan.name)}
                         >
-                          <span>{index === 2 ? "Contact Sales" : "Choose Plan"}</span>
+                          <span>
+                            {index === 0
+                              ? "Choose Basic"
+                              : index === 2
+                              ? "Choose Silver "
+                              : "Choose Gold "}
+                          </span>
                           <i className="fas fa-arrow-right"></i>
                         </button>
                       </div>
@@ -180,50 +327,98 @@ const Pricing = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="modal show fade d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div
+          className="modal show fade d-block"
+          tabIndex="-1"
+          role="dialog"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-lg" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Pricing Booking Form</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                <h5 className="modal-title">Request Form</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
               </div>
               <div className="modal-body">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label className="form-label">Company</label>
-                    <input type="text" className="form-control" name="company" value={formData.company} onChange={handleChange} required placeholder="Enter company name" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter company name"
+                    />
                   </div>
-
                   <div className="mb-3">
                     <label className="form-label">Email</label>
-                    <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required placeholder="Enter email address" />
+                    <input
+                      type="email"
+                      className="form-control"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter email address"
+                    />
                   </div>
-
                   <div className="mb-3">
                     <label className="form-label">Plan</label>
-                    <input type="text" className="form-control" name="plan" value={formData.plan} readOnly />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="plan"
+                      value={formData.plan}
+                      readOnly
+                    />
                   </div>
-
                   <div className="mb-3">
                     <label className="form-label">Billing</label>
-                    <select className="form-select" name="billing" value={formData.billing} onChange={handleChange} required>
+                    <select
+                      className="form-select"
+                      name="billing"
+                      value={formData.billing}
+                      onChange={handleChange}
+                      required
+                    >
                       <option value="">Select billing cycle</option>
-                      <option value="monthly">Monthly</option>
-                      <option value="yearly">Yearly</option>
+                      <option value="Monthly">Monthly</option>
+                      <option value="Yearly">Yearly</option>
                     </select>
                   </div>
-
                   <div className="mb-3">
                     <label className="form-label">Date</label>
-                    <input type="date" className="form-control" name="date" value={formData.date} onChange={handleChange} required />
+                    <input
+                      type="date"
+                      className="form-control"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
-
                   <div className="mb-3">
                     <label className="form-label">Phone Number</label>
-                    <input type="tel" className="form-control" name="phone" value={formData.phone} onChange={handleChange} required placeholder="Enter phone number" />
+                    <input
+                      type="tel"
+                      className="form-control"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter phone number"
+                    />
                   </div>
-
-                  <button type="submit" className="btn btn-primary">Submit Booking</button>
+                  <button type="submit" className="btn btn-primary">
+                    Submit Booking
+                  </button>
                 </form>
               </div>
             </div>
