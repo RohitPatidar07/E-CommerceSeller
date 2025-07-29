@@ -12,16 +12,17 @@ import {
   faHistory,
   faUsers,
   faChartBar,
-  faHandshake, 
-  faBoxes, 
+  faHandshake,
+  faBoxes,
   faTachometerAlt,
   faUsersCog,
-  faSatelliteDish, 
-  faChartLine, 
-  faTruckFast,  
+  faSatelliteDish,
+  faChartLine,
+  faTruckFast,
   faSlidersH,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
+import { FaSignOutAlt, FaUser } from "react-icons/fa";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
@@ -48,12 +49,25 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   // --- Admin Menus ---
   const adminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/admin/dashboard" },
-  { name: "Orders Management", icon: faClipboardList, path: "/admin/ordermanagements" },
-  { name: "Channel Integration", icon: faSatelliteDish, path: "/admin/channelintegration" },
-  { name: "Reports", icon: faChartLine, path: "/admin/reportdashboard" },
-  { name: "Delivery Partner", icon: faTruckFast, path: "/admin/deliverypartner" },
-  { name: "Setting", icon: faSlidersH, path: "/admin/setting" },
-    
+    {
+      name: "Orders Management",
+      icon: faClipboardList,
+      path: "/admin/ordermanagements",
+    },
+    {
+      name: "Channel Integration",
+      icon: faSatelliteDish,
+      path: "/admin/channelintegration",
+    },
+    { name: "Reports", icon: faChartLine, path: "/admin/reportdashboard" },
+    {
+      name: "Delivery Partner",
+      icon: faTruckFast,
+      path: "/admin/deliverypartner",
+    },
+    { name: "Profile", icon: faUser, path: "/profile" },
+    // { name: "Setting", icon: faSlidersH, path: "/admin/setting" },
+
     // { name: "Inventory Managements", icon: faServer, path: "/admin/inventorymanagements" },
     // { name: "Plan Billing", icon: faServer, path: "/admin/plansbilling" },
     // { name: "Shipping Setting", icon: faCog, path: "/admin/shippingsetting" },
@@ -61,24 +75,48 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     // { name: "System Alerts ", icon: faCreditCard, path: "/admin/systemalerts" },
   ];
 
+  const handleLogout = () => {
+    localStorage.clear(); // Remove token
+    navigate("/"); // Redirect to login
+  };
   // --- Super Admin Menus ---
   const superAdminMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/superadmin/dashboard" },
     { name: "Plan Packages", icon: faUsers, path: "/superadmin/planpackages" },
-    { name: "Plan Request", icon: faUser, path: "/superadmin/planrequest" },
-    { name: "User Management", icon: faChartBar, path: "/superadmin/usermanagement" },
-    { name: "Payment", icon: faCog, path: "/superadmin/payment" },
-    { name: "Setting", icon: faCreditCard, path: "/superadmin/setting" },
-
+    {
+      name: "Plan Request",
+      icon: faChartLine,
+      path: "/superadmin/planrequest",
+    },
+    {
+      name: "User Management",
+      icon: faChartBar,
+      path: "/superadmin/usermanagement",
+    },
+    { name: "Profile", icon: faUser, path: "/profile" },
+    // // { name: "Payment", icon: faCog, path: "/superadmin/payment" },
+    // { name: "Setting", icon: faCreditCard, path: "/superadmin/setting" },
   ];
 
   // --- User Menus ---
   const userMenus = [
     { name: "Dashboard", icon: faTachometerAlt, path: "/user/dashboard" },
-    { name: "Shipping Setting", icon: faBoxOpen, path: "/user/shippingsetting" },
-    { name: "Channel Integrations", icon: faHistory, path: "/user/channelintergration" },
+    {
+      name: "Shipping Setting",
+      icon: faBoxOpen,
+      path: "/user/shippingsetting",
+    },
+    {
+      name: "Channel Integrations",
+      icon: faHistory,
+      path: "/user/channelintergration",
+    },
     { name: "Order Management", icon: faUser, path: "/user/ordermanagement" },
-    { name: "Inventory Management", icon: faCog, path: "/user/inventorymanagement" },
+    {
+      name: "Inventory Management",
+      icon: faCog,
+      path: "/user/inventorymanagement",
+    },
     { name: "Report", icon: faCog, path: "/user/reports" },
     { name: "Shipping Setting", icon: faCog, path: "/user/shippingsetting" },
     { name: "Billing And Plans ", icon: faCog, path: "/user/setting" },
@@ -90,8 +128,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     role === "admin"
       ? adminMenus
       : role === "superadmin"
-        ? superAdminMenus
-        : userMenus;
+      ? superAdminMenus
+      : userMenus;
 
   return (
     <div className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
@@ -108,6 +146,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               </div>
             </li>
           ))}
+          <li className="menu-item">
+            <div className="menu-link" onClick={handleLogout}>
+              <FaSignOutAlt className="menu-icon" />
+              {!collapsed && <span className="menu-text">Logout</span>}
+            </div>
+          </li>
         </ul>
       </div>
     </div>

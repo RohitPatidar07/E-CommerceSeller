@@ -9,7 +9,7 @@ const ChannelIntegration = () => {
     { name: 'Meesho', icon: 'fas fa-store', iconColor: 'text-info', connected: false },
     { name: 'Flipkart', icon: 'fas fa-shopping-cart', iconColor: 'text-primary', connected: false },
     { name: 'Myntra', icon: 'fas fa-tshirt', iconColor: 'text-danger', connected: false },
-    { name: 'WooCommerce', icon: 'fab fa-wordpress', iconColor: 'text-info', connected: true }
+    { name: 'Shopify', icon: 'fab fa-shopify', iconColor: 'text-info', connected: true }
   ]);
 
   const handleConnect = (platform) => {

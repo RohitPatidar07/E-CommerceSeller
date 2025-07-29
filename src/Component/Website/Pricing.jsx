@@ -32,7 +32,7 @@ const Pricing = () => {
 
     try {
       await axios.post(
-        "https://2lkmvcf8-5000.inc1.devtunnels.ms/plan-booking",
+        `${BASE_URL}plan-booking`,
         formData
       );
       alert("Plan booking submitted successfully!");

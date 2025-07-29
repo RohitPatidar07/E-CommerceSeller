@@ -8,8 +8,8 @@ const AdminManagement = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [admins, setAdmins] = useState([]); // State to hold admin data
-  const [id, setId] = useState(""); // State to hold admin ID for editing
+  const [admins, setAdmins] = useState([]);
+  const [id, setId] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -21,6 +21,31 @@ const AdminManagement = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [editAdmin, setEditAdmin] = useState({
+    name: "",
+    email: "",
+    region: "North America",
+  });
+
+  const [resetPassword, setResetPassword] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Fetch admin data
+  const fetchAdminData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}getAll-admin`);
+      setAdmins(response.data);
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +59,6 @@ const AdminManagement = () => {
 
     try {
       const res = await axios.post(`${BASE_URL}create-admin`, formData);
-
       console.log("Admin created:", res.data);
       setShowCreateModal(false);
       setFormData({
@@ -44,6 +68,7 @@ const AdminManagement = () => {
         confirmPassword: "",
         role: "admin",
       });
+      fetchAdminData(); // Refresh the admin list
     } catch (err) {
       console.error("Error creating admin:", err);
       setError(err.response?.data?.message || "Something went wrong");
@@ -52,18 +77,91 @@ const AdminManagement = () => {
     }
   };
 
-  // Form states
+  const handleEditAdmin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  const [editAdmin, setEditAdmin] = useState({
-    name: "",
-    email: "",
-    region: "North America",
-  });
+    try {
+      const response = await axios.put(`${BASE_URL}update/${id}`, {
+        name: editAdmin.name,
+        email: editAdmin.email,
+      });
 
-  // Save to localStorage whenever admins change
-  useEffect(() => {
-    localStorage.setItem("adminUsers", JSON.stringify(admins));
-  }, [admins]);
+      if (response.status === 200) {
+        alert("Admin updated successfully!");
+        setShowEditModal(false);
+        fetchAdminData(); // Refresh the admin list
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      setError(error.response?.data?.message || "Failed to update admin. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAdmin = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(`${BASE_URL}delete/${id}`);
+      if (response.status === 200) {
+        alert("Admin deleted successfully!");
+        setShowDeleteModal(false);
+        fetchAdminData(); // Refresh the admin list
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert(error.response?.data?.message || "Failed to delete admin.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (resetPassword.newPassword !== resetPassword.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.put(`${BASE_URL}reset-password/${id}`, {
+        newPassword: resetPassword.newPassword,
+        confirmPassword: resetPassword.confirmPassword,
+      });
+
+      if (response.status === 200) {
+        alert("Password reset successfully.");
+        setShowResetPasswordModal(false);
+        setResetPassword({ newPassword: "", confirmPassword: "" });
+        fetchAdminData(); // Refresh the admin list
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Password reset failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleStatus = async (id) => {
+    try {
+      const res = await axios.put(`${BASE_URL}toggle-status/${id}`);
+      const updatedStatus = res.data.status;
+
+      setAdmins((prev) =>
+        prev.map((admin) =>
+          admin._id === id ? { ...admin, status: updatedStatus } : admin
+        )
+      );
+      fetchAdminData(); // Refresh the admin list
+    } catch (err) {
+      console.error("Failed to toggle status:", err);
+    }
+  };
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -76,103 +174,6 @@ const AdminManagement = () => {
     }
   };
 
-  // Handle create new admin
-
-  // Handle edit admin
-
-  // Handle delete admin
-  const handleDeleteAdmin = async () => {
-    try {
-      const response = await axios.delete(`${BASE_URL}delete/${id}`);
-      if (response.status === 200) {
-        // success actions
-        alert("Admin deleted successfully!");
-        setId(""); // Clear ID after deletion
-        setShowDeleteModal(false);
-        fetchAdminData(); // refetch admin list if you have this function
-      }
-    } catch (error) {
-      console.error("Delete failed:", error);
-    }
-  };
-
-  // Handle reset password
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}getAll-admin`)
-      .then((response) => {
-        setAdmins(response.data); // adjust if response is { data: [...] }
-      })
-      .catch((error) => {
-        console.error("Error fetching admin data:", error);
-      });
-  }, []);
-
-  const handleEditAdmin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.put(
-        `${BASE_URL}update/${id}`, // Use the ID from state
-        {
-          name: editAdmin.name,
-          email: editAdmin.email,
-        }
-      );
-
-      if (response.status === 200) {
-        alert("Admin updated successfully!");
-        setShowEditModal(false);
-        // Clear ID after update
-        // refresh admin list if applicable
-      }
-    } catch (error) {
-      console.error("Update failed:", error);
-      alert("Failed to update admin. Please try again.");
-    }
-  };
-
-  const [resetPassword, setResetPassword] = useState({
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  // 🔁 Password Reset Submit Handler
-  const handleResetPasswordSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (resetPassword.newPassword !== resetPassword.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await axios.put(
-        `${BASE_URL}reset-password/${id}`,
-        {
-          newPassword: resetPassword.newPassword,
-          confirmPassword: resetPassword.confirmPassword,
-        }
-      );
-
-      alert("Password reset successfully.");
-      setShowResetPasswordModal(false);
-      setId(""); // Clear ID after reset
-      if (response.status === 200)
-      setResetPassword({ newPassword: "", confirmPassword: "" });
-    } catch (err) {
-      setError(err.response?.data?.message || "Password reset failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Badge color function
-
-  // Modal component
   const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
     if (!isOpen) return null;
 
@@ -233,7 +234,6 @@ const AdminManagement = () => {
                   <th className="d-none d-md-table-cell">Admin ID</th>
                   <th>Name</th>
                   <th className="d-none d-sm-table-cell">Email</th>
-                  {/* <th className="d-none d-lg-table-cell">Region</th> */}
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -242,7 +242,7 @@ const AdminManagement = () => {
                 {admins
                   .filter((admin) => admin.status !== "Deleted")
                   .map((admin) => (
-                    <tr key={admin.id}>
+                    <tr key={admin._id}>
                       <td className="fw-semibold d-none d-md-table-cell">
                         {admin._id}
                       </td>
@@ -250,10 +250,12 @@ const AdminManagement = () => {
                       <td className="text-muted d-none d-sm-table-cell">
                         {admin.email}
                       </td>
-                      {/* <td className="d-none d-lg-table-cell">{admin.region || "—"}</td> */}
                       <td>
                         <span
                           className={`badge ${getStatusBadge(admin.status)}`}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => toggleStatus(admin._id)}
+                          title="Click to toggle status"
                         >
                           {admin.status}
                         </span>
@@ -263,7 +265,7 @@ const AdminManagement = () => {
                           <button
                             onClick={() => {
                               setSelectedAdmin(admin);
-                              setId(admin._id); // This is the crucial line you were missing
+                              setId(admin._id);
                               setEditAdmin({
                                 name: admin.name,
                                 email: admin.email,
@@ -282,7 +284,7 @@ const AdminManagement = () => {
                           <button
                             onClick={() => {
                               setSelectedAdmin(admin);
-                               setId(admin._id);
+                              setId(admin._id);
                               setShowResetPasswordModal(true);
                             }}
                             className="btn btn-sm btn-outline-success"
@@ -293,10 +295,11 @@ const AdminManagement = () => {
                               Reset
                             </span>
                           </button>
+
                           <button
                             onClick={() => {
                               setSelectedAdmin(admin);
-                              setId(admin._id); // Set the ID for deletion
+                              setId(admin._id);
                               setShowDeleteModal(true);
                             }}
                             className="btn btn-sm btn-outline-danger"
@@ -435,6 +438,7 @@ const AdminManagement = () => {
         title="Edit Admin"
       >
         <form onSubmit={handleEditAdmin}>
+          {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
           <div className="mb-3">
             <label className="form-label">Full Name*</label>
             <input
@@ -459,23 +463,6 @@ const AdminManagement = () => {
               required
             />
           </div>
-          {/* <div className="mb-3">
-          <label className="form-label">Region*</label>
-          <select
-            className="form-select"
-            value={editAdmin.region}
-            onChange={(e) =>
-              setEditAdmin((prev) => ({ ...prev, region: e.target.value }))
-            }
-            required
-          >
-            <option value="North America">North America</option>
-            <option value="Europe">Europe</option>
-            <option value="Asia Pacific">Asia Pacific</option>
-            <option value="Latin America">Latin America</option>
-            <option value="Middle East">Middle East</option>
-          </select>
-        </div> */}
           <div className="d-flex justify-content-end gap-2 pt-2">
             <button
               type="button"
@@ -484,8 +471,8 @@ const AdminManagement = () => {
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
-              Save Changes
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
@@ -516,8 +503,12 @@ const AdminManagement = () => {
             >
               Cancel
             </button>
-            <button onClick={handleDeleteAdmin} className="btn btn-danger">
-              Delete Admin
+            <button 
+              onClick={handleDeleteAdmin} 
+              className="btn btn-danger"
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete Admin"}
             </button>
           </div>
         </div>
