@@ -353,83 +353,97 @@ const AdminManagement = () => {
       </div>
 
       {/* Create Admin Modal */}
-      <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Create New Admin"
-      >
-        <form onSubmit={handleCreateAdmin}>
-          {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
-          <div className="mb-3">
-            <label className="form-label">Full Name*</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              className="form-control"
-              placeholder="Enter full name"
-              onChange={handleChange}
-              required
-            />
-          </div>
+  {showCreateModal && (
+  <div className="modal d-block" tabIndex="-1">
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Create New Admin</h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setShowCreateModal(false)}
+          ></button>
+        </div>
+        <div className="modal-body">
+          <form onSubmit={handleCreateAdmin}>
+            {error && <div className="alert alert-danger">{error}</div>}
 
-          <div className="mb-3">
-            <label className="form-label">Email Address*</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              className="form-control"
-              placeholder="Enter email address"
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <label className="form-label">Full Name*</label>
+              <input
+                type="text"
+                name="name"
+                className="form-control"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter full name"
+                required
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="form-label">Password*</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              className="form-control"
-              placeholder="Enter password"
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <label className="form-label">Email Address*</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter email address"
+                required
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="form-label">Confirm Password*</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              className="form-control"
-              placeholder="Enter confirm password"
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <label className="form-label">Password*</label>
+              <input
+                type="password"
+                name="password"
+                className="form-control"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                required
+              />
+            </div>
 
-          <div className="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(false)}
-              className="btn btn-outline-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading}
-            >
-              {loading ? "Creating..." : "Create Admin"}
-            </button>
-          </div>
-        </form>
-      </Modal>
+            <div className="mb-3">
+              <label className="form-label">Confirm Password*</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                className="form-control"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm password"
+                required
+              />
+            </div>
+
+            <div className="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="btn btn-outline-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Admin"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Edit Admin Modal */}
       <Modal

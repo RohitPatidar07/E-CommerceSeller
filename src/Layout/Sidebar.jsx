@@ -89,7 +89,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       path: "/superadmin/planrequest",
     },
     {
-      name: "User Management",
+      name: "Admin Management",
       icon: faChartBar,
       path: "/superadmin/usermanagement",
     },
