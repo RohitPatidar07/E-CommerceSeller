@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import  { BASE_URL } from "../../../config"; // Adjust the import path as necessary
+import { BASE_URL } from "../../../config"; // Adjust the import path as necessary
 
 const PlansPackages = () => {
   // State for plans data and UI
@@ -29,7 +29,34 @@ const PlansPackages = () => {
     priceMonthly: "",
     priceYearly: "",
     description: "",
+    features: ["", "", ""], // Initialize with 3 empty feature slots
   });
+
+  const toggleStatus = async (id) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.put(`${BASE_URL}plans/${id}/toggle-status`);
+
+      // Optional: show toast or success message here
+
+      // Update local state
+      const updatedPlans = plans.map((plan) =>
+        plan.id === id
+          ? {
+              ...plan,
+              status: plan.status === "Active" ? "Inactive" : "Active",
+            }
+          : plan
+      );
+      setPlans(updatedPlans);
+      setId("");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to toggle status.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const [errors, setErrors] = useState({});
 
@@ -38,17 +65,18 @@ const PlansPackages = () => {
     try {
       setIsLoading(true);
       const res = await axios.get(`${BASE_URL}plan`);
-      
+
       const transformedData = res.data.data.map((item) => ({
         id: item._id,
         name: item.name,
         priceMonthly: item.priceMonthly,
         priceYearly: item.priceYearly,
         description: item.description,
-        status: "Active", // Adding status as it's used in your UI
+        features: item.features || [], // Add features array
+        status: item.status, // Adding status as it's used in your UI
         subscribers: Math.floor(Math.random() * 10000), // Random subscribers for demo
       }));
-      
+
       setPlans(transformedData);
       setFilteredPlans(transformedData);
       setError(null);
@@ -73,12 +101,17 @@ const PlansPackages = () => {
       const matchesSearch =
         !searchTerm ||
         plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (plan.description && plan.description.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+        (plan.description &&
+          plan.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (plan.features &&
+          plan.features.some((feature) =>
+            feature.toLowerCase().includes(searchTerm.toLowerCase())
+          ));
+
       // Apply status filter
       const matchesStatus =
         filterStatus === "All" || plan.status === filterStatus;
-      
+
       return matchesSearch && matchesStatus;
     });
 
@@ -91,7 +124,7 @@ const PlansPackages = () => {
       if (sortBy === "priceMonthly" || sortBy === "priceYearly") {
         aValue = parseFloat(aValue);
         bValue = parseFloat(bValue);
-      } 
+      }
       // Convert to lowercase if string comparison
       else if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
@@ -114,28 +147,67 @@ const PlansPackages = () => {
     if (errors[name]) setErrors({ ...errors, [name]: "" });
   };
 
+  // Handle feature input changes
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...formData.features];
+    newFeatures[index] = value;
+    setFormData({ ...formData, features: newFeatures });
+  };
+
+  // Add a new feature field
+  const addFeatureField = () => {
+    setFormData({
+      ...formData,
+      features: [...formData.features, ""],
+    });
+  };
+
+  // Remove a feature field
+  const removeFeatureField = (index) => {
+    const newFeatures = [...formData.features];
+    newFeatures.splice(index, 1);
+    setFormData({
+      ...formData,
+      features: newFeatures,
+    });
+  };
+
   // Validate form
   const validateForm = () => {
     const newErrors = {};
+    let isValid = true;
 
     if (!formData.name.trim()) {
       newErrors.name = "Plan name is required";
+      isValid = false;
     }
 
     if (!formData.priceMonthly || parseFloat(formData.priceMonthly) <= 0) {
       newErrors.priceMonthly = "Monthly price must be greater than 0";
+      isValid = false;
     }
 
     if (!formData.priceYearly || parseFloat(formData.priceYearly) <= 0) {
       newErrors.priceYearly = "Yearly price must be greater than 0";
+      isValid = false;
     }
 
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
+      isValid = false;
+    }
+
+    // Validate features - at least one non-empty feature
+    const hasFeatures = formData.features.some(
+      (feature) => feature.trim() !== ""
+    );
+    if (!hasFeatures) {
+      newErrors.features = "At least one feature is required";
+      isValid = false;
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return isValid;
   };
 
   // Handle form submission
@@ -146,7 +218,12 @@ const PlansPackages = () => {
 
     try {
       setIsLoading(true);
-      
+
+      // Prepare features array - remove empty strings and trim
+      const preparedFeatures = formData.features
+        .map((feature) => feature.trim())
+        .filter((feature) => feature !== "");
+
       if (editingPlan) {
         // Update existing plan
         const updatedPlanData = {
@@ -154,13 +231,11 @@ const PlansPackages = () => {
           priceMonthly: parseFloat(formData.priceMonthly),
           priceYearly: parseFloat(formData.priceYearly),
           description: formData.description.trim(),
+          features: preparedFeatures,
         };
 
-        await axios.put(
-          `${BASE_URL}plan/${id}`,
-          updatedPlanData
-        );
-        
+        await axios.put(`${BASE_URL}plan/${id}`, updatedPlanData);
+
         // Refetch plans after update
         await fetchPlans();
       } else {
@@ -170,13 +245,11 @@ const PlansPackages = () => {
           priceMonthly: parseFloat(formData.priceMonthly),
           priceYearly: parseFloat(formData.priceYearly),
           description: formData.description.trim(),
+          features: preparedFeatures,
         };
 
-        await axios.post(
-          `${BASE_URL}plan`,
-          newPlanData
-        );
-        
+        await axios.post(`${BASE_URL}plan`, newPlanData);
+
         // Refetch plans after create
         await fetchPlans();
       }
@@ -198,6 +271,7 @@ const PlansPackages = () => {
       priceMonthly: "",
       priceYearly: "",
       description: "",
+      features: ["", "", ""],
     });
     setErrors({});
     setEditingPlan(null);
@@ -214,6 +288,7 @@ const PlansPackages = () => {
       priceMonthly: plan.priceMonthly.toString(),
       priceYearly: plan.priceYearly.toString(),
       description: plan.description,
+      features: plan.features.length > 0 ? [...plan.features] : ["", "", ""],
     });
     setShowModal(true);
   };
@@ -229,13 +304,11 @@ const PlansPackages = () => {
   const confirmDelete = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(
-        `${BASE_URL}plan/${id}` // Use the correct endpoint for deletion,
-      );
-      
+      await axios.delete(`${BASE_URL}plan/${id}`);
+
       // Refetch plans after delete
       await fetchPlans();
-      
+
       setShowDeleteConfirm(false);
       setPlanToDelete(null);
       setId("");
@@ -248,18 +321,6 @@ const PlansPackages = () => {
   };
 
   // Toggle plan status
-  const toggleStatus = (planId) => {
-    setPlans(
-      plans.map((plan) =>
-        plan.id === planId
-          ? {
-              ...plan,
-              status: plan.status === "Active" ? "Inactive" : "Active",
-            }
-          : plan
-      )
-    );
-  };
 
   return (
     <div className="container-fluid">
@@ -330,9 +391,7 @@ const PlansPackages = () => {
               </div>
             </div>
           ) : error ? (
-            <div className="text-center py-4 text-danger">
-              {error}
-            </div>
+            <div className="text-center py-4 text-danger">{error}</div>
           ) : filteredPlans.length === 0 ? (
             <div className="text-center py-4">
               No plans found matching your criteria
@@ -344,7 +403,9 @@ const PlansPackages = () => {
                   <div className="card h-100 border-0 shadow-sm">
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-start mb-3">
-                        <h3 className="h5 mb-0 text-dark fw-bold">{plan.name}</h3>
+                        <h3 className="h5 mb-0 text-dark fw-bold">
+                          {plan.name}
+                        </h3>
                         <button
                           className={`btn btn-sm ${
                             plan.status === "Active"
@@ -356,11 +417,11 @@ const PlansPackages = () => {
                           {plan.status}
                         </button>
                       </div>
-                      
+
                       <div className="mb-3">
                         <small className="text-muted">ID: {plan.id}</small>
                       </div>
-                      
+
                       <div className="d-flex justify-content-between mb-3">
                         <div>
                           <div className="text-muted small">Monthly</div>
@@ -375,11 +436,30 @@ const PlansPackages = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <p className="text-muted small mb-4">
                         {plan.description}
                       </p>
-                      
+
+                      {/* Features List */}
+                      <div className="mb-4">
+                        <h6 className="fw-semibold small">Features:</h6>
+                        <ul className="list-unstyled small">
+                          {plan.features && plan.features.length > 0 ? (
+                            plan.features.map((feature, index) => (
+                              <li key={index} className="mb-1">
+                                <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                {feature}
+                              </li>
+                            ))
+                          ) : (
+                            <li className="text-muted">
+                              No features specified
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+
                       <div className="d-flex justify-content-between align-items-center">
                         <div className="btn-group">
                           <button
@@ -454,7 +534,10 @@ const PlansPackages = () => {
                 <div className="modal-body">
                   {/* Plan Name */}
                   <div className="mb-3">
-                    <label htmlFor="planName" className="form-label fw-semibold">
+                    <label
+                      htmlFor="planName"
+                      className="form-label fw-semibold"
+                    >
                       Plan Name <span className="text-danger">*</span>
                     </label>
                     <input
@@ -477,8 +560,12 @@ const PlansPackages = () => {
                   <div className="row">
                     <div className="col-md-6">
                       <div className="mb-3">
-                        <label htmlFor="priceMonthly" className="form-label fw-semibold">
-                          Monthly Price ($) <span className="text-danger">*</span>
+                        <label
+                          htmlFor="priceMonthly"
+                          className="form-label fw-semibold"
+                        >
+                          Monthly Price ($){" "}
+                          <span className="text-danger">*</span>
                         </label>
                         <input
                           type="number"
@@ -494,7 +581,9 @@ const PlansPackages = () => {
                           placeholder="0.00"
                         />
                         {errors.priceMonthly && (
-                          <div className="invalid-feedback">{errors.priceMonthly}</div>
+                          <div className="invalid-feedback">
+                            {errors.priceMonthly}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -502,8 +591,12 @@ const PlansPackages = () => {
                     {/* Price Yearly */}
                     <div className="col-md-6">
                       <div className="mb-3">
-                        <label htmlFor="priceYearly" className="form-label fw-semibold">
-                          Yearly Price ($) <span className="text-danger">*</span>
+                        <label
+                          htmlFor="priceYearly"
+                          className="form-label fw-semibold"
+                        >
+                          Yearly Price ($){" "}
+                          <span className="text-danger">*</span>
                         </label>
                         <input
                           type="number"
@@ -519,7 +612,9 @@ const PlansPackages = () => {
                           placeholder="0.00"
                         />
                         {errors.priceYearly && (
-                          <div className="invalid-feedback">{errors.priceYearly}</div>
+                          <div className="invalid-feedback">
+                            {errors.priceYearly}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -527,7 +622,10 @@ const PlansPackages = () => {
 
                   {/* Description */}
                   <div className="mb-3">
-                    <label htmlFor="description" className="form-label fw-semibold">
+                    <label
+                      htmlFor="description"
+                      className="form-label fw-semibold"
+                    >
                       Description <span className="text-danger">*</span>
                     </label>
                     <textarea
@@ -542,8 +640,49 @@ const PlansPackages = () => {
                       rows="3"
                     />
                     {errors.description && (
-                      <div className="invalid-feedback">{errors.description}</div>
+                      <div className="invalid-feedback">
+                        {errors.description}
+                      </div>
                     )}
+                  </div>
+
+                  {/* Features */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Features <span className="text-danger">*</span>
+                    </label>
+                    {formData.features.map((feature, index) => (
+                      <div key={index} className="input-group mb-2">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder={`Feature ${index + 1}`}
+                          value={feature}
+                          onChange={(e) =>
+                            handleFeatureChange(index, e.target.value)
+                          }
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger"
+                          onClick={() => removeFeatureField(index)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    ))}
+                    {errors.features && (
+                      <div className="text-danger small mb-2">
+                        {errors.features}
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={addFeatureField}
+                    >
+                      <i className="bi bi-plus me-1"></i> Add Feature
+                    </button>
                   </div>
                 </div>
 
@@ -558,14 +697,24 @@ const PlansPackages = () => {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-1"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         {isEditing ? "Updating..." : "Creating..."}
                       </>
+                    ) : isEditing ? (
+                      "Update Plan"
                     ) : (
-                      isEditing ? "Update Plan" : "Create Plan"
+                      "Create Plan"
                     )}
                   </button>
                 </div>
@@ -636,7 +785,11 @@ const PlansPackages = () => {
                 >
                   {isLoading ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-1"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Deleting...
                     </>
                   ) : (

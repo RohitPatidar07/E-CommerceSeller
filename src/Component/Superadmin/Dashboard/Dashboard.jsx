@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as echarts from "echarts";
 import axios from "axios";
+import { BASE_URL } from "../../../config";
 
 const Dashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("7 Days");
@@ -19,7 +20,7 @@ const Dashboard = () => {
   const fetchKpiData = async () => {
     try {
       const response = await axios.get(
-        "https://2lkmvcf8-5000.inc1.devtunnels.ms/super-admin-dashboard"
+        `${BASE_URL}super-admin-dashboard`
       );
       const data = response.data;
 
@@ -595,8 +596,8 @@ const Dashboard = () => {
       </div>
 
         {/* Additional Charts Row */}
-        <div className="row mb-4">
-          {/* Total Growth Chart */}
+        {/* <div className="row mb-4">
+         
           <div className="col-md-4 mb-4 mb-md-0">
             <div className="card shadow-sm h-100">
               <div className="card-body">
@@ -605,7 +606,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Company Signup Chart */}
+          
           <div className="col-md-4 mb-4 mb-md-0">
             <div className="card shadow-sm h-100">
               <div className="card-body">
@@ -613,8 +614,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* Revenue Trends Chart */}
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
               <div className="card-body">
@@ -622,7 +621,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Recent Activities Table */}
       </div>

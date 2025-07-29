@@ -43,25 +43,17 @@ const Pricing = () => {
     }
   };
 
-  // const [formData, setFormData] = useState({
-  //   company: "",
-  //   email: "",
-  //   plan: "",
-  //   billing: "",
-  //   date: "",
-  //   phone: "",
-  // });
-
   const fetchPlans = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get(`${BASE_URL}plan`);
+      const res = await axios.get(`${BASE_URL}plans/active`);
       const transformedData = res.data.data.map((item) => ({
         id: item._id,
         name: item.name,
         priceMonthly: item.priceMonthly,
         priceYearly: item.priceYearly,
         description: item.description,
+        features: item.features || [], // Add features array
       }));
       setPlans(transformedData);
     } catch (err) {
@@ -75,13 +67,6 @@ const Pricing = () => {
     fetchPlans();
   }, []);
 
-  // const handleChange = (e) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  // };
-
   const openModal = (planName) => {
     setFormData((prev) => ({
       ...prev,
@@ -89,14 +74,6 @@ const Pricing = () => {
     }));
     setShowModal(true);
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Submitted Data:", formData);
-  //   // axios.post(`${BASE_URL}pricing/book`, formData)
-  //   setShowModal(false);
-  //   alert("Booking Submitted!");
-  // };
 
   return (
     <div className="min-vh-100">
@@ -156,7 +133,7 @@ const Pricing = () => {
                             ? "linear-gradient(to bottom right, #2563eb, #3b82f6)"
                             : "linear-gradient(to bottom right, white, rgba(239, 246, 255, 0.3))",
                         borderColor: "rgba(191, 219, 254, 0.3)",
-                        color: index === 2 ? "white" : "inherit",
+                        color: index === 1 ? "white" : "inherit",
                       }}
                     >
                       {index === 1 && (
@@ -179,21 +156,17 @@ const Pricing = () => {
                             index === 1 ? "text-white" : "text-dark"
                           }`}
                         >
-                          {index === 0
-                            ? "Basic Plan"
-                            : index === 1
-                            ? "Gold Plan"
-                            : "Silver Plan "}
+                          {plan.name}
                         </h3>
 
                         <div className="mb-4">
                           <div className="d-flex align-items-center justify-content-center">
                             <span
-                              className={`small me-2 ${
+                              className={`h3 me-3 text-bold mt-2 ${
                                 index === 1 ? "text-white-50" : "text-muted"
                               }`}
                             >
-                              INR
+                              $
                             </span>
                             <span
                               className={`fs-1 fw-bold ${
@@ -212,75 +185,37 @@ const Pricing = () => {
                           </span>
                         </div>
 
+                        {/* Features List */}
                         <ul
                           className={`text-start list-unstyled px-4 mb-4 small ${
                             index === 1 ? "text-white" : "text-muted"
                           }`}
                         >
-                          {index === 0 && (
-                            <>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                1 User
+                          {plan.features && plan.features.length > 0 ? (
+                            plan.features.map((feature, featureIndex) => (
+                              <li key={featureIndex} className="mb-2">
+                                <i
+                                  className={`fas fa-check me-2 ${
+                                    index === 1 ? "" : "text-success"
+                                  }`}
+                                ></i>
+                                {feature}
                               </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                5 GB Storage
-                              </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                Email Support
-                              </li>
-                            </>
-                          )}
-                          {index === 2 && (
-                            <>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                5 Users
-                              </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                50 GB Storage
-                              </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                Priority Email Support
-                              </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                Basic Analytics
-                              </li>
-                            </>
-                          )}
-                          {index === 1 && (
-                            <>
-                              <li>
-                                <i className="fas fa-check me-2"></i>
-                                Unlimited Users
-                              </li>
-                              <li>
-                                <i className="fas fa-check  me-2"></i>
-                                1 TB Storage
-                              </li>
-                              <li>
-                                <i className="fas fa-check  me-2"></i>
-                                24/7 Phone & Email Support
-                              </li>
-                              <li>
-                                <i className="fas fa-check  me-2"></i>
-                                Advanced Analytics
-                              </li>
-                              <li>
-                                <i className="fas fa-check  me-2"></i>
-                                Custom Reports
-                              </li>
-                            </>
+                            ))
+                          ) : (
+                            <li className="text-muted">No features specified</li>
                           )}
                         </ul>
 
                         <div className="mb-4">
                           <div className="d-flex align-items-center justify-content-center">
+                            <span
+                              className={`h3 me-3 text-bold mt-2 ${
+                                index === 1 ? "text-white-50" : "text-muted"
+                              }`}
+                            >
+                              $
+                            </span>
                             <span
                               className={`fs-1 fw-bold ${
                                 index === 1 ? "text-white" : "text-primary"
@@ -306,13 +241,7 @@ const Pricing = () => {
                           }`}
                           onClick={() => openModal(plan.name)}
                         >
-                          <span>
-                            {index === 0
-                              ? "Choose Basic"
-                              : index === 2
-                              ? "Choose Silver "
-                              : "Choose Gold "}
-                          </span>
+                          <span>Choose {plan.name}</span>
                           <i className="fas fa-arrow-right"></i>
                         </button>
                       </div>
