@@ -106,44 +106,7 @@ const Notification = () => {
             </div>
 
             {/* User Profile Dropdown */}
-            <div className="user-dropdown-wrapper" ref={profileRef}>
-                <div
-                    className="user-profile"
-                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                >
-                    <div className="avatar">
-                        <FaUserCircle className="user-icon" />
-                    </div>
-                </div>
-
-                {profileDropdownOpen && (
-                    <div className="profile-dropdown">
-                        <div className="dropdown-header">
-                            <div className="avatar">
-                                <FaUserCircle className="text-dark" size={40} />
-                            </div>
-                            <div className="user-details">
-                                <h6>Admin User</h6>
-                                <small>admin@example.com</small>
-                            </div>
-                        </div>
-                        <div className="dropdown-divider"></div>
-                        <Link className="dropdown-item text-dark" to="/profile">
-                            <FaUser className="dropdown-icon" />
-                            <span>Profile</span>
-                        </Link>
-                        <Link className="dropdown-item text-dark" to="/admin/setting">
-                            <FaCog className="dropdown-icon" />
-                            <span>Settings</span>
-                        </Link>
-                        <div className="dropdown-divider"></div>
-                        <Link className="dropdown-item" to="/login">
-                            <FaSignOutAlt className="dropdown-icon" />
-                            <span>Logout</span>
-                        </Link>
-                    </div>
-                )}
-            </div>
+           
         </div>
     );
 };

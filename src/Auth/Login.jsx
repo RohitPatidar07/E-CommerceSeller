@@ -3,58 +3,47 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config";
 
-// Dummy valid admin user for demo purposes (ideally fetched from DB)
-
-
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState("admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleRoleChange = (selectedRole) => {
-    setRole(selectedRole);
-    setError(""); // Clear error on role change
-  };
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    const response = await axios.post(`${BASE_URL}login`, {
-      email,
-      password,
-      role,
-    });
+    try {
+      const response = await axios.post(`${BASE_URL}login`, {
+        email,
+        password,
+      });
 
-    const data = response.data;
+      const data = response.data;
 
-    if (data && data.success && data.user) {
-      const { role: userRole } = data.user;
+      if (data && data.success && data.user) {
+        const { role: userRole, token,id } = data.user;
+        localStorage.setItem("userId", id);
+        localStorage.setItem("userRole", userRole);
+        localStorage.setItem("authToken", token);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Save token and role
-      localStorage.setItem("userRole", userRole);
-      localStorage.setItem("authToken", data.user.token); // if provided
-
-      if (userRole === "superadmin") {
-        navigate("/superadmin/dashboard");
-      } else if (userRole === "admin") {
-        navigate("/admin/dashboard");
+        if (userRole === "superadmin") {
+          navigate("/superadmin/dashboard");
+        } else if (userRole === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          setError("Unknown role assigned.");
+        }
       } else {
-        setError("Unknown role assigned.");
+        setError("Invalid credentials.");
       }
-    } else {
-      setError("Invalid credentials.");
+    } catch (err) {
+      console.error(err);
+      setError("Login failed. Please check your credentials and try again.");
     }
-  } catch (err) {
-    console.error(err);
-    setError("Login failed. Please check your credentials and try again.");
-  }
-};
-
+  };
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-white px-3">
@@ -99,7 +88,9 @@ const Login = () => {
               </p>
 
               {error && (
-                <div className="alert alert-danger py-2 px-3 small">{error}</div>
+                <div className="alert alert-danger py-2 px-3 small">
+                  {error}
+                </div>
               )}
 
               <form onSubmit={handleSubmit}>
@@ -107,47 +98,38 @@ const Login = () => {
                   <label className="form-label text-white">Email address</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className="form-control bg-white text-dark"
                     required
                     value={email}
+                    placeholder="Enter Email"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
 
                 <div className="mb-3 position-relative">
                   <label className="form-label text-white">Password</label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="form-control"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <span
-                    className="position-absolute top-50 end-0 translate-middle-y me-3"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <i className="bi bi-eye-slash-fill text-white-50"></i>
-                    ) : (
-                      <i className="bi bi-eye-fill text-white-50"></i>
-                    )}
-                  </span>
+                  <div className="position-relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control  text-dark pe-5"
+                      required
+                      value={password}
+                      placeholder="Enter Password"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span
+                      className="position-absolute top-50 end-0 translate-middle-y me-3"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {!showPassword ? (
+                        <i className="bi bi-eye-slash-fill text-secondary"></i>
+                      ) : (
+                        <i className="bi bi-eye-fill text-secondary"></i>
+                      )}
+                    </span>
+                  </div>
                 </div>
-
-                {/* <div className="mb-3">
-                  <label className="form-label text-white">Select Role</label>
-                  <select
-                    className="form-select"
-                    value={role}
-                    onChange={(e) => handleRoleChange(e.target.value)}
-                    required
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="superadmin">Super Admin</option>
-                  </select>
-                </div> */}
 
                 <div className="mb-3 d-flex justify-content-between align-items-center">
                   <div className="form-check">
@@ -163,12 +145,6 @@ const Login = () => {
                       Remember me
                     </label>
                   </div>
-                  <a
-                    href="#"
-                    className="text-white-50 text-decoration-none small"
-                  >
-                    Forgot Password?
-                  </a>
                 </div>
 
                 <button
