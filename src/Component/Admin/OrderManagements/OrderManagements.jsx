@@ -309,6 +309,8 @@ const OrderManagement = () => {
                                             <option value="Amazon">Amazon</option>
                                             <option value="Meesho">Meesho</option>
                                             <option value="Flipkart">Flipkart</option>
+                                            <option value="Myntra">Myntra</option>
+                                            <option value="Shopify">Shopify</option>
                                         </select>
                                     </div>
                                 </div>

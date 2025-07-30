@@ -92,7 +92,7 @@ const Dashboard = () => {
           yAxis: {
             type: "value",
           },
-          series: [
+          series: [ 
             {
               name: "Count",
               type: "bar",
