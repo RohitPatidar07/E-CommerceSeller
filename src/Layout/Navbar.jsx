@@ -4,11 +4,31 @@ import { FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import Notification from "./Notification";
+import axios from "axios";
+import { BASE_URL } from "../config";
 
 const Navbar = ({ toggleSidebar }) => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const navigate = useNavigate();
+
+  const [userData, setUserData] = useState({});
+
+  const id = localStorage.getItem("userId");
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}getById/${id}`);
+      console.log("Fetched user data:", response.data);
+      setUserData(response.data);
+      setId(""); // Update id state with fetched user id
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -54,6 +74,7 @@ const Navbar = ({ toggleSidebar }) => {
 
       {/* Notification and Profile */}
       <div className="navbar-right d-flex" ref={dropdownRef}>
+        <p className=" fw-semibold fade-in mt-1">👋 Hi, {userData.name}!</p>
         {/* <Notification /> */}
         <div
           className="profile-icon"
@@ -66,7 +87,6 @@ const Navbar = ({ toggleSidebar }) => {
         {/* Profile Dropdown */}
         {profileDropdownOpen && (
           <div className="profile-dropdown">
-            <div className="dropdown-divider"></div>
             <Link className="dropdown-item text-dark" to="/profile">
               <FaUser className="dropdown-icon" />
               <span>Profile</span>

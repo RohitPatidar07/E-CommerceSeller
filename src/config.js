@@ -1,3 +1,3 @@
-const  BASE_URL = "https://2lkmvcf8-5000.inc1.devtunnels.ms/";
+const  BASE_URL = "https://superadmin-production-99d3.up.railway.app/";
 
 export { BASE_URL };

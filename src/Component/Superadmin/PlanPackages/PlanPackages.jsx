@@ -400,83 +400,89 @@ const PlansPackages = () => {
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
               {filteredPlans.map((plan) => (
                 <div className="col" key={plan.id}>
-                  <div className="card h-100 border-0 shadow-sm">
-                    <div className="card-body">
-                      <div className="d-flex justify-content-between align-items-start mb-3">
-                        <h3 className="h5 mb-0 text-dark fw-bold">
-                          {plan.name}
-                        </h3>
-                        <button
-                          className={`btn btn-sm ${
-                            plan.status === "Active"
-                              ? "btn-outline-success"
-                              : "btn-outline-danger"
-                          }`}
-                          onClick={() => toggleStatus(plan.id)}
-                        >
-                          {plan.status}
-                        </button>
-                      </div>
 
-                      <div className="mb-3">
-                        <small className="text-muted">ID: {plan.id}</small>
-                      </div>
+                  <div
+                    className="plan-card bg-white"
+                    style={{
+                      border: "1px solid #dee2e6", // light border
+                      borderRadius: "1rem",
+                      boxShadow: "30px 30px 30px 30px rgba(0, 0, 0, 0.08)", // more elevated shadow
+                      transition: "all 0.3s ease-in-out",
+                      padding: "1.5rem",
+                      height: "100%",
+                      backgroundColor: "#ffffff", // clean white
+                    }}
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <h3 className="h5 text-dark fw-bold mb-0">{plan.name}</h3>
+                      <span
+                        className={`badge rounded-pill px-3 py-1 ${
+                          plan.status === "Active"
+                            ? "bg-success-subtle text-success"
+                            : "bg-danger-subtle text-danger"
+                        }`}
+                        style={{ fontSize: "0.75rem", cursor: "pointer" }}
+                        onClick={() => toggleStatus(plan.id)}
+                      >
+                        {plan.status}
+                      </span>
+                    </div>
 
-                      <div className="d-flex justify-content-between mb-3">
-                        <div>
-                          <div className="text-muted small">Monthly</div>
-                          <div className="h4 text-dark fw-bold">
-                            ${plan.priceMonthly.toFixed(2)}
-                          </div>
+                    
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      <div>
+                        <div className="text-muted small">Monthly</div>
+                        <div className="h4 text-dark fw-bold">
+                          ${plan.priceMonthly.toFixed(2)}
                         </div>
-                        <div className="text-end">
-                          <div className="text-muted small">Yearly</div>
-                          <div className="h4 text-dark fw-bold">
-                            ${plan.priceYearly.toFixed(2)}
-                          </div>
+                      </div>
+                      <div className="text-end">
+                        <div className="text-muted small">Yearly</div>
+                        <div className="h4 text-dark fw-bold">
+                          ${plan.priceYearly.toFixed(2)}
                         </div>
                       </div>
+                    </div>
 
-                      <p className="text-muted small mb-4">
-                        {plan.description}
-                      </p>
+                    <p
+                      className="text-muted small mb-4"
+                      style={{ minHeight: "50px" }}
+                    >
+                      {plan.description}
+                    </p>
 
-                      {/* Features List */}
-                      <div className="mb-4">
-                        <h6 className="fw-semibold small">Features:</h6>
-                        <ul className="list-unstyled small">
-                          {plan.features && plan.features.length > 0 ? (
-                            plan.features.map((feature, index) => (
-                              <li key={index} className="mb-1">
-                                <i className="bi bi-check-circle-fill text-success me-2"></i>
-                                {feature}
-                              </li>
-                            ))
-                          ) : (
-                            <li className="text-muted">
-                              No features specified
+                    <div className="mb-4">
+                      <h6 className="fw-semibold small mb-2">Features:</h6>
+                      <ul className="list-unstyled small mb-0">
+                        {plan.features && plan.features.length > 0 ? (
+                          plan.features.map((feature, index) => (
+                            <li key={index} className="mb-1 text-dark">
+                              <i className="bi bi-check-circle-fill text-success me-2"></i>
+                              {feature}
                             </li>
-                          )}
-                        </ul>
-                      </div>
+                          ))
+                        ) : (
+                          <li className="text-muted">No features specified</li>
+                        )}
+                      </ul>
+                    </div>
 
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="btn-group">
-                          <button
-                            className="btn btn-sm btn-outline-primary"
-                            onClick={() => handleEdit(plan)}
-                            title="Edit"
-                          >
-                            <i className="bi bi-pencil-square"></i>
-                          </button>
-                          <button
-                            className="btn btn-sm btn-outline-danger"
-                            onClick={() => handleDelete(plan)}
-                            title="Delete"
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        </div>
+                    <div className="d-flex justify-content-end">
+                      <div className="btn-group gap-2">
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => handleEdit(plan)}
+                          title="Edit"
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleDelete(plan)}
+                          title="Delete"
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
                       </div>
                     </div>
                   </div>

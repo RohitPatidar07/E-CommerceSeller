@@ -95,7 +95,10 @@ const AdminManagement = () => {
       }
     } catch (error) {
       console.error("Update failed:", error);
-      setError(error.response?.data?.message || "Failed to update admin. Please try again.");
+      setError(
+        error.response?.data?.message ||
+          "Failed to update admin. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -241,10 +244,10 @@ const AdminManagement = () => {
               <tbody>
                 {admins
                   .filter((admin) => admin.status !== "Deleted")
-                  .map((admin) => (
+                  .map((admin, index) => (
                     <tr key={admin._id}>
                       <td className="fw-semibold d-none d-md-table-cell">
-                        {admin._id}
+                        {index + 1} {/* Serial number starts from 1 */}
                       </td>
                       <td>{admin.name}</td>
                       <td className="text-muted d-none d-sm-table-cell">
@@ -354,7 +357,11 @@ const AdminManagement = () => {
 
       {/* Create Admin Modal */}
       {showCreateModal && (
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
@@ -368,7 +375,9 @@ const AdminManagement = () => {
 
               <div className="modal-body">
                 <form onSubmit={handleCreateAdmin}>
-                  {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
+                  {error && (
+                    <div className="alert alert-danger py-2 px-3">{error}</div>
+                  )}
 
                   <div className="mb-3">
                     <label className="form-label">Full Name*</label>
@@ -445,11 +454,13 @@ const AdminManagement = () => {
         </div>
       )}
 
-
-
       {/* Edit Admin Modal */}
       {showEditModal && (
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
@@ -463,7 +474,9 @@ const AdminManagement = () => {
 
               <div className="modal-body">
                 <form onSubmit={handleEditAdmin}>
-                  {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
+                  {error && (
+                    <div className="alert alert-danger py-2 px-3">{error}</div>
+                  )}
 
                   <div className="mb-3">
                     <label className="form-label">Full Name*</label>
@@ -472,7 +485,10 @@ const AdminManagement = () => {
                       className="form-control"
                       value={editAdmin.name}
                       onChange={(e) =>
-                        setEditAdmin((prev) => ({ ...prev, name: e.target.value }))
+                        setEditAdmin((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
                       }
                       required
                     />
@@ -485,7 +501,10 @@ const AdminManagement = () => {
                       className="form-control"
                       value={editAdmin.email}
                       onChange={(e) =>
-                        setEditAdmin((prev) => ({ ...prev, email: e.target.value }))
+                        setEditAdmin((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
                       }
                       required
                     />
@@ -499,7 +518,11 @@ const AdminManagement = () => {
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={loading}
+                    >
                       {loading ? "Saving..." : "Save Changes"}
                     </button>
                   </div>
@@ -509,7 +532,6 @@ const AdminManagement = () => {
           </div>
         </div>
       )}
-
 
       {/* Delete Confirmation Modal */}
       <Modal
@@ -549,7 +571,11 @@ const AdminManagement = () => {
 
       {/* Reset Password Modal */}
       {showResetPasswordModal && (
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
@@ -626,7 +652,6 @@ const AdminManagement = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

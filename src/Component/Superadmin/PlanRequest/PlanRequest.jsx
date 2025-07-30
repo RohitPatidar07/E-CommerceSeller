@@ -30,7 +30,7 @@ const PlanRequest = () => {
   const handleApprove = async (id) => {
     try {
       await axios.put(
-        `https://2lkmvcf8-5000.inc1.devtunnels.ms/update-status/${id}`,
+        `${BASE_URL}update-status/${id}`,
         {
           status: "Approved",
         }
@@ -49,7 +49,7 @@ const PlanRequest = () => {
   const handleReject = async (id) => {
     try {
       await axios.put(
-        `https://2lkmvcf8-5000.inc1.devtunnels.ms/update-status/${id}`,
+        `${BASE_URL}update-status/${id}`,
         {
           status: "Rejected",
         }
