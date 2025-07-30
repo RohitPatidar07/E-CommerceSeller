@@ -9,9 +9,8 @@ const Dashboard = () => {
   const [growthChartInstance, setGrowthChartInstance] = useState(null);
   const [companyChartInstance, setCompanyChartInstance] = useState(null);
   const [revenueChartInstance, setRevenueChartInstance] = useState(null);
-  const chartRef = React.createRef();
-
   const [kpiData, setKpiData] = useState([]);
+  const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
     fetchKpiData();
@@ -19,9 +18,7 @@ const Dashboard = () => {
 
   const fetchKpiData = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}super-admin-dashboard`
-      );
+      const response = await axios.get(`${BASE_URL}super-admin-dashboard`);
       const data = response.data;
 
       const kpiList = [
@@ -30,7 +27,6 @@ const Dashboard = () => {
           value: data.totalUsers,
           icon: "fas fa-users",
           iconColor: "text-primary",
-         
           changeType: "positive",
         },
         {
@@ -38,15 +34,13 @@ const Dashboard = () => {
           value: data.totalPlans,
           icon: "fas fa-clipboard-list",
           iconColor: "text-warning",
-          
           changeType: "positive",
         },
         {
-          title: "Today’s Plans",
+          title: "Today's Plans",
           value: data.todayPlans,
           icon: "fas fa-calendar-day",
           iconColor: "text-success",
-          
           changeType: "negative",
         },
         {
@@ -54,470 +48,94 @@ const Dashboard = () => {
           value: data.totalEnquiries,
           icon: "fas fa-question-circle",
           iconColor: "text-danger",
-         
           changeType: "positive",
         },
       ];
 
       setKpiData(kpiList);
+      setChartData(data);
     } catch (error) {
       console.error("Error fetching KPI data:", error);
     }
   };
 
-   const renderChart = (data) => {
-    const chartInstance = echarts.init(document.getElementById("main-chart"));
-
-    const option = {
-      tooltip: {
-        trigger: "axis",
-      },
-      xAxis: {
-        type: "category",
-        data: ["Users", "Plans", "Today's Plans", "Enquiries"],
-      },
-      yAxis: {
-        type: "value",
-      },
-      series: [
-        {
-          name: selectedPeriod,
-          type: "bar",
-          data: [
-            data.totalUsers,
-            data.totalPlans,
-            data.todayPlans,
-            data.totalEnquiries,
-          ],
-          itemStyle: {
-            color: "#007bff",
-            borderRadius: 5,
-          },
-        },
-      ],
-    };
-
-    chartInstance.setOption(option);
-  };
-
   // Initialize main chart
   useEffect(() => {
-    const chartDom = document.getElementById("main-chart");
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      setMainChartInstance(myChart);
+    if (chartData) {
+      const chartDom = document.getElementById("main-chart");
+      if (chartDom) {
+        const myChart = echarts.init(chartDom);
+        setMainChartInstance(myChart);
 
-      const option = getMainChartOption(selectedPeriod);
-      myChart.setOption(option);
-
-      const handleResize = () => {
-        myChart.resize();
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        myChart.dispose();
-      };
-    }
-  }, [selectedPeriod]);
-
-  // Initialize additional charts
-  useEffect(() => {
-    // Total Growth Chart
-    const growthChartDom = document.getElementById("growth-chart");
-    if (growthChartDom) {
-      const chart = echarts.init(growthChartDom);
-      setGrowthChartInstance(chart);
-      chart.setOption(getGrowthChartOption());
-    }
-
-    // Company Signup Chart
-    const companyChartDom = document.getElementById("company-chart");
-    if (companyChartDom) {
-      const chart = echarts.init(companyChartDom);
-      setCompanyChartInstance(chart);
-      chart.setOption(getCompanyChartOption());
-    }
-
-    // Revenue Trends Chart
-    const revenueChartDom = document.getElementById("revenue-chart");
-    if (revenueChartDom) {
-      const chart = echarts.init(revenueChartDom);
-      setRevenueChartInstance(chart);
-      chart.setOption(getRevenueChartOption());
-    }
-
-    const handleResize = () => {
-      if (growthChartInstance) growthChartInstance.resize();
-      if (companyChartInstance) companyChartInstance.resize();
-      if (revenueChartInstance) revenueChartInstance.resize();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (growthChartInstance) growthChartInstance.dispose();
-      if (companyChartInstance) companyChartInstance.dispose();
-      if (revenueChartInstance) revenueChartInstance.dispose();
-    };
-  }, []);
-
-  // Update main chart when period changes
-  useEffect(() => {
-    if (mainChartInstance) {
-      const option = getMainChartOption(selectedPeriod);
-      mainChartInstance.setOption(option);
-    }
-  }, [selectedPeriod, mainChartInstance]);
-
-  const getMainChartOption = (period) => {
-    // This is a simplified version - you would adjust data based on selected period
-    let xAxisData, userData, revenueData;
-
-    switch (period) {
-      case "30 Days":
-        xAxisData = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
-        userData = Array.from(
-          { length: 30 },
-          () => Math.floor(Math.random() * 300) + 50
-        );
-        revenueData = Array.from(
-          { length: 30 },
-          () => Math.floor(Math.random() * 5000) + 2000
-        );
-        break;
-      case "90 Days":
-        xAxisData = Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`);
-        userData = Array.from(
-          { length: 12 },
-          () => Math.floor(Math.random() * 800) + 100
-        );
-        revenueData = Array.from(
-          { length: 12 },
-          () => Math.floor(Math.random() * 15000) + 5000
-        );
-        break;
-      default: // 7 Days
-        xAxisData = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-        userData = [120, 140, 110, 145, 95, 240, 220];
-        revenueData = [3200, 3800, 3100, 4200, 2800, 4800, 4200];
-    }
-
-    return {
-      animation: false,
-      grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "3%",
-        containLabel: true,
-      },
-      xAxis: [
-        {
-          type: "category",
-          data: xAxisData,
-          axisPointer: { type: "shadow" },
-        },
-      ],
-      yAxis: [
-        {
-          type: "value",
-          name: "Users",
-          position: "left",
-          axisLine: {
-            show: true,
-            lineStyle: { color: "#10b981" },
-          },
-          axisLabel: { formatter: "{value}" },
-        },
-        {
-          type: "value",
-          name: "Revenue ($)",
-          position: "right",
-          axisLine: {
-            show: true,
-            lineStyle: { color: "#3b82f6" },
-          },
-          axisLabel: { formatter: "{value}" },
-        },
-      ],
-      series: [
-        {
-          name: "User Growth",
-          type: "bar",
-          yAxisIndex: 0,
-          data: userData,
-          itemStyle: { color: "#10b981" },
-        },
-        {
-          name: "Revenue",
-          type: "line",
-          yAxisIndex: 1,
-          data: revenueData,
-          lineStyle: { color: "#3b82f6", width: 3 },
-          itemStyle: { color: "#3b82f6" },
-        },
-      ],
-    };
-  };
-
-  const getGrowthChartOption = () => {
-    return {
-      title: {
-        text: "Total Growth",
-        left: "center",
-        textStyle: {
-          fontSize: 14,
-          fontWeight: "bold",
-        },
-      },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "shadow",
-        },
-      },
-      grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "3%",
-        containLabel: true,
-      },
-      xAxis: {
-        type: "category",
-        data: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        axisLabel: {
-          rotate: 45,
-        },
-      },
-      yAxis: {
-        type: "value",
-        name: "Growth (%)",
-      },
-      series: [
-        {
-          name: "Growth",
-          type: "line",
-          smooth: true,
-          data: [
-            5.2, 8.1, 12.4, 15.3, 18.7, 22.5, 25.8, 28.3, 32.1, 35.6, 38.9,
-            42.5,
-          ],
-          itemStyle: {
-            color: "#8b5cf6",
-          },
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgba(139, 92, 246, 0.5)",
-              },
-              {
-                offset: 1,
-                color: "rgba(139, 92, 246, 0.1)",
-              },
-            ]),
-          },
-        },
-      ],
-    };
-  };
-
-  const getCompanyChartOption = () => {
-    return {
-      title: {
-        text: "Company Signups",
-        left: "center",
-        textStyle: {
-          fontSize: 14,
-          fontWeight: "bold",
-        },
-      },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "shadow",
-        },
-      },
-      grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "3%",
-        containLabel: true,
-      },
-      xAxis: {
-        type: "category",
-        data: ["Q1", "Q2", "Q3", "Q4"],
-        axisLabel: {
-          rotate: 45,
-        },
-      },
-      yAxis: {
-        type: "value",
-        name: "Companies",
-      },
-      series: [
-        {
-          name: "New Companies",
-          type: "bar",
-          data: [45, 78, 92, 120],
-          itemStyle: {
-            color: function (params) {
-              const colorList = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"];
-              return colorList[params.dataIndex];
+        const option = {
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow",
             },
           },
-        },
-      ],
-    };
-  };
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true,
+          },
+          xAxis: {
+            type: "category",
+            data: ["Total Admin", "Total Plans", "Today's Plans", "Total Enquiries"],
+            axisLabel: {
+              interval: 0,
+              rotate: 0,
+              fontSize: 12,
+            },
+          },
+          yAxis: {
+            type: "value",
+          },
+          series: [
+            {
+              name: "Count",
+              type: "bar",
+              data: [
+                chartData.totalUsers,
+                chartData.totalPlans,
+                chartData.todayPlans,
+                chartData.totalEnquiries,
+              ],
+              itemStyle: {
+                color: function(params) {
+                  // Custom colors for each bar
+                  const colorList = ['#0856d4ff', 'rgba(203, 194, 22, 1)', '#0f4f3eff', '#a9064dff'];
+                  return colorList[params.dataIndex];
+                },
+                borderRadius: [5, 5, 0, 0],
+              },
+              label: {
+                show: true,
+                position: "top",
+                formatter: "{c}",
+                color: "#333",
+                fontSize: 12,
+              },
+            },
+          ],
+        };
 
-  const getRevenueChartOption = () => {
-    return {
-      title: {
-        text: "Revenue Trends",
-        left: "center",
-        textStyle: {
-          fontSize: 14,
-          fontWeight: "bold",
-        },
-      },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          label: {
-            backgroundColor: "#6a7985",
-          },
-        },
-      },
-      legend: {
-        data: ["Recurring", "One-time", "Services"],
-        bottom: 0,
-      },
-      grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "15%",
-        containLabel: true,
-      },
-      xAxis: [
-        {
-          type: "category",
-          boundaryGap: false,
-          data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-        },
-      ],
-      yAxis: [
-        {
-          type: "value",
-          name: "Revenue ($)",
-        },
-      ],
-      series: [
-        {
-          name: "Recurring",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgba(16, 185, 129, 0.8)",
-              },
-              {
-                offset: 1,
-                color: "rgba(16, 185, 129, 0.1)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [14000, 18200, 19100, 23400, 29000, 33000, 41000],
-        },
-        {
-          name: "One-time",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgba(59, 130, 246, 0.8)",
-              },
-              {
-                offset: 1,
-                color: "rgba(59, 130, 246, 0.1)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [3000, 5200, 11000, 13000, 14000, 18000, 21000],
-        },
-        {
-          name: "Services",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgba(245, 158, 11, 0.8)",
-              },
-              {
-                offset: 1,
-                color: "rgba(245, 158, 11, 0.1)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [5000, 8000, 9000, 10000, 12500, 15000, 18000],
-        },
-      ],
-    };
-  };
+        myChart.setOption(option);
 
-  // KPI data
+        const handleResize = () => {
+          myChart.resize();
+        };
 
-  // Recent activities data
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+          window.removeEventListener("resize", handleResize);
+          myChart.dispose();
+        };
+      }
+    }
+  }, [chartData, selectedPeriod]);
 
   return (
     <div className="">
@@ -535,10 +153,10 @@ const Dashboard = () => {
           {kpiData.map((kpi, index) => (
             <div key={index} className="col-md-6 col-lg-3 mb-4">
               <div className="card h-100 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="card-body justify-content-center">
+                  <div className="d-flex align-items-center justify-content-center mb-3">
                     <div className="d-flex align-items-center">
-                      <div className="rounded bg-light p-3 me-3">
+                      <div className="p-3 me-3">
                         <i className={`${kpi.icon} ${kpi.iconColor} fs-4`}></i>
                       </div>
                       <div>
@@ -546,21 +164,10 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="d-flex align-items-end justify-content-between">
+                  <div className="d-flex align-items-end justify-content-center">
                     <div>
                       <p className="h4 fw-bold mb-0">{kpi.value}</p>
                     </div>
-                    {/* <div className="d-flex align-items-center">
-                      <span
-                        className={`small fw-bold ${
-                          kpi.changeType === "positive"
-                            ? "text-success"
-                            : "text-danger"
-                        }`}
-                      >
-                        {kpi.change}
-                      </span>
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -568,62 +175,50 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Chart Section */}
-         <div className="card shadow-sm mb-4">
-        <div className="card-body">
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h2 className="h5 fw-bold mb-0">Platform Analytics</h2>
-            <div className="btn-group" role="group">
-              {["7 Days", "30 Days", "90 Days"].map((period) => (
-                <button
-                  key={period}
-                  onClick={() => setSelectedPeriod(period)}
-                  className={`btn btn-sm ${
-                    selectedPeriod === period
-                      ? "btn-primary"
-                      : "btn-outline-secondary"
-                  }`}
-                >
-                  {period}
-                </button>
-              ))}
+        {/* Main Chart Section */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card shadow-sm">
+              <div className="card-header bg-white border-bottom">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Platform Overview</h5>
+                  <div className="btn-group">
+                    <button
+                      className={`btn btn-sm ${
+                        selectedPeriod === "7 Days" ? "btn-primary" : "btn-outline-primary"
+                      }`}
+                      onClick={() => setSelectedPeriod("7 Days")}
+                    >
+                      7 Days
+                    </button>
+                    <button
+                      className={`btn btn-sm ${
+                        selectedPeriod === "30 Days" ? "btn-primary" : "btn-outline-primary"
+                      }`}
+                      onClick={() => setSelectedPeriod("30 Days")}
+                    >
+                      30 Days
+                    </button>
+                    <button
+                      className={`btn btn-sm ${
+                        selectedPeriod === "90 Days" ? "btn-primary" : "btn-outline-primary"
+                      }`}
+                      onClick={() => setSelectedPeriod("90 Days")}
+                    >
+                      90 Days
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="card-body">
+                <div
+                  id="main-chart"
+                  style={{ width: "100%", height: "400px" }}
+                ></div>
+              </div>
             </div>
-          </div>
-          <div className="chart-container" style={{ height: "400px" }}>
-            <div id="main-chart" className="w-100 h-100" ref={chartRef}></div>
           </div>
         </div>
-      </div>
-
-        {/* Additional Charts Row */}
-        {/* <div className="row mb-4">
-         
-          <div className="col-md-4 mb-4 mb-md-0">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <div id="growth-chart" style={{ height: "300px" }}></div>
-              </div>
-            </div>
-          </div>
-
-          
-          <div className="col-md-4 mb-4 mb-md-0">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <div id="company-chart" style={{ height: "300px" }}></div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <div id="revenue-chart" style={{ height: "300px" }}></div>
-              </div>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Recent Activities Table */}
       </div>
     </div>
   );
