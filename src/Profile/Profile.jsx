@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../config";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -9,7 +9,7 @@ const Profile = () => {
     email: "",
     address: "",
     gstId: "",
-    companyLogo: null,
+    companyLogo: "",
     previewLogo: "",
   });
 
@@ -151,11 +151,11 @@ const Profile = () => {
                 </div>
                 <div className="mb-3">
                   <h6 className="text-muted">Address</h6>
-                  <p className="fs-5">{userData.address || "Not Provided"}</p>
+                  <p className="fs-5">{userData.address || "road 4 Amirpet "}</p>
                 </div>
                 <div className="mb-3">
                   <h6 className="text-muted">GST ID</h6>
-                  <p className="fs-5">{userData.gstId || "Not Provided"}</p>
+                  <p className="fs-5">{userData.gstId || "ABC122580"}</p>
                 </div>
               </div>
               <div className="col-md-6 d-flex flex-column gap-4">
@@ -164,11 +164,11 @@ const Profile = () => {
                   <img
                     src={
                       userData.previewLogo ||
-                      "https://via.placeholder.com/200x200?text=No+Logo"
+                      "https://logos-world.net/wp-content/uploads/2020/11/Shopify-Logo.png"
                     }
                     alt="Company Logo"
                     className="img-thumbnail"
-                    style={{ maxWidth: "200px", maxHeight: "200px" }}
+                    style={{ maxWidth: "100px", maxHeight: "100px", borderRadius: "50%" }}
                   />
                 </div>
               </div>
@@ -237,14 +237,15 @@ const Profile = () => {
                     accept="image/*"
                     onChange={handleFileChange}
                   />
-                  {formData.previewLogo && (
-                    <img
-                      src={formData.previewLogo}
-                      alt="Logo Preview"
-                      className="img-thumbnail mt-2"
-                      style={{ maxWidth: "200px" }}
-                    />
-                  )}
+                  <img
+                    src={
+                      formData.previewLogo ||
+                      "https://logos-world.net/wp-content/uploads/2020/11/Shopify-Logo.png"
+                    }
+                    alt="Logo Preview"
+                    className="img-thumbnail mt-2"
+                    style={{ maxWidth: "200px" }}
+                  />
                 </div>
               </div>
             </div>
