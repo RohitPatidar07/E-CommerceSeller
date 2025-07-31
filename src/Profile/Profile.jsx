@@ -4,16 +4,25 @@ import { BASE_URL } from "../config";
 import { useParams } from "react-router-dom";
 
 const Profile = () => {
-  // Sample user data - in a real app, this would come from an API or context
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    address: "",
+    gstId: "",
+    companyLogo: null,
+    previewLogo: "",
+    companyIcon: null,
+    previewIcon: ""
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [formData, setFormData] = useState({ ...userData });
 
-  // Replace with dynamic value if available (e.g., from auth context or localStorage)
   const id = localStorage.getItem("userId");
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -22,18 +31,36 @@ const Profile = () => {
     try {
       const response = await axios.get(`${BASE_URL}getById/${id}`);
       console.log("Fetched user data:", response.data);
-      setUserData(response.data);
-      setId(""); // Update id state with fetched user id
+      setUserData({
+        ...response.data,
+        previewLogo: response.data.companyLogo ? `${BASE_URL}${response.data.companyLogo}` : "",
+        previewIcon: response.data.companyIcon ? `${BASE_URL}${response.data.companyIcon}` : ""
+      });
+      setFormData({
+        ...response.data,
+        previewLogo: response.data.companyLogo ? `${BASE_URL}${response.data.companyLogo}` : "",
+        previewIcon: response.data.companyIcon ? `${BASE_URL}${response.data.companyIcon}` : ""
+      });
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
-  const [formData, setFormData] = useState({ ...userData });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    const file = files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: file,
+        [`preview${name.charAt(0).toUpperCase() + name.slice(1)}`]: URL.createObjectURL(file)
+      }));
+    }
   };
 
   const handleEditClick = () => {
@@ -61,6 +88,9 @@ const Profile = () => {
       });
 
       setMessage("Password updated successfully");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error) {
       setMessage(error.response?.data?.message || "Failed to update password");
     }
@@ -70,14 +100,33 @@ const Profile = () => {
     e.preventDefault();
 
     try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("gstId", formData.gstId);
+      
+      if (formData.companyLogo && typeof formData.companyLogo !== "string") {
+        formDataToSend.append("companyLogo", formData.companyLogo);
+      }
+      
+      if (formData.companyIcon && typeof formData.companyIcon !== "string") {
+        formDataToSend.append("companyIcon", formData.companyIcon);
+      }
+
       const response = await axios.put(
-        `https://2lkmvcf8-5000.inc1.devtunnels.ms/profile-edit/${id}`,
+        `${BASE_URL}profile-edit/${id}`,
+        formDataToSend,
         {
-          name: formData.name,
-          email: formData.email,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
+
       alert("Profile updated successfully!");
+      setIsEditing(false);
+      fetchUserData(); // Refresh user data
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile");
@@ -94,14 +143,56 @@ const Profile = () => {
           <div className="card-body">
             <h4 className="card-title mb-4">Personal Information</h4>
 
-            <div className="mb-3">
-              <h6 className="text-muted">Name</h6>
-              <p className="fs-5">{userData.name}</p>
-            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <h6 className="text-muted">Name</h6>
+                  <p className="fs-5">{userData.name}</p>
+                </div>
 
-            <div className="mb-3">
-              <h6 className="text-muted">Email</h6>
-              <p className="fs-5">{userData.email}</p>
+                <div className="mb-3">
+                  <h6 className="text-muted">Email</h6>
+                  <p className="fs-5">{userData.email}</p>
+                </div>
+
+                <div className="mb-3">
+                  <h6 className="text-muted">Address</h6>
+                  <p className="fs-5">{userData.address || "Not provided"}</p>
+                </div>
+
+                <div className="mb-3">
+                  <h6 className="text-muted">GST ID</h6>
+                  <p className="fs-5">{userData.gstId || "Not provided"}</p>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="d-flex flex-column gap-4">
+                  {userData.previewLogo && (
+                    <div className="mb-3">
+                      <h6 className="text-muted">Company Logo</h6>
+                      <img 
+                        src={userData.previewLogo} 
+                        alt="Company Logo" 
+                        className="img-thumbnail" 
+                        style={{ maxWidth: "200px", maxHeight: "200px" }}
+                      />
+                    </div>
+                  )}
+                  
+                  {userData.previewIcon && (
+                    <div className="mb-3">
+                      <h6 className="text-muted">Company Icon</h6>
+                      <img 
+                        src={userData.previewIcon} 
+                        alt="Company Icon" 
+                        className="img-thumbnail" 
+                        style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <button onClick={handleEditClick} className="btn btn-primary">
@@ -115,28 +206,100 @@ const Profile = () => {
           <div className="card-body">
             <h4 className="card-title mb-4">Edit Profile</h4>
 
-            <div className="mb-3">
-              <label className="form-label">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-            <div className="mb-3">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Address</label>
+                  <textarea
+                    className="form-control"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    rows="3"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">GST ID</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="gstId"
+                    value={formData.gstId}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="d-flex flex-column gap-4">
+                  <div className="mb-3">
+                    <label className="form-label">Company Logo</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      name="companyLogo"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                    {formData.previewLogo && (
+                      <div className="mt-2">
+                        <img 
+                          src={formData.previewLogo} 
+                          alt="Logo Preview" 
+                          className="img-thumbnail" 
+                          style={{ maxWidth: "200px", maxHeight: "200px" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label className="form-label">Company Icon</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      name="companyIcon"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                    {formData.previewIcon && (
+                      <div className="mt-2">
+                        <img 
+                          src={formData.previewIcon} 
+                          alt="Icon Preview" 
+                          className="img-thumbnail" 
+                          style={{ maxWidth: "100px", maxHeight: "100px" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="d-flex gap-2">
@@ -160,7 +323,11 @@ const Profile = () => {
         <div className="card-body">
           <h4 className="card-title mb-4">Change Password</h4>
 
-          {message && <div className="alert alert-info">{message}</div>}
+          {message && (
+            <div className={`alert ${message.includes("successfully") ? "alert-success" : "alert-danger"}`}>
+              {message}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
